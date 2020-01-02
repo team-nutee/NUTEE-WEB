@@ -21,3 +21,4 @@ ex)COOKIE_SECRET=cookiesecret
 
 7. 웹브라우저를 실행하고 localhost:3000 으로 접속
 </pre>
+aaa
