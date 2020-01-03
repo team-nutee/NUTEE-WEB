@@ -20,4 +20,4 @@ ex)COOKIE_SECRET=cookiesecret
 6. 각각의 디렉토리에서 cmd 창으로 npm run dev 실행
 
 7. 웹브라우저를 실행하고 localhost:3000 으로 접속
-</pre>
+</pre> 
