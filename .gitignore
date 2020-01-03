@@ -2,3 +2,4 @@
 /front/node_modules/
 /front/.next/
 /back/.env
+/front/.env
