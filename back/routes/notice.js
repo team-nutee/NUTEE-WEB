@@ -33,7 +33,7 @@ router.get('/',(req,res,next)=>{
         console.log(constresult.a);
         console.log(constresult.b);
         console.dir("constresult는"+constresult.toLocaleString());
-        return res.json(constresult);
+        res.json(constresult);
     },500);
 });
 
