@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const ColorHash = require('color-hash'); //익명채팅 사용자 구분 위해 사용(color-Hash 색으로 구분)
 
 const passportConfig = require('./passport');
 const db = require('./models');
@@ -13,9 +14,22 @@ const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
 const hashtagAPIRouter = require('./routes/hashtag');
 const noticeAPIRouter = require('./routes/notice');
+const WebSocket = require('./socket');
 
 dotenv.config();
 const app = express();
+
+const sessionMiddleware = expressSession({ // Socket.io ('./socket.js')에서 사용하기 위해 세션을 변수로 빼놓았습니다.
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false, // https를 쓸 때 true
+    },
+    name: 'rnbck',
+});
+
 db.sequelize.sync();
 passportConfig();
 
@@ -28,16 +42,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(expressSession({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-        httpOnly: true,
-        secure: false, // https를 쓸 때 true
-    },
-    name: 'rnbck',
-}));
+
+
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -48,6 +55,8 @@ app.use('/api/posts', postsAPIRouter);
 app.use('/api/hashtag', hashtagAPIRouter);
 app.use('/api/notice', noticeAPIRouter);
 
-app.listen(9425, () => {
+const server = app.listen(9425, () => {  // Socket.io 에서 쓰기 위해 변수에 저장.
     console.log('server is running on http://localhost:9425');
 });
+
+WebSocket(server, app, sessionMiddleware);
