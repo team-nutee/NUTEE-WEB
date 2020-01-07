@@ -10,6 +10,8 @@ db.Hashtag = require('./hashtag')(sequelize,Sequelize);
 db.Image = require('./image')(sequelize,Sequelize);
 db.Post = require('./post')(sequelize,Sequelize);
 db.User = require('./user')(sequelize,Sequelize);
+db.Chatroom = require('./chatroom')(sequelize,Sequelize);
+db.Chatting = require('./chatting')(sequelize,Sequelize);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
