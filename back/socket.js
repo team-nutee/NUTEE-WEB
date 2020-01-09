@@ -65,7 +65,7 @@ module.exports = (server,app,sessionMiddleware)=>{
                         console.error(error);
                     });
             }else{
-                axios.post(`http://localhost:8005/room/${roomId}/sys`,{
+                axios.post(`http://localhost:9425/room/${roomId}/sys`,{
                     type:'exit',
                 },{
                     headers:{
