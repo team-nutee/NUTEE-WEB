@@ -1,8 +1,8 @@
 module.exports = (sequelize,DataTypes)=>{
     const Chatroom = sequelize.define('Chatroom',{
         roomNumber:{
-            type:DataTypes.UNSIGNED,
-            allowNull:false,
+            type:DataTypes.INTEGER,
+            primaryKey:true, // ai 설정으로 primaryKey
             autoIncrement: true,
         },
         title:{
@@ -10,7 +10,7 @@ module.exports = (sequelize,DataTypes)=>{
             allowNull: false,
         },
         max:{
-            type:DataTypes.UNSIGNED,
+            type:DataTypes.INTEGER,
             default:10,
             min:2,
             allowNull:false,
@@ -21,15 +21,11 @@ module.exports = (sequelize,DataTypes)=>{
         },
         password:{
             type:DataTypes.STRING(30),
-        },
-        createdAt:{
-            type:DataTypes.Date,
-            default:Date.now(),
         }
     });
     Chatroom.associate = (db)=>{
         db.Chatroom.hasMany(db.Chatting, {foreignKey:'roomNumber'});
-        db.Chatting.hasOne(db.Chatroom);
+
     };
     return Chatroom;
 };
