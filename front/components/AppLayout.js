@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {Col, Input,Card, Menu, Row, Item, List, Typography, Button} from 'antd';
@@ -17,11 +17,20 @@ const noticeData = [
     '[일반] 2019년 하반기 삼성 기회균등 특별채용 추천자 모...',
     '[행사] [중앙도서관] 2019년 9월. Issue Corn...',
 ];
+const mealUrl= {
+    "url":"https://skhu.ac.kr/uni_zelkova/uni_zelkova_4_3_view.aspx?idx=374\u0026curpage=1"
+};
+
+const meal = axios.post(`https://skhu-test.sleepy-owl.com/life/meal/data`, mealUrl,{
+    headers:{
+        'Access-Control-Allow-Origin' : '*'
+    }
+});
 
 const foodData = [
     {
         title: '중식',
-        content:'api 호출',
+        content:'',
     },
     {
         title: '석식',
@@ -32,17 +41,11 @@ const foodData = [
         content:'api 호출',
     },
 ];
-const mealUrl= {
-    "url":"https://skhu.ac.kr/uni_zelkova/uni_zelkova_4_3_view.aspx?idx=374\u0026curpage=1"
-};
-
-const meal = axios.post(`https://skhu-test.sleepy-owl.com/life/meal/data`, mealUrl);
 
 const AppLayout = ({ children }) => {
+    const [chat,setChat] = useState(false);
     const { me } = useSelector(state => state.user);
-
     const dispatch = useDispatch();
-
     const onLogout = useCallback(() => {
         dispatch({
             type: LOG_OUT_REQUEST,
@@ -53,11 +56,17 @@ const AppLayout = ({ children }) => {
         // Router.push({ pathname: '/hashtag', query: { tag: value } }, `/hashtag/${value}`);
         console.log(meal);
     };
+    const chatOn = () => {
+        setChat(true);
+    };
+    const chatOff = () => {
+        setChat(false);
+    };
 
     return (
         <div>
             {/*메뉴바*/}
-            <Row style={{background: '#13c276', minWidth: '1160px', height: '40px', padding: '5px'}}>
+            <Row style={{background: '#13c276',width:'100%', minWidth: '1160px', height: '40px', padding: '5px'}}>
                 <Col span={8}>
                     <div style={{float: "right", marginRight: '20px',minWidth: '300px'}}>
                         <div style={{float: "left", marginRight: '20px'}}>
@@ -69,12 +78,16 @@ const AppLayout = ({ children }) => {
                                 </a>
                             </Link>
                         </div>
-                        <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/"><a><b
+                        <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/"><a onClick={chatOff}><b
                             style={{color: "white"}}>누티</b></a></Link></div>
                         {me ?
                             <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
-                                href="/profile"><a><b
-                                style={{color: "white"}}>프로필</b></a></Link></div> : <></>}
+                                href="/profile"><a onClick={chatOff}><b
+                                style={{color: "white"}}>프로필</b></a></Link></div> : <></>
+                        }
+                        <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
+                            href="/chat"><a onClick={chatOn}><b
+                            style={{color: "white"}}>채팅</b></a></Link></div>
                         <div style={{float: "left", marginTop: '3px'}}>
                             {me ?
                                 <Input.Search
@@ -106,18 +119,25 @@ const AppLayout = ({ children }) => {
             </Row>
             {/*본문 내용*/}
             {me ?
-                <Row style={{background: '#effbf5', paddingTop: '10px', minWidth:'1160px'}} type='flex' justify='center' gutter={8}>
-                    <Col span={4}>
-                        {me
-                            ? <UserProfile></UserProfile>
-                            : <></>}
-                    </Col>
-                    <Col style={{minWidth:'600px'}} span={10}>
+                <Row style={chat
+                    ? {background: '#effbf5', width:'100%'}
+                    : {background: '#effbf5', paddingTop: '10px', width:'100%'}
+                } type='flex' justify='center' gutter={8}>
+                    {!chat?
+                        <Col span={4}>
+                            {me
+                                ? <UserProfile></UserProfile>
+                                : <></>}
+                        </Col>
+                        :<></>
+                    }
+                    <Col style={{minWidth:'600px'}} span={chat?24:10}>
                         {children}
                     </Col>
-                    <Col span={6} style={{minWidth:'270px'}}>
-                        {/*식단*/}
-                        {/*<Card style={{marginRight:'10px', padding:'0px'}}>
+                    {!chat?
+                        <Col span={6} style={{minWidth: '270px'}}>
+                            {/*식단*/}
+                            {<Card style={{marginRight:'10px', padding:'0px'}}>
                         <List style={{margin:'0px', padding:'0px'}}
                             grid={{ column: 3 }}
                             dataSource={foodData}
@@ -127,22 +147,30 @@ const AppLayout = ({ children }) => {
                                 </List.Item>
                             )}
                         />
-                        </Card>*/}
-                        {/*학교 공지사항*/}
-                        <List style={{background:'white', marginRight:'10px', marginTop:'10px', borderRadius:'0', borderColor:'#e6e6e6'}}
-                            header={<div>학교 공지사항</div>}
-                            bordered
-                            dataSource={noticeData}
-                            renderItem={item => (
-                                <List.Item>
-                                    {item}
-                                </List.Item>
-                            )}
-                        />
-                        <Link href="https://github.com/MoonHKLee/react-nodebird/"><a target="_blank">Made by
-                            MoonHKLee</a></Link>
+                        </Card>}
+                            {/*학교 공지사항*/}
+                            <List style={{
+                                background: 'white',
+                                marginRight: '10px',
+                                marginTop: '10px',
+                                borderRadius: '0',
+                                borderColor: '#e6e6e6'
+                            }}
+                                  header={<div>학교 공지사항</div>}
+                                  bordered
+                                  dataSource={noticeData}
+                                  renderItem={item => (
+                                      <List.Item>
+                                          {item}
+                                      </List.Item>
+                                  )}
+                            />
+                            <Link href="https://github.com/MoonHKLee/react-nodebird/"><a target="_blank">Made by
+                                MoonHKLee</a></Link>
 
-                    </Col>
+                        </Col>
+                        :<></>
+                    }
                 </Row>
                 : <Signup></Signup>
             }

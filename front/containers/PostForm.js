@@ -64,7 +64,7 @@ const PostForm = () => {
             <div style={{height: "auto", overflow:"hidden", background:'white', paddingBottom:'5px', border:'1px solid #e6e6e6'}}>
                 <div style={{overflow:'hidden', height:'auto'}}>
                     <TextareaAutosize
-                        style={{margin:'5px', resize:'none', lineHeight:'30px', overflowY:'hidden', border:'none', width:'98.5%', minHeight:'80px', height:'auto'}}
+                        style={{margin:'5px', resize:'none', lineHeight:'30px', overflowY:'hidden', border:'none', width:'98.5%', minHeight:'65px', height:'auto'}}
                         placeholder="오늘 힘든 일이 있었나요?"
                         value={text}
                         onChange={onChangeText}

@@ -8,7 +8,6 @@ import createSagaMiddleware from 'redux-saga';
 import axios from 'axios';
 import Helmet from 'react-helmet';
 import App, { Container } from 'next/app';
-
 import AppLayout from '../components/AppLayout';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
@@ -51,6 +50,36 @@ const NodeBird = ({ Component, store, pageProps }) => {
                 <Component {...pageProps} />
             </AppLayout>
         </Provider>
+            <style jsx>
+                {
+                    `
+                    
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #effbf5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  -webkit-appearance: none;
+}
+
+*:focus {
+  outline: none;
+}
+                    `
+                }
+            </style>
         </Container>
     );
 };
