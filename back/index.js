@@ -14,6 +14,8 @@ const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
 const hashtagAPIRouter = require('./routes/hashtag');
 const noticeAPIRouter = require('./routes/notice');
+const chatroomAPIRouter = require('./routes/chatroom');
+const chattingAPIRouter = require('./routes/chatting');
 const WebSocket = require('./socket');
 
 dotenv.config();
@@ -54,6 +56,9 @@ app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
 app.use('/api/hashtag', hashtagAPIRouter);
 app.use('/api/notice', noticeAPIRouter);
+app.use('/api/room', chatroomAPIRouter);
+app.use('api/chat', chattingAPIRouter);
+
 
 const server = app.listen(9425, () => {  // Socket.io 에서 쓰기 위해 변수에 저장.
     console.log('server is running on http://localhost:9425');
