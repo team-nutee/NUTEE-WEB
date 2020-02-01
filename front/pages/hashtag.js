@@ -1,14 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_HASHTAG_POSTS_REQUEST } from '../reducers/post';
+import {useDispatch, useSelector} from 'react-redux';
+import {LOAD_HASHTAG_POSTS_REQUEST} from '../reducers/post';
 import PostCard from '../containers/PostCard';
 import styled from "styled-components";
+import LeftContents from "../components/LeftContents";
+import RightContents from "../components/RightContents";
+import {Col} from "antd";
 
-const Hashtag = ({ tag }) => {
+const Hashtag = ({tag}) => {
     const dispatch = useDispatch();
 
-    const { mainPosts, hasMorePost } = useSelector(state => state.post);
+    const {mainPosts, hasMorePost} = useSelector(state => state.post);
 
     const onScroll = useCallback(() => {
         if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
@@ -34,13 +37,19 @@ const Hashtag = ({ tag }) => {
 `;
 
     return (
-        <CardWrapper>
-            <div>
-                {mainPosts.map(c => (
-                    <PostCard key={c.id} post={c}/>
-                ))}
-            </div>
-        </CardWrapper>
+        <>
+            <LeftContents/>
+            <Col span={10}>
+                <CardWrapper>
+                    <div>
+                        {mainPosts.map(c => (
+                            <PostCard key={c.id} post={c}/>
+                        ))}
+                    </div>
+                </CardWrapper>
+            </Col>
+            <RightContents/>
+        </>
     );
 };
 
@@ -55,7 +64,7 @@ Hashtag.getInitialProps = async (context) => {
         type: LOAD_HASHTAG_POSTS_REQUEST,
         data: tag,
     });
-    return { tag };
+    return {tag};
 };
 
 export default Hashtag;

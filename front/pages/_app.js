@@ -44,6 +44,8 @@ const NodeBird = ({ Component, store, pageProps }) => {
                     rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css',
                 }, {
                     rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css',
+                }, {
+                    rel: 'stylesheet', href: 'https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css',
                 }]}
             />
             <AppLayout>

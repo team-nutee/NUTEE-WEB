@@ -21,7 +21,7 @@ export default function Compose(props) {
   background: #effbf5;
   border-top: 1px solid #eeeef1;
   position: fixed;
-  width: calc(100% - 20px);
+  width: calc(100% - 378px);
   bottom: 0px;
 }
 
@@ -38,7 +38,10 @@ export default function Compose(props) {
   border: none;
   font-size: 14px;
   height: 40px;
-  background: none;
+  background: #E6E6E6;
+  border-radius: 20px;
+  outline: none;
+  padding: 0px 10px;
 }
 
 .compose-input::placeholder {

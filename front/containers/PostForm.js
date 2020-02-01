@@ -64,12 +64,11 @@ const PostForm = () => {
             <div style={{height: "auto", overflow:"hidden", background:'white', paddingBottom:'5px', border:'1px solid #e6e6e6'}}>
                 <div style={{overflow:'hidden', height:'auto'}}>
                     <TextareaAutosize
-                        style={{margin:'5px', resize:'none', lineHeight:'30px', overflowY:'hidden', border:'none', width:'98.5%', minHeight:'65px', height:'auto'}}
-                        placeholder="오늘 힘든 일이 있었나요?"
+                        style={{margin:'5px', resize:'none',outline:'none', lineHeight:'30px', overflowY:'hidden', border:'none', width:'98.5%', minHeight:'65px', height:'auto'}}
+                        placeholder="내용을 입력해주세요."
                         value={text}
                         onChange={onChangeText}
                         autoFocus={true} />
-                    <hr style={{borderWidth:'1px 0px 0px 0px',borderColor:'#e6e6e6', width:'98%', align:'center'}}/>
                     <div style={{ overflow:'hidden', height:"auto"}}>
                         {imagePaths.map((v, i) => (
                             <div key={v} style={{margin:'5px', width:'48.2%', float:"left", height:'180px', background:'#F2F2F2', textAlign:'center'}}>

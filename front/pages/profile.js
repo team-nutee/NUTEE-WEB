@@ -58,11 +58,11 @@ const Profile = () => {
                 dataSource={followingList}
                 renderItem={item => (
                     <List.Item style={{ marginTop: '20px' }}>
-                        <Avatar size='large'>
-
-                        </Avatar>
-                        <Card actions={[<Icon key="stop" type="stop" onClick={onUnfollow(item.id)} />]}>
-                            <Card.Meta description={item.nickname} />
+                        <Card style={{margin:'0 auto'}} actions={[<a onClick={onUnfollow(item.id)}>팔로우 취소</a>]}>
+                            <Avatar size='large' style={{margin:'0px 5px 0px 0px'}}>
+                                {item.nickname[0]}
+                            </Avatar>
+                            <h2 style={{display:'inline-block', fontSize:'15px',paddingTop:'3px'}}>{item.nickname}</h2>
                         </Card>
                     </List.Item>
                 )}
@@ -77,8 +77,11 @@ const Profile = () => {
                 dataSource={followerList}
                 renderItem={item => (
                     <List.Item style={{ marginTop: '20px' }}>
-                        <Card actions={[<Icon key="stop" type="stop" onClick={onRemoveFollower(item.id)} />]}>
-                            <Card.Meta description={item.nickname} />
+                        <Card actions={[<a onClick={onRemoveFollower(item.id)}>팔로워 차단</a>]}>
+                            <Avatar size='large' style={{margin:'0px 5px 0px 0px'}}>
+                                {item.nickname[0]}
+                            </Avatar>
+                            <h2 style={{display:'inline-block', fontSize:'15px',paddingTop:'3px'}}>{item.nickname}</h2>
                         </Card>
                     </List.Item>
                 )}
