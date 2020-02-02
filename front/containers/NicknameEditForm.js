@@ -21,7 +21,7 @@ const NicknameEditForm = () => {
     }, [editedName]);
 
     return (
-        <Form style={{ marginBottom: '20px', border: '1px solid #d9d9d9', backgroundColor:'white', padding: '20px' }} onSubmit={onEditNickname}>
+        <Form style={{ marginTop:'10px',marginBottom: '20px',width:'220px'}} onSubmit={onEditNickname}>
             <Input addonBefore="닉네임" value={editedName || (me && me.nickname)} onChange={onChangeNickname} />
             <Button type="primary" htmlType="submit" loading={isEditingNickname}>수정</Button>
         </Form>
