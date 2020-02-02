@@ -2,7 +2,7 @@ const client = require('cheerio-httpcli');
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-let crawlresult = {};
+let crawlresult = [];
 
 new Promise((resolve)=>{
     client.fetch("http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10004&searchBun=51", {},(err, $, res, body)=>{
@@ -17,7 +17,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href1 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[0] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 new Promise((resolve)=>{
@@ -33,7 +33,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href2 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[1] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 new Promise((resolve)=>{
@@ -49,7 +49,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href3 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[2] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 new Promise((resolve)=>{
@@ -65,7 +65,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href4 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[3] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 new Promise((resolve)=>{
@@ -81,7 +81,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href5 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[4] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 new Promise((resolve)=>{
@@ -97,7 +97,7 @@ new Promise((resolve)=>{
     let str2 = check.indexOf('\"',str1+1);
     let results = check.substring(str1,str2);
     console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult.href6 = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    crawlresult[5] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
 });
 
 module.exports = crawlresult;
