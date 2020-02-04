@@ -53,6 +53,7 @@ export default function ConversationList(props) {
                 .conversation-list {
                     display: flex;
                     flex-direction: column;
+                    min-width: 330px;
                 }
                 `}
             </style>

@@ -134,7 +134,7 @@ const PostCard = ({ post }) => {
                                             <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
                                         </>
                                     )
-                                    : <Button>신고</Button>}
+                                    : <><Button>신고</Button><Button>채팅</Button></>}
                             </Button.Group>
                         )}
                     >

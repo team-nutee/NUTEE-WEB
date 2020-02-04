@@ -1,9 +1,6 @@
 import React from 'react';
 import ConversationList from '../ConversationList';
 import MessageList from '../MessageList';
-// import './Messenger.css';
-import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
 
 export default function Messenger(props) {
     return (
@@ -24,6 +21,7 @@ export default function Messenger(props) {
   width: 100%;
   height: 94vh;
   background: #effbf5;
+  min-width: 890px;
 
   grid-template-columns: 350px auto;
   grid-template-rows: 60px auto 60px;

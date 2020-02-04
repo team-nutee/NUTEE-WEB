@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostForm from '../containers/PostForm';
 import PostCard from '../containers/PostCard';
 import { LOAD_MAIN_POSTS_REQUEST } from '../reducers/post';
+import LeftContents from "../components/LeftContents";
+import MainContents from "../components/MainContents";
+import RightContents from "../components/RightContents";
+import {Col, Row} from "antd";
 
 const Home = () => {
     const { me } = useSelector(state => state.user);
@@ -33,14 +37,18 @@ const Home = () => {
     }, [mainPosts.length]);
 
     return (
-        <div>
-            {me && <PostForm />}
-            {mainPosts.map((c) => {
-                return (
-                    <PostCard key={c.id} post={c} />
-                );
-            })}
-        </div>
+        <>
+            <LeftContents me={me} span={4} />
+            <Col span={10}>
+                {me && <PostForm />}
+                {mainPosts.map((c) => {
+                    return (
+                        <PostCard key={c.id} post={c} />
+                    );
+                })}
+            </Col>
+            <RightContents />
+        </>
     );
 };
 
