@@ -1,6 +1,6 @@
 const client = require('cheerio-httpcli');
 
-let crawlresult = {};
+let crawlresult = [];
 
 new Promise((resolve)=>{
     client.fetch("http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10004&searchBun=51", {},(err, $, res, body)=>{
@@ -9,7 +9,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.a = result;
+    crawlresult[0] = result;
 });
 
 new Promise((resolve)=>{
@@ -19,7 +19,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.b = result;
+    crawlresult[1] = result;
 });
 
 new Promise((resolve)=>{
@@ -29,7 +29,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.c = result;
+    crawlresult[2] = result;
 });
 
 new Promise((resolve)=>{
@@ -39,7 +39,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.d = result;
+    crawlresult[3] = result;
 });
 
 new Promise((resolve)=>{
@@ -49,7 +49,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.e = result;
+    crawlresult[4] = result;
 });
 
 new Promise((resolve)=>{
@@ -59,7 +59,7 @@ new Promise((resolve)=>{
         resolve(results);
     });
 }).then((result)=>{
-    crawlresult.f = result;
+    crawlresult[5] = result;
 });
 
 
