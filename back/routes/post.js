@@ -46,9 +46,6 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
                 await newPost.addImage(image);
             }
         }
-        // const User = await newPost.getUser();
-        // newPost.User = User;
-        // res.json(newPost);
         const fullPost = await db.Post.findOne({
             where: { id: newPost.id },
             include: [{
