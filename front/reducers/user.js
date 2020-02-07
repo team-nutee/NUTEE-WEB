@@ -119,7 +119,7 @@ export default (state = initialState, action) => {
                     draft.me = action.data;
                     break;
                 }
-                draft.useInfo = action.data;
+                draft.userInfo = action.data;
                 break;
             }
             case LOAD_USER_FAILURE: {
@@ -130,6 +130,7 @@ export default (state = initialState, action) => {
             }
             case FOLLOW_USER_SUCCESS: {
                 draft.me.Followings.unshift({ id: action.data });
+                draft.userInfo.Followers.unshift({ id: action.data });
                 break;
             }
             case FOLLOW_USER_FAILURE: {
@@ -143,6 +144,8 @@ export default (state = initialState, action) => {
                 draft.me.Followings.splice(index, 1);
                 const index2 = draft.followingList.findIndex(v => v.id === action.data);
                 draft.followingList.splice(index2, 1);
+                const index3 = draft.userInfo.Followers.findIndex(v => v.id === action.data);
+                draft.userInfo.Followers.splice(index3,1);
                 break;
             }
             case UNFOLLOW_USER_FAILURE: {

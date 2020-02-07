@@ -88,20 +88,6 @@ const PostCard = ({ post }) => {
         });
     }, [me && me.id, post && post.id]);
 
-    const onFollow = useCallback(userId => () => {
-        dispatch({
-            type: FOLLOW_USER_REQUEST,
-            data: userId,
-        });
-    }, []);
-
-    const onUnfollow = useCallback(userId => () => {
-        dispatch({
-            type: UNFOLLOW_USER_REQUEST,
-            data: userId,
-        });
-    }, []);
-
     const onRemovePost = useCallback(userId => () => {
         dispatch({
             type: REMOVE_POST_REQUEST,
@@ -142,12 +128,6 @@ const PostCard = ({ post }) => {
                     </Popover>,
                 ]}
                 title={post.RetweetId ? `${post.User.nickname}님이 글을 공유하였습니다.` : null}
-                extra={!me || post.User.id === me.id
-                    ? null
-                    : me.Followings && me.Followings.find(v => v.id === post.User.id)
-                        ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
-                        : <Button onClick={onFollow(post.User.id)}>팔로우</Button>
-                }
             >
                 {post.RetweetId && post.Retweet
                     ? (
