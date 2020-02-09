@@ -1,8 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
 const db = require('../models');
-const { isLoggedIn } = require('./middleware');
+const { isLoggedIn, isNotLoggedIn } = require('./middleware');
+
+require('dotenv').config();
 
 const router = express.Router();
 
@@ -24,20 +27,69 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
                 res.status(403).send('이미 사용중인 아이디입니다.')
             );
         }
-        const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
-        const newUser = await db.User.create({
-            nickname: req.body.nickname,
-            userId: req.body.userId,
-            password: hashedPassword,
-        });
-        console.log(newUser);
-        return res.status(200).json(newUser);
+
+        db.OTP.findAndCountAll({})
+            .then(async (result)=>{
+                for(let i = result.count;i>0;i--){
+                    let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
+                    if(checktrue){
+                        await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
+                        break;
+                    }else{
+                        continue;
+                    }
+                }
+            });
+        if(req.body.otpcheck === otp){ // 프론트에서 otp인증 폼의 name을 otpcheck로 일단 해주세요.
+            const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
+            const newUser = await db.User.create({
+                nickname: req.body.nickname,
+                userId: req.body.userId,
+                password: hashedPassword,
+            });
+            console.log(newUser);
+            return res.status(200).json(newUser);
+        }else{
+            res.status(403).send('잘못된 인증번호입니다.');
+        }
     } catch (e) {
         console.error(e);
         // 에러 처리를 여기서
         return next(e);
     }
 });
+
+router.get('/otpcheck',isNotLoggedIn, async(req,res,next)=>{
+    const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
+    console.log(otp); // 확인용찍어봄
+
+    let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
+        service:'Gmail',
+        auth:{
+            user:process.env.GOOGLE_EMAIL,
+            pass:process.env.GOOGLE_PASSWORD,
+        }
+    });
+    let mailOptions = {  // 받는사람 메일 설정입니다.
+        from: process.env.GOOGLE_EMAIL,
+        to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
+        subject: 'NUTEE OTP 인증입니다.',
+        text:otp,
+    }
+    transporter.sendMail(mailOptions,(eror,info)=>{
+        if (error) {
+            console.log(error);
+        }
+        else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    console.time('otp암호화시간(디비저장)');
+    const hash = await bcrypt.hash(otp,12);
+    console.timeEnd('otp암호화시간(디비저장)');
+    await db.OTP.create({hash:hash});
+});
+
 
 router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것 ex) /api/user/123
     try {
