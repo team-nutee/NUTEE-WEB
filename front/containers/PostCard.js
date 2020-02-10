@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Avatar, Button, Card, Comment, Form, Icon, Input, List, Popover } from 'antd';
+import {Avatar, Button, Card, Comment, Form, Icon, Input, List, Modal, Popover} from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import {
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
 import '../css/test.css';
+import EditForm from "../components/EditForm";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -26,6 +27,17 @@ const PostCard = ({ post }) => {
     const { me } = useSelector(state => state.user);
     const { commentAdded, isAddingComment } = useSelector(state => state.post);
     const dispatch = useDispatch();
+
+    const [visible,setVisible] = useState(false);
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handelOk = () => {
+        setVisible(false);
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
 
@@ -95,6 +107,8 @@ const PostCard = ({ post }) => {
         });
     });
 
+    const onUpdatePost = useCallback()
+
     return (
         <CardWrapper>
             <Card
@@ -116,8 +130,11 @@ const PostCard = ({ post }) => {
                                 {me && post.UserId === me.id
                                     ? (
                                         <>
-                                            <Button>수정</Button>
+                                            <Button onClick={showModal}>수정</Button>
                                             <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
+                                            <Modal footer={null} bodyStyle={{padding:'0px', zIndex:1}} title='게시글 수정' visible={visible} onOk={handelOk} onCancel={handleCancel}>
+                                                <EditForm postId={post.id}/>
+                                            </Modal>
                                         </>
                                     )
                                     : <><Button>신고</Button><Button>채팅</Button></>}
