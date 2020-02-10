@@ -20,7 +20,7 @@ const MenuBar = ({me}) => {
             <Col span={8}>
                 <div style={{float: "right", marginRight: '20px',minWidth: '300px'}}>
                     <div style={{float: "left", marginRight: '20px'}}>
-                        <Link href="/">
+                        <Link href="/" prefetch>
                             <a>
                                 <img
                                     style={{height: '30px', width: '30px'}}
@@ -28,15 +28,15 @@ const MenuBar = ({me}) => {
                             </a>
                         </Link>
                     </div>
-                    <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/"><a><b
+                    <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/" prefetch><a><b
                         style={{color: "white"}}>누티</b></a></Link></div>
                     {me ?
                         <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
-                            href="/profile"><a><b
+                            href="/profile" prefetch><a><b
                             style={{color: "white"}}>프로필</b></a></Link></div> : <></>
                     }
                     <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
-                        href="/chat"><a><b
+                        href="/chat" prefetch><a><b
                         style={{color: "white"}}>채팅</b></a></Link></div>
                     <div style={{float: "left", marginTop: '3px'}}>
                         {me ?

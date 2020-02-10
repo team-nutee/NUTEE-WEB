@@ -35,9 +35,11 @@ const NodeBird = ({ Component, store, pageProps }) => {
                     name: 'og:description', content: '성공회대 통합 커뮤니티 서비스',
                 }, {
                     property: 'og:type', content: 'website',
+                }, {
+                    property: 'og:image', content: 'localhost:3000/favicon.ico',
                 }]}
                 link={[{
-                    rel: 'shortcut icon', href: '/favicon.ico',
+                    rel: 'icon',type:'image/png', href: 'favicon.ico',
                 }, {
                     rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css',
                 }, {
