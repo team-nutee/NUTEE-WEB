@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => { // GET /api/posts
             };
         }
         const posts = await db.Post.findAll({
-
+            where,
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
@@ -33,6 +33,14 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
+                }],
+            }, {
+                model: db.Comment,
+                order: [['createdAt', 'ASC']],
+                as:'Comments',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
                 }],
             }],
             order: [['createdAt', 'DESC']], // DESC는 내림차순, ASC는 오름차순

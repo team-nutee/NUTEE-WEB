@@ -4,9 +4,9 @@ import Link from 'next/link';
 import {useSelector,useDispatch} from 'react-redux';
 import {FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST} from "../reducers/user";
 
-const UserProfile = () => {
+const MyProfile = ({target}) => {
     const dispatch = useDispatch();
-    const { me, userInfo } = useSelector(state => state.user);
+    const { me,userInfo } = useSelector(state => state.user);
     const onFollow = useCallback(userId => () => {
         dispatch({
             type: FOLLOW_USER_REQUEST,
@@ -23,38 +23,38 @@ const UserProfile = () => {
 
     return (
         <>
-            {userInfo ?
+            {target ?
                 <Card style={{marginLeft: '10px', minWidth: '220px', minHeight: '140px', float: 'right'}}
                       actions={[
                           <Link href="/profile" key="twit">
                               <a>
-                                  <div>게시물<br/>{userInfo.Posts.length}</div>
+                                  <div>게시물<br/>{target.Posts.length}</div>
                               </a>
                           </Link>,
                           <Link href="/profile" key="following">
                               <a>
-                                  <div>팔로잉<br/>{userInfo.Followings.length}</div>
+                                  <div>팔로잉<br/>{target.Followings.length}</div>
                               </a>
                           </Link>,
                           <Link href="/profile" key="follower">
                               <a>
-                                  <div>팔로워<br/>{userInfo.Followers.length}</div>
+                                  <div>팔로워<br/>{target.Followers.length}</div>
                               </a>
                           </Link>,
                       ]}
                 >
                     <Card.Meta
-                        avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
-                        title={!userInfo || me.id === userInfo.id
-                            ? <>{userInfo.nickname}</>
-                            : me.Followings && me.Followings.find(v => v.id === userInfo.id)
+                        avatar={<Avatar>{target.nickname[0]}</Avatar>}
+                        title={!target || me.id === target.id
+                            ? <>{target.nickname}</>
+                            : target.Followers && target.Followers.find(v => v.id === me.id)
                                 ?
-                                <>{userInfo.nickname}<br/>
-                                    <Button size='small' onClick={onUnfollow(userInfo.id)}>언팔로우</Button>
+                                <>{target.nickname}<br/>
+                                    <Button size='small' onClick={onUnfollow(target.id)}>언팔로우</Button>
                                 </>
                                 :
-                                <>{userInfo.nickname}<br/>
-                                    <Button size='small' onClick={onFollow(userInfo.id)}>팔로우</Button>
+                                <>{target.nickname}<br/>
+                                    <Button size='small' onClick={onFollow(target.id)}>팔로우</Button>
                                 </>
                         }
                     />
@@ -66,4 +66,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default MyProfile;

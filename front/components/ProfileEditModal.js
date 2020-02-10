@@ -42,7 +42,7 @@ const ProfileEditModal = () => {
                 onOk={onEditNickname}
                 onCancel={handleCancel}
             >
-                <Form style={{ marginTop:'10px',marginBottom: '20px',width:'220px'}} onSubmit={onEditNickname}>
+                <Form style={{ marginTop:'10px', marginBottom: '20px', width:'220px'}} onSubmit={onEditNickname}>
                     <Input addonBefore="닉네임" value={editedName || (me && me.nickname)} onChange={onChangeNickname} />
                 </Form>
             </Modal>

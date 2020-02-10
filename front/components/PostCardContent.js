@@ -13,7 +13,7 @@ const ShowBox = styled.pre`
     whiteSpace: 'pre-wrap',
 `;
 
-const PostCardContent = ({ postData }) => {
+const PostCardContent = ({ postData,commentN,likers }) => {
     const stringLength= (function(s,b,i,c){
         for(b=i=0;c=s.charCodeAt(i++);b+=c>>11?3:c>>7?2:1);
         return b
@@ -32,7 +32,7 @@ const PostCardContent = ({ postData }) => {
                 <pre style={{
                     wordWrap: 'break-word',
                     whiteSpace: 'pre-wrap',
-                    wordBreak:'break-all'
+                    wordBreak:'break-all',
                 }}>
                     {postData.split(/(#[^\s]+)/g).map((v) => {
                         if (v.match(/#[^\s]+/)) {
@@ -48,6 +48,7 @@ const PostCardContent = ({ postData }) => {
                         }
                         return v;
                     })}
+                    <h5 style={{position:'absolute',right:'15px',bottom:'45px'}}>댓글 {commentN}개 좋아요 {likers}개</h5>
                 </pre>
                 :
                 <div>
@@ -68,7 +69,7 @@ const PostCardContent = ({ postData }) => {
                                 }
                                 return v;
                             })}
-                            <br/>
+                            <h5 style={{position:'absolute',right:'15px',bottom:'45px'}}>댓글 {commentN}개 좋아요 {likers}개</h5>
                         </ShowBox>
                         :
                         <pre style={{
@@ -90,6 +91,7 @@ const PostCardContent = ({ postData }) => {
                         }
                         return v;
                     })}
+                            <h5 style={{position:'absolute',right:'15px',bottom:'45px'}}>댓글 {commentN}개 좋아요 {likers}개</h5>
                 </pre>
                     }
                     {!showMore?
