@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const db = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 
@@ -17,9 +19,33 @@ router.get('/', isLoggedIn, (req, res) => { // /api/user/
 
 router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
+        function timedecrement(){
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth()+1;
+            let date = now.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            if(hours<10){
+                hours = "0"+hours;
+            }
+            if(minutes<13){
+                minutes=minutes-3;
+                minutes = "0"+minutes;
+            }else{
+                minutes-=3;
+            }
+            if(seconds<10){
+                seconds = "0"+seconds;
+            }
+            return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
+        }
+        let timedesc3 = timedecrement();
+
         const exUser = await db.User.findOne({
             where: {
-                userId: req.body.userId,
+                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
             },
         });
         if (exUser) {
@@ -28,30 +54,27 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
             );
         }
 
-        db.OTP.findAndCountAll({})
+        db.OTP.findAndCountAll({where:{createdAt:{[Op.gt]:timedesc3}}})
             .then(async (result)=>{
                 for(let i = result.count;i>0;i--){
                     let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
                     if(checktrue){
                         await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
-                        break;
+                        const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
+                        const newUser = await db.User.create({
+                            nickname: req.body.nickname,
+                            userId: req.body.userId,
+                            password: hashedPassword,
+                            schoolEmail:req.body.schoolEmail,
+                        });
+                        console.log(newUser);
+                        return res.status(200).json(newUser);
                     }else{
                         continue;
                     }
                 }
+                res.status(403).send('잘못된 인증번호입니다.');
             });
-        if(req.body.otpcheck === otp){ // 프론트에서 otp인증 폼의 name을 otpcheck로 일단 해주세요.
-            const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
-            const newUser = await db.User.create({
-                nickname: req.body.nickname,
-                userId: req.body.userId,
-                password: hashedPassword,
-            });
-            console.log(newUser);
-            return res.status(200).json(newUser);
-        }else{
-            res.status(403).send('잘못된 인증번호입니다.');
-        }
     } catch (e) {
         console.error(e);
         // 에러 처리를 여기서
@@ -76,7 +99,7 @@ router.get('/otpcheck',isNotLoggedIn, async(req,res,next)=>{
         subject: 'NUTEE OTP 인증입니다.',
         text:otp,
     }
-    transporter.sendMail(mailOptions,(eror,info)=>{
+    transporter.sendMail(mailOptions,(error,info)=>{
         if (error) {
             console.log(error);
         }
