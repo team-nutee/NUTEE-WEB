@@ -14,7 +14,6 @@ import {
 } from '../reducers/post';
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
-import '../css/test.css';
 import EditForm from "../components/EditForm";
 
 const CardWrapper = styled.div`

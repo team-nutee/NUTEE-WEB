@@ -7,10 +7,9 @@ module.exports={
     username: 'nutee',
     password: process.env.DB_PASSWORD,
     database: 'nutee_test',
-    host: 'nuteedb.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
+    host: 'nutee.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     port:3306,
-    operatorsAliases: false
   },
   test: {
     username: 'nutee',
@@ -19,7 +18,6 @@ module.exports={
     host: 'nuteedb.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     port:3306,
-    operatorsAliases: false
   },
   production: {
     username: 'nutee',
@@ -28,6 +26,5 @@ module.exports={
     host: 'nuteedb.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     port:3306,
-    operatorsAliases: false
   }
 };
