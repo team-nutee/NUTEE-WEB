@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "next build",
-    "start": "next start"
+    "build": "cross-env BUNDLE_ANALYZE=both next build",
+    "start": "cross-env NODE_ENV=production next start"
   },
   "author": "MoonHKLee",
   "license": "MIT",
   "dependencies": {
     "@material-ui/core": "^4.8.1",
+    "@next/bundle-analyzer": "^9.2.1",
     "antd": "^3.26.5",
     "axios": "^0.19.0",
+    "compression-webpack-plugin": "^3.1.0",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^7.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
@@ -36,7 +39,9 @@
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",
     "shave": "^2.5.7",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "@zeit/next-bundle-analyzer": "latest",
+    "webpack-bundle-analyzer": "latest"
   },
   "devDependencies": {
     "@zeit/next-css": "^1.0.1",

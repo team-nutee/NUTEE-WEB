@@ -34,6 +34,10 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
+export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST';
+export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
+export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
+
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
 export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
@@ -83,8 +87,7 @@ export default (state = initialState, action) => {
                 break;
             }
             case ADD_POST_REQUEST: {
-                draft.isAddingPost = true
-
+                draft.isAddingPost = true;
                 draft.addingPostErrorReason = '';
                 draft.postAdded = false;
                 break;
@@ -97,6 +100,24 @@ export default (state = initialState, action) => {
                 break;
             }
             case ADD_POST_FAILURE: {
+                draft.isAddingPost = false;
+                draft.addPostErrorReason = action.error;
+                break;
+            }
+            case EDIT_POST_REQUEST: {
+                draft.isAddingPost = true;
+                draft.addingPostErrorReason = '';
+                draft.postAdded = false;
+                break;
+            }
+            case EDIT_POST_SUCCESS: {
+                draft.isAddingPost = false;
+                draft.mainPosts.unshift(action.data);
+                draft.postAdded = true;
+                draft.imagePaths = [];
+                break;
+            }
+            case EDIT_POST_FAILURE: {
                 draft.isAddingPost = false;
                 draft.addPostErrorReason = action.error;
                 break;

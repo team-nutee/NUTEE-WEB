@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Avatar, Button, Card, Comment, Form, Icon, Input, List, Popover } from 'antd';
+import {Avatar, Button, Card, Comment, Form, Icon, Input, List, Modal, Popover} from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import {
 } from '../reducers/post';
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
-import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from '../reducers/user';
+import EditForm from "../components/EditForm";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -26,6 +26,17 @@ const PostCard = ({ post }) => {
     const { me } = useSelector(state => state.user);
     const { commentAdded, isAddingComment } = useSelector(state => state.post);
     const dispatch = useDispatch();
+
+    const [visible,setVisible] = useState(false);
+    const showModal = () => {
+        setVisible(true);
+    };
+    const handelOk = () => {
+        setVisible(false);
+    };
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
 
@@ -88,26 +99,14 @@ const PostCard = ({ post }) => {
         });
     }, [me && me.id, post && post.id]);
 
-    const onFollow = useCallback(userId => () => {
-        dispatch({
-            type: FOLLOW_USER_REQUEST,
-            data: userId,
-        });
-    }, []);
-
-    const onUnfollow = useCallback(userId => () => {
-        dispatch({
-            type: UNFOLLOW_USER_REQUEST,
-            data: userId,
-        });
-    }, []);
-
     const onRemovePost = useCallback(userId => () => {
         dispatch({
             type: REMOVE_POST_REQUEST,
             data: userId,
         });
     });
+
+    const onUpdatePost = useCallback()
 
     return (
         <CardWrapper>
@@ -130,8 +129,11 @@ const PostCard = ({ post }) => {
                                 {me && post.UserId === me.id
                                     ? (
                                         <>
-                                            <Button>수정</Button>
+                                            <Button onClick={showModal}>수정</Button>
                                             <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
+                                            <Modal footer={null} bodyStyle={{padding:'0px', zIndex:1}} title='게시글 수정' visible={visible} onOk={handelOk} onCancel={handleCancel}>
+                                                <EditForm postId={post.id}/>
+                                            </Modal>
                                         </>
                                     )
                                     : <><Button>신고</Button><Button>채팅</Button></>}
@@ -142,12 +144,6 @@ const PostCard = ({ post }) => {
                     </Popover>,
                 ]}
                 title={post.RetweetId ? `${post.User.nickname}님이 글을 공유하였습니다.` : null}
-                extra={!me || post.User.id === me.id
-                    ? null
-                    : me.Followings && me.Followings.find(v => v.id === post.User.id)
-                        ? <Button onClick={onUnfollow(post.User.id)}>언팔로우</Button>
-                        : <Button onClick={onFollow(post.User.id)}>팔로우</Button>
-                }
             >
                 {post.RetweetId && post.Retweet
                     ? (
@@ -164,7 +160,13 @@ const PostCard = ({ post }) => {
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
-                                description={<PostCardContent postData={post.Retweet.content}/>} // a tag x -> Link
+                                description={
+                                    <PostCardContent
+                                        likers={post.Likers?post.Likers.length:0}
+                                        commentN={post.Comments?post.Comments.length:0}
+                                        postData={post.Retweet.content}
+                                    />
+                                } // a tag x -> Link
                             />
                         </Card>
                     )
@@ -176,25 +178,24 @@ const PostCard = ({ post }) => {
                                 </Link>
                             )}
                             title={post.User.nickname}
-                            description={<PostCardContent postData={post.content} />} // a tag x -> Link
+                            description={
+                                <PostCardContent
+                                    likers={post.Likers?post.Likers.length:0}
+                                    commentN={post.Comments?post.Comments.length:0}
+                                    postData={post.content}
+                                />
+                            } // a tag x -> Link
                             loading={true}
                         />
                     )}
             </Card>
             {commentFormOpened && (
                 <>
-                    <Form onSubmit={onSubmitComment}>
-                        <Form.Item>
-                            <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
-                        </Form.Item>
-                        <Button type="primary" htmlType="submit" loading={isAddingComment}>삐약</Button>
-                    </Form>
                     <List
-                        header={`${post.Comments ? post.Comments.length : 0} 댓글`}
                         itemLayout="horizontal"
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <li>
+                            <li style={{listStyle:'none'}}>
                                 <Comment
                                     author={item.User.nickname}
                                     avatar={(
@@ -207,6 +208,12 @@ const PostCard = ({ post }) => {
                             </li>
                         )}
                     />
+                    <Form onSubmit={onSubmitComment}>
+                        <Form.Item>
+                            <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
+                        </Form.Item>
+                        <Button type="primary" htmlType="submit" loading={isAddingComment}>작성</Button>
+                    </Form>
                 </>
             )}
         </CardWrapper>
