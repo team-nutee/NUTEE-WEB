@@ -19,30 +19,6 @@ router.get('/', isLoggedIn, (req, res) => { // /api/user/
 
 router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
-        function timedecrement(){
-            let now = new Date();
-            let year = now.getFullYear();
-            let month = now.getMonth()+1;
-            let date = now.getDate();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-            if(hours<10){
-                hours = "0"+hours;
-            }
-            if(minutes<13){
-                minutes=minutes-3;
-                minutes = "0"+minutes;
-            }else{
-                minutes-=3;
-            }
-            if(seconds<10){
-                seconds = "0"+seconds;
-            }
-            return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
-        }
-        let timedesc3 = timedecrement();
-
         const exUser = await db.User.findOne({
             where: {
                 [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
@@ -53,28 +29,16 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
                 res.status(403).send('이미 사용중인 아이디입니다.')
             );
         }
+        const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
+        const newUser = await db.User.create({
+            nickname: req.body.nickname,
+            userId: req.body.userId,
+            password: hashedPassword,
+            schoolEmail:req.body.schoolEmail,
+        });
+        console.log(newUser);
+        return res.status(200).json(newUser);
 
-        db.OTP.findAndCountAll({where:{createdAt:{[Op.gt]:timedesc3}}})
-            .then(async (result)=>{
-                for(let i = result.count;i>0;i--){
-                    let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
-                    if(checktrue){
-                        await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
-                        const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
-                        const newUser = await db.User.create({
-                            nickname: req.body.nickname,
-                            userId: req.body.userId,
-                            password: hashedPassword,
-                            schoolEmail:req.body.schoolEmail,
-                        });
-                        console.log(newUser);
-                        return res.status(200).json(newUser);
-                    }else{
-                        continue;
-                    }
-                }
-                res.status(403).send('잘못된 인증번호입니다.');
-            });
     } catch (e) {
         console.error(e);
         // 에러 처리를 여기서
@@ -82,7 +46,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     }
 });
 
-router.get('/otpcheck',isNotLoggedIn, async(req,res,next)=>{
+router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
     const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
     console.log(otp); // 확인용찍어봄
 
@@ -113,6 +77,54 @@ router.get('/otpcheck',isNotLoggedIn, async(req,res,next)=>{
     await db.OTP.create({hash:hash});
 });
 
+router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 라우터
+    try{
+        function timedecrement(){
+            let now = new Date();
+            let year = now.getFullYear();
+            let month = now.getMonth()+1;
+            let date = now.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            if(hours<10){
+                hours = "0"+hours;
+            }
+            if(minutes<13){
+                minutes=minutes-3;
+                minutes = "0"+minutes;
+            }else{
+                minutes-=3;
+            }
+            if(seconds<10){
+                seconds = "0"+seconds;
+            }
+            return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`
+        }
+        let timedesc3 = timedecrement();
+
+        db.OTP.findAndCountAll({where:{createdAt:{[Op.gt]:timedesc3}}})
+            .then(async (result)=>{
+                let i;
+                for(i = result.count;i>0;i--){
+                    let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
+                    if(checktrue){
+                        await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
+                        res.status(200).send('OTP 인증에 성공하였습니다.');
+                        break;
+                    }else{
+                        continue;
+                    }
+                }
+                if(i===0){
+                    res.status(403).send('잘못된 인증번호입니다.');
+                }
+            });
+    }catch(err){
+        console.error(err);
+        next(err);
+    }
+});
 
 router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것 ex) /api/user/123
     try {
