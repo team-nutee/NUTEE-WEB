@@ -21,7 +21,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where: {
-                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname},{schoolEmail:req.body.schoolEmail}]
+                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
             },
         });
         if (exUser) {
@@ -47,34 +47,42 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
 });
 
 router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
-    const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
-    console.log(otp); // 확인용찍어봄
+    const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
+    if(exUser){
+        return (
+            res.status(403).send('이미 가입된 이메일입니다.')
+        );
+    }else{
+        const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
+        console.log(otp); // 확인용찍어봄
 
-    let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
-        service:'Gmail',
-        auth:{
-            user:process.env.GOOGLE_EMAIL,
-            pass:process.env.GOOGLE_PASSWORD,
+        let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
+            service:'Gmail',
+            auth:{
+                user:process.env.GOOGLE_EMAIL,
+                pass:process.env.GOOGLE_PASSWORD,
+            }
+        });
+        let mailOptions = {  // 받는사람 메일 설정입니다.
+            from: process.env.GOOGLE_EMAIL,
+            to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
+            subject: 'NUTEE OTP 인증입니다.',
+            text:otp,
         }
-    });
-    let mailOptions = {  // 받는사람 메일 설정입니다.
-        from: process.env.GOOGLE_EMAIL,
-        to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
-        subject: 'NUTEE OTP 인증입니다.',
-        text:otp,
+        transporter.sendMail(mailOptions,(error,info)=>{
+            if (error) {
+                console.log(error);
+            }
+            else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+        console.time('otp암호화시간(디비저장)');
+        const hash = await bcrypt.hash(otp,12);
+        console.timeEnd('otp암호화시간(디비저장)');
+        await db.OTP.create({hash:hash});
+        res.status(200).send('입력하신 이메일로 OTP 인증번호가 발송되었습니다.');
     }
-    transporter.sendMail(mailOptions,(error,info)=>{
-        if (error) {
-            console.log(error);
-        }
-        else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-    console.time('otp암호화시간(디비저장)');
-    const hash = await bcrypt.hash(otp,12);
-    console.timeEnd('otp암호화시간(디비저장)');
-    await db.OTP.create({hash:hash});
 });
 
 router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 라우터
