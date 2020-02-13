@@ -324,39 +324,6 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     }
 });
 
-router.post('/findid', isNotLoggedIn, async(req,res,next)=>{
-    try{
-        const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
-        if(!exUser) {
-            res.status(403).send('존재하지 않는 이메일입니다.');
-        }else{
-            let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
-                service:'Gmail',
-                auth:{
-                    user:process.env.GOOGLE_EMAIL,
-                    pass:process.env.GOOGLE_PASSWORD,
-                }
-            });
-            let mailOptions = {  // 받는사람 메일 설정입니다.
-                from: process.env.GOOGLE_EMAIL,
-                to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
-                subject: 'NUTEE 아이디찾기 결과입니다.',
-                text: `입력하신 이메일의 아이디는 ${exUser.userId} 입니다.`,
-            }
-            transporter.sendMail(mailOptions,(error,info)=>{
-                if (error) {
-                    console.log(error);
-                }
-                else {
-                    console.log('Email sent: ' + info.response);
-                }
-            });
-            res.status(200).send('입력하신 이메일로 아이디가 발송되었습니다.');
-        }
-    }catch(err){
-        console.error(err);
-        next(err);
-    }
-});
+
 
 module.exports = router;
