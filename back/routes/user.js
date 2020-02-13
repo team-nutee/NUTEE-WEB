@@ -21,7 +21,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where: {
-                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
+                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname},{schoolEmail:req.body.schoolEmail}]
             },
         });
         if (exUser) {
