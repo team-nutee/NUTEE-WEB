@@ -15,9 +15,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[0] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}&${resultsplit[3]}`;
+    console.log(results);
+    crawlresult[0] = results;
 });
 
 new Promise((resolve)=>{
@@ -31,9 +33,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[1] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}&${resultsplit[3]}`;
+    console.log(results);
+    crawlresult[1] = results;
 });
 
 new Promise((resolve)=>{
@@ -47,9 +51,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[2] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}&${resultsplit[3]}`;
+    console.log(results);
+    crawlresult[2] = results;
 });
 
 new Promise((resolve)=>{
@@ -63,9 +69,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[3] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}&${resultsplit[3]}`;
+    console.log(results);
+    crawlresult[3] = results;
 });
 
 new Promise((resolve)=>{
@@ -79,9 +87,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[4] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}`;
+    console.log(results);
+    crawlresult[4] = results;
 });
 
 new Promise((resolve)=>{
@@ -95,9 +105,11 @@ new Promise((resolve)=>{
     let check = dom.window.document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle').innerHTML;
     let str1 = check.indexOf('?');
     let str2 = check.indexOf('\"',str1+1);
-    let results = check.substring(str1,str2);
-    console.log('http://www.skhu.ac.kr/board/boardread.aspx'+results);
-    crawlresult[5] = 'http://www.skhu.ac.kr/board/boardread.aspx'+results;
+    let beforeresult = check.substring(str1,str2);
+    let resultsplit = beforeresult.split('&amp;');
+    const results = `http://www.skhu.ac.kr/board/boardread.aspx${resultsplit[0]}&${resultsplit[1]}&${resultsplit[2]}`;
+    console.log(results);
+    crawlresult[5] = results;
 });
 
 module.exports = crawlresult;
