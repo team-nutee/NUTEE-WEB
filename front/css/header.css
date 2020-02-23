@@ -1,0 +1,23 @@
+header {
+    background: #13c276;
+    padding: 10px;
+    width:100%;
+
+    margin: 0 auto;
+    position:relative;
+    z-index:100;
+
+    max-width: 1025px;
+}
+
+header>img {
+    padding: 10px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+
+}
+
+header>img:hover {
+    cursor:pointer;
+
+}
