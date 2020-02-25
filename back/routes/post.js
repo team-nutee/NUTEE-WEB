@@ -92,17 +92,17 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => { //게시물 수정 
     try {
-        await db.Post.update({ content: req.body.content
-        }, { where: { id: req.params.id },
-            //update(수정할 내용, 수정할 내용을 갖다넣을 부분)
-        })
-        res.send(req.body.content);
-    } catch(err) {
-        console.error(err);
-        next(err);
-    }
+       await db.Post.update({ content: req.body.content 
+       }, { where: { id: req.params.id },
+     //update(수정할 내용, 수정할 내용을 갖다넣을 부분)
+       }) 
+    res.send(req.body.content);
+   } catch(err) {
+       console.error(err);
+       next(err);
+   }
 });
 
 router.delete('/:id', isLoggedIn, async (req, res, next) => {
