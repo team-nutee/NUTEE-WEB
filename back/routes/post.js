@@ -154,6 +154,31 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
     }
 });
 
+router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
+    try {
+        await db.Comment.update({ content: req.body.content
+        }, { where: {
+                id: req.params.id,
+                UserId: req.user.id,
+            },
+        });
+        res.status(200).send('성공');
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
+    try {
+        await db.Comment.destroy({ where: { id: req.params.id, UserId: req.user.id, } });
+        res.status(200).send('성공');
+    } catch (e) {
+        console.error(e);
+        next(e);
+    }
+});
+
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id }});
