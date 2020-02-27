@@ -48,6 +48,8 @@ export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST';
 export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
 export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
 
+export const EDIT_POST_IMAGES = 'EDIT_POST_IMAGES';
+
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
 export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
@@ -150,6 +152,10 @@ export default (state = initialState, action) => {
             case EDIT_POST_FAILURE: {
                 draft.isEditingPost = false;
                 draft.editPostErrorReason = action.error;
+                break;
+            }
+            case EDIT_POST_IMAGES: {
+                draft.editImagePaths = action.data;
                 break;
             }
             case ADD_COMMENT_REQUEST: {
