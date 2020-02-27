@@ -162,7 +162,7 @@ router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
                 UserId: req.user.id,
             },
         });
-        res.status(200).send('성공');
+        res.status(200).json(req.body.content);
     } catch(err) {
         console.error(err);
         next(err);
@@ -172,7 +172,7 @@ router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
 router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
     try {
         await db.Comment.destroy({ where: { id: req.params.id, UserId: req.user.id, } });
-        res.status(200).send('성공');
+        res.status(200).json(req.params.id);
     } catch (e) {
         console.error(e);
         next(e);
