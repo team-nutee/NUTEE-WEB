@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
 const Sequelize = require('sequelize');
+const multer = require('multer');
+const path = require('path');
 const Op = Sequelize.Op;
 const db = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middleware');
@@ -10,6 +12,20 @@ const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 require('dotenv').config();
 
 const router = express.Router();
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) {
+            done(null, 'images');
+        },
+        filename(req, file, done) {
+            const ext = path.extname(file.originalname);
+            const basename = path.basename(file.originalname, ext);
+            done(null, basename + new Date().valueOf() + ext);
+        },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 },
+});
 
 router.get('/', isLoggedIn, (req, res) => { // /api/user/
     const user = Object.assign({}, req.user.toJSON());
@@ -356,6 +372,35 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=>{
     }catch(err){
         console.error(err);
         next(err);
+      
+router.post('/:id/profile', isLoggedIn, upload.single('src'), async (req, res, next) => {
+    try {
+        if(req.file) {
+            await db.Image.update({ src: req.file.filename
+            }, { where: { UserId: req.params.id },
+            })
+        } else {
+            await db.Image.create({
+                src: req.file.filename,
+                UserId: req.params.id,
+            })
+        }
+        res.status(200).send('성공');
+        console.log(req.file);
+    } catch (e) {
+        console.error(e);
+        next(e);
+    }
+});
+
+router.delete('/profile/:id', isLoggedIn, async (req, res, next) => {
+    try {
+        await db.Image.findOne({ where: { UserId: req.params.id } });
+        await db.Image.destroy({ where: { UserId: req.params.id } });
+        res.status(200).send('성공');
+    } catch (e) {
+        console.error(e);
+        next(e);
     }
 });
 

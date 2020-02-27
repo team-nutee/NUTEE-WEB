@@ -7,6 +7,8 @@ export const initialState = {
     isSignedUp: false, // 회원가입 성공
     isSigningUp: false, // 회원가입 시도중
     signUpErrorReason: '', // 회원가입 실패 사유
+    emailCheck:false, //이메일 중복가입 확인 여부
+    otpCheck: false, //otp 인증 여부
     me: null, // 내 정보
     followingList: [], // 팔로잉 리스트
     followerList: [], // 팔로워 리스트
@@ -20,6 +22,14 @@ export const initialState = {
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const EMAIL_CHECK_REQUEST = 'EMAIL_CHECK_REQUEST';
+export const EMAIL_CHECK_SUCCESS = 'EMAIL_CHECK_SUCCESS';
+export const EMAIL_CHECK_FAILURE = 'EMAIL_CHECK_FAILURE';
+
+export const OTP_CHECK_REQUEST = 'OTP_CHECK_REQUEST';
+export const OTP_CHECK_SUCCESS = 'OTP_CHECK_SUCCESS';
+export const OTP_CHECK_FAILURE = 'OTP_CHECK_FAILURE';
 
 export const SIGN_UP_RESET = 'SIGN_UP_RESET';
 
@@ -105,6 +115,30 @@ export default (state = initialState, action) => {
             case SIGN_UP_FAILURE: {
                 draft.isSigningUp = false;
                 draft.signUpErrorReason = action.error;
+                break;
+            }
+            case OTP_CHECK_REQUEST: {
+                draft.otpCheck = false;
+                break;
+            }
+            case OTP_CHECK_SUCCESS: {
+                draft.otpCheck = true;
+                break;
+            }
+            case OTP_CHECK_FAILURE: {
+                draft.otpCheck = false;
+                break;
+            }
+            case EMAIL_CHECK_REQUEST: {
+                draft.emailCheck = false;
+                break;
+            }
+            case EMAIL_CHECK_SUCCESS: {
+                draft.emailCheck = true;
+                break;
+            }
+            case EMAIL_CHECK_FAILURE: {
+                draft.emailCheck = false;
                 break;
             }
             case SIGN_UP_RESET:{

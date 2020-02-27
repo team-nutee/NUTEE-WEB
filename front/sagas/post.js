@@ -33,7 +33,16 @@ import {
     UNLIKE_POST_SUCCESS,
     UPLOAD_IMAGES_FAILURE,
     UPLOAD_IMAGES_REQUEST,
-    UPLOAD_IMAGES_SUCCESS, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, LOAD_POST_REQUEST,
+    UPLOAD_IMAGES_SUCCESS,
+    LOAD_POST_SUCCESS,
+    LOAD_POST_FAILURE,
+    LOAD_POST_REQUEST,
+    EDIT_POST_SUCCESS,
+    EDIT_POST_FAILURE,
+    EDIT_POST_REQUEST,
+    UPLOAD_EDIT_IMAGES_SUCCESS,
+    UPLOAD_EDIT_IMAGES_FAILURE,
+    UPLOAD_EDIT_IMAGES_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -64,6 +73,31 @@ function* addPost(action) {
 
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
+}
+
+function editPostAPI(postData) {
+    return axios.patch('/post', postData, {
+        withCredentials: true,
+    });
+}
+
+function* editPost(action) {
+    try {
+        const result = yield call(editPostAPI, action.data);
+        yield put({ // post reducer의 데이터를 수정
+            type: EDIT_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (e) {
+        yield put({
+            type: EDIT_POST_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchEditPost() {
+    yield takeLatest(EDIT_POST_REQUEST, editPost);
 }
 
 function loadMainPostsAPI(lastId = 0, limit = 10) {
@@ -215,6 +249,32 @@ function* uploadImages(action) {
 
 function* watchUploadImages() {
     yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
+
+function editImagesAPI(formData) {
+    return axios.post('/post/images', formData, {
+        withCredentials: true,
+    });
+}
+
+function* editImages(action) {
+    try {
+        const result = yield call(editImagesAPI, action.data);
+        yield put({
+            type: UPLOAD_EDIT_IMAGES_SUCCESS,
+            data: result.data,
+        });
+    } catch (e) {
+        console.error(e);
+        yield put({
+            type: UPLOAD_EDIT_IMAGES_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchEditImages() {
+    yield takeLatest(UPLOAD_EDIT_IMAGES_REQUEST, editImages);
 }
 
 function likePostAPI(postId) {
@@ -370,5 +430,7 @@ export default function* postSaga() {
         fork(watchRetweet),
         fork(watchRemovePost),
         fork(watchLoadPost),
+        fork(watchEditPost),
+        fork(watchEditImages),
     ]);
 }

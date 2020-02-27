@@ -3,6 +3,7 @@ import { Form, Input, Button, Icon } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 import TextareaAutosize from "react-textarea-autosize";
+import TARGET_URL from "../static";
 
 const PostForm = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const PostForm = () => {
             formData.append('image', i);
         });
         formData.append('content', text);
+        formData.append('id', '1');
         dispatch({
             type: ADD_POST_REQUEST,
             data: formData,
@@ -78,7 +80,7 @@ const PostForm = () => {
                                           onClick={onRemoveImage(i)}
                                     />
                                 </div>
-                                <img src={`http://localhost:9425/${v}`} style={{
+                                <img src={`${TARGET_URL}/${v}`} style={{
                                     maxWidth: '100%',
                                     height: '100%'
                                 }} alt={v}/>
