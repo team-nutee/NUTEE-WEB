@@ -7,8 +7,8 @@ const href = require('../crawl/href');
 router.get('/',async(req,res,next)=>{
     try{
         let crawlresult = {
-            content: await index1,
-            hrefs: await href
+            content: index1,
+            hrefs: href
         };
         res.json(crawlresult);
     }catch(err){
