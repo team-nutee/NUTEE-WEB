@@ -1,37 +1,52 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Icon } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import {
+    ADD_POST_REQUEST,
+    EDIT_POST_REQUEST, REMOVE_EDIT_IMAGE,
+    REMOVE_IMAGE,
+    UPLOAD_EDIT_IMAGES_REQUEST,
+    UPLOAD_IMAGES_REQUEST
+} from '../reducers/post';
 import TextareaAutosize from "react-textarea-autosize";
 
-const EditForm = ({postId}) => {
+const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
     const dispatch = useDispatch();
-    const [text, setText] = useState('');
-    const { imagePaths, isAddingPost, postAdded } = useSelector(state => state.post);
+    const [text, setText] = useState(postContent);
+    const { editImagePaths, isEditingPost, postEdited } = useSelector(state => state.post);
     const imageInput = useRef();
 
     useEffect(() => {
-        if (postAdded) {
+        if (postEdited) {
             setText('');
         }
-    }, [postAdded]);
+        if (visible) {
+            setText(postContent);
+        }
+    }, [postEdited,visible,postContent]);
 
-    const onSubmitForm = useCallback((e) => {
+    useEffect(() => {
+        editImagePaths
+    }, []);
+
+    const onEditForm = useCallback((e) => {
         e.preventDefault();
         if (!text || !text.trim()) {
             return alert('게시글을 작성하세요.');
         }
-        const formData = new FormData();
-        imagePaths.forEach((i) => {
-            formData.append('image', i);
+        const formData = {};
+        formData.image = [];
+        editImagePaths.forEach((i) => {
+            formData.image.push(i);
         });
-        formData.append('content', text);
-        formData.append('postId',postId);
+        formData.content = text;
+        formData.postId = postId;
         dispatch({
             type: EDIT_POST_REQUEST,
             data: formData,
         });
-    }, [text, imagePaths]);
+        setVisible(false);
+    }, [text, editImagePaths,postId]);
 
     const onChangeText = useCallback((e) => {
         setText(e.target.value);
@@ -44,7 +59,7 @@ const EditForm = ({postId}) => {
             imageFormData.append('image', f);
         });
         dispatch({
-            type: UPLOAD_IMAGES_REQUEST,
+            type: UPLOAD_EDIT_IMAGES_REQUEST,
             data: imageFormData,
         });
     }, []);
@@ -55,13 +70,13 @@ const EditForm = ({postId}) => {
 
     const onRemoveImage = useCallback(index => () => {
         dispatch({
-            type: REMOVE_IMAGE,
+            type: REMOVE_EDIT_IMAGE,
             index,
         });
     }, []);
 
     return (
-        <Form style={{ margin: '0px 0 10px' }} encType="multipart/form-data" onSubmit={onSubmitForm}>
+        <Form style={{ margin: '0px 0 10px' }} encType="multipart/form-data" onSubmit={onEditForm}>
             <div style={{height: "auto", overflow:"hidden", background:'white', paddingBottom:'5px', border:'1px solid #e6e6e6'}}>
                 <div style={{overflow:'hidden', height:'auto'}}>
                     <TextareaAutosize
@@ -71,8 +86,8 @@ const EditForm = ({postId}) => {
                         onChange={onChangeText}
                         autoFocus={true} />
                     <div style={{ overflow:'hidden', height:"auto"}}>
-                        {imagePaths.map((v, i) => (
-                            <div key={v} style={{margin:'5px', width:'48.2%', float:"left", height:'180px', background:'#F2F2F2', textAlign:'center'}}>
+                        {editImagePaths.map((v, i) => (
+                            <div key={v} style={{margin:'5px', width:'47.6%', float:"left", height:'180px', background:'#F2F2F2', textAlign:'center'}}>
                                 <div style={{textAlign:'right', marginRight:'15px'}}>
                                     <Icon style={{ color: 'black', position:'absolute'}}
                                           type="close"
@@ -89,7 +104,7 @@ const EditForm = ({postId}) => {
                     <div style={{ marginBottom:'5px', marginTop:'5px'}}>
                         <input type="file" multiple hidden ref={imageInput} onChange={onChangeImages} />
                         <Button onClick={onClickImageUpload} style={{marginLeft:'5px', borderRadius:'0'}}>이미지 업로드</Button>
-                        <Button type="primary" style={{ float: 'right', marginRight:'5px', borderRadius:'0'}} htmlType="submit" loading={isAddingPost}>작성</Button>
+                        <Button type="primary" style={{ float: 'right', marginRight:'5px', borderRadius:'0'}} htmlType="submit" loading={isEditingPost}>작성</Button>
                     </div>
                 </div>
             </div>

@@ -32,7 +32,7 @@ const PostCard = ({post}) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const [commentText, setCommentText] = useState('');
     const {me} = useSelector(state => state.user);
-    const {commentAdded, isAddingComment} = useSelector(state => state.post);
+    const {commentAdded, isAddingComment,editImagePaths} = useSelector(state => state.post);
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
@@ -200,12 +200,15 @@ const PostCard = ({post}) => {
                     )
                     : (
                         <Card.Meta
-                            avatar={(
+                            avatar={post.User.id
+                                ? (
                                 <Link href={{pathname: '/user', query: {id: post.User.id}}}
                                       as={`/user/${post.User.id}`}>
                                     <a><Avatar>{post.User.nickname[0]}</Avatar></a>
                                 </Link>
-                            )}
+                            ) :(<>
+                                </>)
+                            }
                             title={post.User.nickname}
                             description={
                                 <PostCardContent
@@ -295,7 +298,7 @@ const PostCard = ({post}) => {
             )}
             <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}
                    onOk={handelOk} onCancel={handleCancel}>
-                <EditForm postId={post.id}/>
+                <EditForm postId={post.id} postContent={post.content} postImages={post.Images} setVisible={setVisible} visible={visible}/>
             </Modal>
         </CardWrapper>
     );
