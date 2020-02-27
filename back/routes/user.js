@@ -340,6 +340,45 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
+    const newPassword = await Math.floor(Math.random()*100000000000+10000000000).toString(); // 메일에 보내질 OTP 내용입니다.
+    console.log(newPassword); // 확인용찍어봄
+    console.time('암호화 시작');
+    const hash = await bcrypt.hash(newPassword, 12);
+    console.timeEnd('암호화 완료');
+    let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
+        service:'Gmail',
+        auth:{
+            user:process.env.GOOGLE_EMAIL,
+            pass:process.env.GOOGLE_PASSWORD,
+        }
+    });
+    let mailOptions = {  // 받는사람 메일 설정입니다.
+        from: process.env.GOOGLE_EMAIL,
+        to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
+        subject: 'NUTEE 비밀번호 재발급입니다.',
+        text:`새 비밀번호는 ${newPassword}`,
+    }
+
+    const userfind = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail, userId:req.body.userId}});
+    if(userfind){
+        await db.User.update({password:hash},{where:{schoolEmail:req.body.schoolEmail}});
+        transporter.sendMail(mailOptions,(error,info)=>{
+            if (error) {
+                console.log(error);
+            }
+            else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+            return(
+                res.status(200).send('이메일 발송이 완료되었습니다.')
+            );
+    }else{
+        return(
+            res.status(401).send('아이디/이메일이 일치하지 않습니다.')
+        );
+    }
 router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{id:req.user.id}});
     const Userpassword = await bcrypt.compare(req.body.password, exUser.password);
