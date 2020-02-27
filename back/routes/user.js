@@ -84,7 +84,7 @@ router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
             to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
             subject: 'NUTEE OTP 인증입니다.',
             text:otp,
-        }
+        };
         transporter.sendMail(mailOptions,(error,info)=>{
             if (error) {
                 console.log(error);

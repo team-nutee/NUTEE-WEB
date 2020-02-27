@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Icon } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    ADD_POST_REQUEST,
+    ADD_POST_REQUEST, EDIT_POST_IMAGES,
     EDIT_POST_REQUEST, REMOVE_EDIT_IMAGE,
     REMOVE_IMAGE,
     UPLOAD_EDIT_IMAGES_REQUEST,
@@ -17,17 +17,15 @@ const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
     const imageInput = useRef();
 
     useEffect(() => {
-        if (postEdited) {
-            setText('');
-        }
         if (visible) {
             setText(postContent);
+            const images = postImages.map(v=>v.src);
+            dispatch({
+                type:EDIT_POST_IMAGES,
+                data:images
+            });
         }
-    }, [postEdited,visible,postContent]);
-
-    useEffect(() => {
-        editImagePaths
-    }, []);
+    }, [postEdited,visible,postContent,dispatch,postImages]);
 
     const onEditForm = useCallback((e) => {
         e.preventDefault();
