@@ -1,13 +1,14 @@
-import React from 'react';
-import {Card, Col, List} from "antd";
+import React, {useEffect} from 'react';
+import {Card, Col, List,Tabs} from "antd";
 import Link from "next/link";
 import axios from "axios";
+import {MEAL_URL, TARGET_URL} from "../static";
+import {useDispatch, useSelector} from "react-redux";
+import {LOAD_NOTICE_REQUEST} from "../reducers/notice";
 
-const mealUrl= {
-    "url":"https://skhu.ac.kr/uni_zelkova/uni_zelkova_4_3_view.aspx?idx=374\u0026curpage=1"
-};
+const { TabPane } = Tabs;
 
-const meal = axios.post(`https://skhu-test.sleepy-owl.com/life/meal/data`, mealUrl,{
+const meal = axios.post(`https://skhu-test.sleepy-owl.com/life/meal/data`, MEAL_URL,{
     headers:{
         'Access-Control-Allow-Origin' : '*'
     }
@@ -28,16 +29,14 @@ const foodData = [
     },
 ];
 
-const noticeData = [
-    '[학사] [영어학과] \'미국문학개론\' 대체과목 안내',
-    '[수업] [사회과학부/사회융합자율학부사회학전공] 가족사회학 ...',
-    '[학점] [케이씨대학교] 2019학년도 2학기 학점교류 안내',
-    '[장학] [장학]2019-2학기 학부 인턴근로장학생 4차 신...',
-    '[일반] 2019년 하반기 삼성 기회균등 특별채용 추천자 모...',
-    '[행사] [중앙도서관] 2019년 9월. Issue Corn...',
-];
-
 const RightContents = () => {
+    const dispatch = useDispatch();
+    const {noticeContents} = useSelector(state => state.notice);
+    useEffect(()=>{
+        dispatch({
+            type:LOAD_NOTICE_REQUEST,
+        })
+    },[]);
     return(
         <Col span={6} style={{minWidth: '270px'}}>
             {/*식단*/}
@@ -53,24 +52,39 @@ const RightContents = () => {
                 />
             </Card>}
             {/*학교 공지사항*/}
-            <List style={{
-                background: 'white',
-                marginRight: '10px',
-                marginTop: '10px',
-                borderRadius: '0',
-                borderColor: '#e6e6e6'
-            }}
-                  header='학교 공지사항'
-                  bordered
-                  dataSource={noticeData}
-                  renderItem={item => (
-                      <List.Item>
-                          {item}
-                      </List.Item>
-                  )}
-            />
-            <Link href="https://github.com/MoonHKLee/react-nodebird/"><a target="_blank">Made by
-                MoonHKLee</a></Link>
+            <Tabs size='small' style={{marginTop:'10px'}} type="card">
+                <TabPane tab="학사" key="1">
+                    <List style={{
+                        background: 'white',
+                        borderRadius: '0',
+                        borderColor: '#e6e6e6'
+                    }}
+                          bordered
+                          dataSource={[]}
+                          renderItem={item => (
+                              <List.Item>
+                                  {item}
+                              </List.Item>
+                          )}
+                    />
+                </TabPane>
+                <TabPane tab="수업" key="2">
+                    Content of Tab Pane 2
+                </TabPane>
+                <TabPane tab="학점" key="3">
+                    Content of Tab Pane 3
+                </TabPane>
+                <TabPane tab="장학" key="4">
+                    Content of Tab Pane 4
+                </TabPane>
+                <TabPane tab="일반" key="5">
+                    Content of Tab Pane 5
+                </TabPane>
+                <TabPane tab="행사" key="6">
+                    Content of Tab Pane 6
+                </TabPane>
+            </Tabs>
+            <Link href="https://github.com/team-nutee/NUTEE-WEB"><a target="_blank">Made by S.OWL</a></Link>
         </Col>
     )
 };

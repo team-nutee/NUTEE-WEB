@@ -3,7 +3,7 @@ import { Form, Input, Button, Icon } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 import TextareaAutosize from "react-textarea-autosize";
-import TARGET_URL from "../static";
+import {TARGET_URL} from "../static";
 
 const PostForm = () => {
     const dispatch = useDispatch();
