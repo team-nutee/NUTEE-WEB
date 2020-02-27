@@ -30,7 +30,7 @@ const LoginForm = () => {
                 <Input placeholder={'Password'} size={"small"} name="user-password" value={password} onChange={onChangePassword} type="password" required />
             </div>
             <div style={{float:"left"}}>
-                <Button size={"small"} style={{marginRight: '5px'}} type="primary" htmlType="submit" shape={"round"} loading={isLoggingIn}>로그인</Button>
+                <Button size={"small"} style={{marginRight: '5px'}} type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
             </div>
         </Form>
     );

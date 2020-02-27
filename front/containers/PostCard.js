@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {Avatar, Button, Card, Comment, Form, Icon, Input, List, Modal, Popover} from 'antd';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Avatar, Button, Card, Comment, Form, Icon, Input, List, Modal, Skeleton, Dropdown, Menu, Row, Col} from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
+import {MdSend} from "react-icons/md";
 
 import {
     ADD_COMMENT_REQUEST,
@@ -15,19 +16,26 @@ import {
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
 import EditForm from "../components/EditForm";
+import TextareaAutosize from "react-textarea-autosize";
+import Send from "../components/Send";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
 `;
+// <Button onClick={showModal}>수정</Button>
+// <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
+// <Modal footer={null} bodyStyle={{padding:'0px', zIndex:1}} title='게시글 수정' visible={visible} onOk={handelOk} onCancel={handleCancel}>
+//     <EditForm postId={post.id}/>
+// </Modal>
 
-const PostCard = ({ post }) => {
+const PostCard = ({post}) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const [commentText, setCommentText] = useState('');
-    const { me } = useSelector(state => state.user);
-    const { commentAdded, isAddingComment } = useSelector(state => state.post);
+    const {me} = useSelector(state => state.user);
+    const {commentAdded, isAddingComment,editImagePaths} = useSelector(state => state.post);
     const dispatch = useDispatch();
 
-    const [visible,setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const showModal = () => {
         setVisible(true);
     };
@@ -50,8 +58,10 @@ const PostCard = ({ post }) => {
         }
     }, []);
 
+
     const onSubmitComment = useCallback((e) => {
         e.preventDefault();
+        console.log('댓글작성');
         if (!me) {
             return alert('로그인이 필요합니다.');
         }
@@ -100,20 +110,45 @@ const PostCard = ({ post }) => {
     }, [me && me.id, post && post.id]);
 
     const onRemovePost = useCallback(userId => () => {
-        dispatch({
-            type: REMOVE_POST_REQUEST,
-            data: userId,
-        });
+        const result = confirm('정말로 삭제하시겠습니까?');
+        if (!result) {
+
+        } else {
+            dispatch({
+                type: REMOVE_POST_REQUEST,
+                data: userId,
+            });
+        }
     });
 
-    const onUpdatePost = useCallback()
+    const menu1 = (
+        <Menu>
+            <Menu.Item>
+                <a target='_blank' rel='noreferrer' onClick={showModal}>수정</a>
+            </Menu.Item>
+            <Menu.Item>
+                <a target='_blank' rel='noreferrer' onClick={onRemovePost(post.id)}>삭제</a>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const menu2 = (
+        <Menu>
+            <Menu.Item>
+                신고
+            </Menu.Item>
+            <Menu.Item>
+                채팅
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <CardWrapper>
             <Card
-                cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
+                cover={post.Images && post.Images[0] && <PostImages images={post.Images}/>}
                 actions={[
-                    <Icon type="retweet" key="retweet" onClick={onRetweet} />,
+                    <Icon type="retweet" key="retweet" onClick={onRetweet}/>,
                     <Icon
                         type="heart"
                         key="heart"
@@ -121,27 +156,20 @@ const PostCard = ({ post }) => {
                         twoToneColor="#eb2f96"
                         onClick={onToggleLike}
                     />,
-                    <Icon type="message" key="message" onClick={onToggleComment} />,
-                    <Popover
-                        key="ellipsis"
-                        content={(
-                            <Button.Group>
-                                {me && post.UserId === me.id
-                                    ? (
-                                        <>
-                                            <Button onClick={showModal}>수정</Button>
-                                            <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
-                                            <Modal footer={null} bodyStyle={{padding:'0px', zIndex:1}} title='게시글 수정' visible={visible} onOk={handelOk} onCancel={handleCancel}>
-                                                <EditForm postId={post.id}/>
-                                            </Modal>
-                                        </>
-                                    )
-                                    : <><Button>신고</Button><Button>채팅</Button></>}
-                            </Button.Group>
-                        )}
-                    >
-                        <Icon type="ellipsis" />
-                    </Popover>,
+                    <Icon type="message" key="message" onClick={onToggleComment}/>,
+                    <>
+                        {me && post.UserId === me.id
+                            ? (
+                                <Dropdown overlay={menu1} placement="topRight">
+                                    <Icon type='ellipsis'/>
+                                </Dropdown>
+                            )
+                            : (
+                                <Dropdown overlay={menu2} placement="topRight">
+                                    <Icon type='ellipsis'/>
+                                </Dropdown>
+                            )}
+                    </>,
                 ]}
                 title={post.RetweetId ? `${post.User.nickname}님이 글을 공유하였습니다.` : null}
             >
@@ -162,8 +190,8 @@ const PostCard = ({ post }) => {
                                 title={post.Retweet.User.nickname}
                                 description={
                                     <PostCardContent
-                                        likers={post.Likers?post.Likers.length:0}
-                                        commentN={post.Comments?post.Comments.length:0}
+                                        likers={post.Likers ? post.Likers.length : 0}
+                                        commentN={post.Comments ? post.Comments.length : 0}
                                         postData={post.Retweet.content}
                                     />
                                 } // a tag x -> Link
@@ -172,16 +200,20 @@ const PostCard = ({ post }) => {
                     )
                     : (
                         <Card.Meta
-                            avatar={(
-                                <Link href={{ pathname: '/user', query: { id: post.User.id } }} as={`/user/${post.User.id}`}>
+                            avatar={post.User.id
+                                ? (
+                                <Link href={{pathname: '/user', query: {id: post.User.id}}}
+                                      as={`/user/${post.User.id}`}>
                                     <a><Avatar>{post.User.nickname[0]}</Avatar></a>
                                 </Link>
-                            )}
+                            ) :(<>
+                                </>)
+                            }
                             title={post.User.nickname}
                             description={
                                 <PostCardContent
-                                    likers={post.Likers?post.Likers.length:0}
-                                    commentN={post.Comments?post.Comments.length:0}
+                                    likers={post.Likers ? post.Likers.length : 0}
+                                    commentN={post.Comments ? post.Comments.length : 0}
                                     postData={post.content}
                                 />
                             } // a tag x -> Link
@@ -193,29 +225,81 @@ const PostCard = ({ post }) => {
                 <>
                     <List
                         itemLayout="horizontal"
+                        style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <li style={{listStyle:'none'}}>
-                                <Comment
-                                    author={item.User.nickname}
+                            <List.Item
+                                actions={[<a key="edit">수정</a>, <a key="delete">삭제</a>]}
+                            >
+                                <List.Item.Meta
                                     avatar={(
-                                        <Link href={{ pathname: '/user', query: { id: item.User.id } }} as={`/user/${item.User.id}`}>
+                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
+                                              as={`/user/${item.User.id}`}>
                                             <a><Avatar>{item.User.nickname[0]}</Avatar></a>
                                         </Link>
                                     )}
-                                    content={item.content}
+                                    title={
+                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
+                                              as={`/user/${item.User.id}`}>
+                                            <a href="https://ant.design">{item.User.nickname}</a>
+                                        </Link>
+                                    }
+                                    description={item.content}
                                 />
-                            </li>
+                            </List.Item>
                         )}
                     />
-                    <Form onSubmit={onSubmitComment}>
-                        <Form.Item>
-                            <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
-                        </Form.Item>
-                        <Button type="primary" htmlType="submit" loading={isAddingComment}>작성</Button>
+                    <Form style={{margin: '0px 0 10px'}} onSubmit={onSubmitComment}>
+                        <div style={{height: "auto", overflow: "hidden", background: '#effbf5'}}>
+                            <div style={{
+                                overflow: 'hidden',
+                                height: 'auto',
+                                background: 'white',
+                                borderRadius: '20px',
+                                marginTop: '5px',
+                                border: '1px solid #e6e6e6'
+                            }}>
+                                <Row gutter={4}>
+                                    <Col span={22}>
+                                        <TextareaAutosize
+                                            style={{
+                                                margin: '0px 0px 0px 0px',
+                                                paddingLeft: '15px',
+                                                resize: 'none',
+                                                outline: 'none',
+                                                lineHeight: '30px',
+                                                overflowY: 'hidden',
+                                                width: '100%',
+                                                minHeight: '30px',
+                                                height: '30px',
+                                                border: 'none'
+                                            }}
+                                            placeholder="댓글을 입력해주세요."
+                                            value={commentText}
+                                            onChange={onChangeCommentText}
+                                            autoFocus={true}
+                                        />
+                                    </Col>
+                                    <Col span={2}>
+                                        <div style={{width: '10px', margin: '10px 0px 0px 10px'}}>
+                                            <a>
+                                                <Send
+                                                    onSubmitComment={onSubmitComment}
+                                                    isAddingComment={isAddingComment}
+                                                />
+                                            </a>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
                     </Form>
                 </>
             )}
+            <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}
+                   onOk={handelOk} onCancel={handleCancel}>
+                <EditForm postId={post.id} postContent={post.content} postImages={post.Images} setVisible={setVisible} visible={visible}/>
+            </Modal>
         </CardWrapper>
     );
 };

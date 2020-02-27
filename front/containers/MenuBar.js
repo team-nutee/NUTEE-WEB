@@ -24,7 +24,7 @@ const MenuBar = ({me}) => {
                             <a>
                                 <img
                                     style={{height: '30px', width: '30px'}}
-                                    src='http://localhost:9425/settings/nutee_circle.png'/>
+                                    src='http://15.164.50.161:9425/settings/nutee_circle.png'/>
                             </a>
                         </Link>
                     </div>

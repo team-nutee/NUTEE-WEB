@@ -43,7 +43,7 @@ const RightContents = () => {
             {/*식단*/}
             {<Card style={{marginRight:'10px', padding:'0px'}}>
                 <List style={{margin:'0px', padding:'0px'}}
-                      grid={{ column: 3 }}
+                      grid={{gutter:1, column: 3 }}
                       dataSource={foodData}
                       renderItem={item => (
                           <List.Item>
@@ -60,7 +60,7 @@ const RightContents = () => {
                 borderRadius: '0',
                 borderColor: '#e6e6e6'
             }}
-                  header={<div>학교 공지사항</div>}
+                  header='학교 공지사항'
                   bordered
                   dataSource={noticeData}
                   renderItem={item => (

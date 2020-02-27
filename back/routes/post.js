@@ -66,6 +66,65 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
     }
 });
 
+router.patch('/', async (req, res, next) => { //게시물 수정
+    try {
+        const hashtags = req.body.content.match(/#[^\s]+/g);
+        const post = await db.Post.findOne({ where: { id: req.body.postId }});
+        if (!post) {
+            return res.status(404).send('수정할 포스트가 존재하지 않습니다.');
+        }
+
+        //게시 글에 대한 수정
+        await db.Post.update({
+            content: req.body.content
+        }, { where: { id: req.body.postId },
+        });
+
+        //게시글에 해당하는 해쉬태그들에 대한 수정
+        if (hashtags) {
+            await post.removeHashtags(req.body.postId);
+            const result = await Promise.all(hashtags.map(tag => db.Hashtag.findOrCreate({
+                where: { name: tag.slice(1).toLowerCase() },
+            })));
+            console.log(result);
+            await post.addHashtags(result.map(r => r[0]));
+        }
+
+        //이미지 수정 패턴
+        if (req.body.image) { // 이미지 주소를 여러개 올리면 image: [주소1, 주소2]
+            // await post.removeImages(req.body.postId);
+            await db.Image.destroy({ where: { PostId: req.body.postId }});
+            if (Array.isArray(req.body.image)) {
+                const images = await Promise.all(req.body.image.map((image) => {
+                    return db.Image.create({ src: image });
+                }));
+                await post.addImages(images);
+            } else { // 이미지를 하나만 올리면 image: 주소1
+                const image = await db.Image.create({ src: req.body.image });
+                await post.addImage(image);
+            }
+        }
+        //res로 리턴
+        const fullPost = await db.Post.findOne({
+            where: { id: req.body.postId },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }, {
+                model: db.Image,
+            }, {
+                model: db.User,
+                as: 'Likers',
+                attributes: ['id'],
+            }],
+        });
+        res.send(fullPost);
+    } catch(err) {
+        console.error(err);
+        next(err);
+    }
+});
+
 router.post('/images', upload.array('image'), (req, res) => {
     console.log(req.files);
     res.json(req.files.map(v => v.filename));
@@ -156,11 +215,12 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
 
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
+        console.log('조아요');
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
             return res.status(404).send('포스트가 존재하지 않습니다.');
         }
-        await post.addLiker(req.user.id);
+        await post.addLikers(req.user.id);
         res.json({ userId: req.user.id });
     } catch (e) {
         console.error(e);

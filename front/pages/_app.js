@@ -48,42 +48,23 @@ const NodeBird = ({ Component, store, pageProps }) => {
                     rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css',
                 }, {
                     rel: 'stylesheet', href: 'https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css',
+                }, {
+                    rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css",
                 }]}
+                style={{
+                    "cssText": `
+                        @font-face { font-family: 'BMDOHYEON';
+                           src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+                           font-weight: normal;
+                           font-style: normal;
+                        }
+                    `
+                }}
             />
             <AppLayout>
                 <Component {...pageProps} />
             </AppLayout>
         </Provider>
-            <style jsx>
-                {
-                    `
-                    
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #effbf5;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-* {
-  -webkit-appearance: none;
-}
-
-*:focus {
-  outline: none;
-}
-                    `
-                }
-            </style>
         </Container>
     );
 };

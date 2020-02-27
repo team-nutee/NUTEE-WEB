@@ -1,7 +1,8 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    EDIT_NICKNAME_FAILURE, EDIT_NICKNAME_REQUEST,
+    EDIT_NICKNAME_FAILURE,
+    EDIT_NICKNAME_REQUEST,
     EDIT_NICKNAME_SUCCESS,
     FOLLOW_USER_FAILURE,
     FOLLOW_USER_REQUEST,
@@ -9,7 +10,8 @@ import {
     LOAD_FOLLOWERS_FAILURE,
     LOAD_FOLLOWERS_REQUEST,
     LOAD_FOLLOWERS_SUCCESS,
-    LOAD_FOLLOWINGS_FAILURE, LOAD_FOLLOWINGS_REQUEST,
+    LOAD_FOLLOWINGS_FAILURE,
+    LOAD_FOLLOWINGS_REQUEST,
     LOAD_FOLLOWINGS_SUCCESS,
     LOAD_USER_FAILURE,
     LOAD_USER_REQUEST,
@@ -19,13 +21,19 @@ import {
     LOG_IN_SUCCESS,
     LOG_OUT_FAILURE,
     LOG_OUT_REQUEST,
-    LOG_OUT_SUCCESS, REMOVE_FOLLOWER_FAILURE, REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS,
+    LOG_OUT_SUCCESS,
+    REMOVE_FOLLOWER_FAILURE,
+    REMOVE_FOLLOWER_REQUEST,
+    REMOVE_FOLLOWER_SUCCESS,
     SIGN_UP_FAILURE,
     SIGN_UP_REQUEST,
     SIGN_UP_SUCCESS,
+    OTP_CHECK_REQUEST,
+    OTP_CHECK_SUCCESS,
+    OTP_CHECK_FAILURE,
     UNFOLLOW_USER_FAILURE,
     UNFOLLOW_USER_REQUEST,
-    UNFOLLOW_USER_SUCCESS,
+    UNFOLLOW_USER_SUCCESS, EMAIL_CHECK_REQUEST, EMAIL_CHECK_SUCCESS, EMAIL_CHECK_FAILURE,
 } from '../reducers/user';
 
 function logInAPI(loginData) {
@@ -76,6 +84,54 @@ function* signUp(action) {
 
 function* watchSignUp() {
     yield takeEvery(SIGN_UP_REQUEST, signUp);
+}
+
+function otpCheckAPI(otp) {
+    // 서버에 요청을 보내는 부분
+    return axios.post('/user/otp', otp);
+}
+
+function* otpCheck(action) {
+    try {
+        yield call(otpCheckAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: OTP_CHECK_SUCCESS,
+        });
+    } catch (e) { // otp 인증 실패
+        alert('otp 인증에 실패하셨습니다.');
+        yield put({
+            type: OTP_CHECK_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchOtpCheck() {
+    yield takeEvery(OTP_CHECK_REQUEST, otpCheck);
+}
+
+function emailCheckAPI(email) {
+    // 서버에 요청을 보내는 부분
+    return axios.post('/user/email', email);
+}
+
+function* emailCheck(action) {
+    try {
+        yield call(emailCheckAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: EMAIL_CHECK_SUCCESS,
+        });
+    } catch (e) { // 이메일 인증 실패
+        alert('otp 인증에 실패하셨습니다.');
+        yield put({
+            type: EMAIL_CHECK_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchEmailCheck() {
+    yield takeEvery(EMAIL_CHECK_REQUEST, emailCheck);
 }
 
 function logOutAPI() {
@@ -314,5 +370,7 @@ export default function* userSaga() {
         fork(watchLoadFollowings),
         fork(watchRemoveFollower),
         fork(watchEditNickname),
+        fork(watchOtpCheck),
+        fork(watchEmailCheck),
     ]);
 }
