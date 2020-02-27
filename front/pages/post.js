@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { LOAD_POST_REQUEST } from '../reducers/post';
+import TARGET_URL from "../static";
 
 const Post = ({ id }) => {
     const { singlePost } = useSelector(state => state.post);
@@ -18,7 +19,7 @@ const Post = ({ id }) => {
                 }, {
                     property: 'og:description', content: singlePost.content,
                 }, {
-                    property: 'og:image', content: singlePost.Images[0] && `http://localhost:9425/${singlePost.Images[0].src}`,
+                    property: 'og:image', content: singlePost.Images[0] && `${TARGET_URL}/${singlePost.Images[0].src}`,
                 }, {
                     property: 'og:url', content: `http://localhost:3000/post/${id}`,
                 }]}
