@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         });
         if (exUser) {
             return (
-                res.status(403).send('이미 사용중인 아이디입니다.')
+                res.status(401).send('이미 사용중인 아이디입니다.')
             );
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
@@ -66,7 +66,7 @@ router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
     if(exUser){
         return (
-            res.status(403).send('이미 가입된 이메일입니다.')
+            res.status(401).send('이미 가입된 이메일입니다.')
         );
     }else{
         const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
@@ -141,7 +141,7 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
                     }
                 }
                 if(i===0){
-                    res.status(403).send('잘못된 인증번호입니다.');
+                    res.status(401).send('잘못된 인증번호입니다.');
                 }
             });
     }catch(err){
@@ -183,7 +183,7 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
 router.post('/logout', (req, res) => { // /api/user/logout
     req.logout();
     req.session.destroy();
-    res.send('logout 성공');
+    res.send('\"logout 성공\"');
 });
 
 router.post('/login', (req, res, next) => { // POST /api/user/login
@@ -339,6 +339,40 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
         next(e);
     }
 });
+
+router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
+    const exUser = await db.User.findOne({where:{id:req.user.id}});
+    const Userpassword = await bcrypt.compare(req.body.password, exUser.password);
+    if(Userpassword){
+        return(
+            res.status(200).send('비밀번호가 확인이 완료되었습니다.')
+        );
+    }else{
+        return(
+            res.status(401).send('비밀번호가 일치하지 않습니다.')
+        );
+    }
+});
+
+router.post('/passwordchange',isLoggedIn, async(req,res,next)=>{
+    console.log(req.body.newpassword);
+    console.time('암호화 시작');
+    const hash = await bcrypt.hash(req.body.newpassword,12);
+    console.timeEnd('암호화 끝');
+    console.log(hash);
+    const newpassword = await db.User.update({password:hash},{where:{id:req.user.id}});
+    if(newpassword){
+        return(
+            res.status(200).send('\"비밀번호가 변경되었습니다.\"')
+        );
+    }else{
+        return(
+            res.status(403).send('\"비밀번호 변경에 실패하였습니다.\"')
+        );
+    }
+    return (
+        res.status(500).send('\"500 Server Error\"')
+    );
 
 router.post('/findid', isNotLoggedIn, async(req,res,next)=>{
     try{
