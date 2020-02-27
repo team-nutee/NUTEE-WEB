@@ -358,7 +358,7 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
         to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
         subject: 'NUTEE 비밀번호 재발급입니다.',
         text:`새 비밀번호는 ${newPassword}`,
-    }
+    };
 
     const userfind = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail, userId:req.body.userId}});
     if(userfind){
@@ -379,6 +379,8 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
             res.status(401).send('아이디/이메일이 일치하지 않습니다.')
         );
     }
+});
+
 router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{id:req.user.id}});
     const Userpassword = await bcrypt.compare(req.body.password, exUser.password);
@@ -393,58 +395,60 @@ router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     }
 });
 
-router.post('/passwordchange',isLoggedIn, async(req,res,next)=>{
+router.post('/passwordchange',isLoggedIn, async(req,res,next)=> {
     console.log(req.body.newpassword);
     console.time('암호화 시작');
-    const hash = await bcrypt.hash(req.body.newpassword,12);
+    const hash = await bcrypt.hash(req.body.newpassword, 12);
     console.timeEnd('암호화 끝');
     console.log(hash);
-    const newpassword = await db.User.update({password:hash},{where:{id:req.user.id}});
-    if(newpassword){
-        return(
+    const newpassword = await db.User.update({password: hash}, {where: {id: req.user.id}});
+    if (newpassword) {
+        return (
             res.status(200).send('\"비밀번호가 변경되었습니다.\"')
         );
-    }else{
-        return(
+    } else {
+        return (
             res.status(403).send('\"비밀번호 변경에 실패하였습니다.\"')
         );
     }
     return (
         res.status(500).send('\"500 Server Error\"')
     );
+});
 
-router.post('/findid', isNotLoggedIn, async(req,res,next)=>{
-    try{
-        const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
-        if(!exUser) {
+router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
+    try {
+        const exUser = await db.User.findOne({where: {schoolEmail: req.body.schoolEmail}});
+        if (!exUser) {
             res.status(403).send('존재하지 않는 이메일입니다.');
-        }else{
+        } else {
             let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
-                service:'Gmail',
-                auth:{
-                    user:process.env.GOOGLE_EMAIL,
-                    pass:process.env.GOOGLE_PASSWORD,
+                service: 'Gmail',
+                auth: {
+                    user: process.env.GOOGLE_EMAIL,
+                    pass: process.env.GOOGLE_PASSWORD,
                 }
             });
             let mailOptions = {  // 받는사람 메일 설정입니다.
                 from: process.env.GOOGLE_EMAIL,
-                to:req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
+                to: req.body.schoolEmail, // form 에서 name schoolEmail로 해주세요.
                 subject: 'NUTEE 아이디찾기 결과입니다.',
                 text: `입력하신 이메일의 아이디는 ${exUser.userId} 입니다.`,
-            }
-            transporter.sendMail(mailOptions,(error,info)=>{
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.log(error);
-                }
-                else {
+                } else {
                     console.log('Email sent: ' + info.response);
                 }
             });
             res.status(200).send('입력하신 이메일로 아이디가 발송되었습니다.');
         }
-    }catch(err){
+    } catch (err) {
         console.error(err);
         next(err);
+    }
+});
       
 router.post('/:id/profile', isLoggedIn, upload.single('src'), async (req, res, next) => {
     try {
