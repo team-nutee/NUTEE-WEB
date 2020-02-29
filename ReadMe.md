@@ -8,9 +8,11 @@ NUTEE
 
 2. mysql  설치
 
-3. back 디렉토리에서 .env 파일 생성하여 COOKIE_SECRET과 DB_PASSWORD 설정
+3. back 디렉토리에서 .env 파일 생성하여 COOKIE_SECRET, DB_PASSWORD, GOOGLE_EMAIL, GOOGLE_PASSWORD 설정
 ex)COOKIE_SECRET=cookiesecret
    DB_PASSWORD=12345678
+   GOOGLE_EMAIL=hello@gmail.com
+   GOOGLE_PASSWORD=12345678
 !!) .env 파일은 절대로 깃에 공유되면 안된다.
 
 4. back 폴더의 config.js에서 각자의 mysql 환경에 맞게 설정
@@ -27,9 +29,11 @@ MacOS
 
 2. mysql@5.7 설치
 
-3. back 디렉토리에서 .env 파일 생성하여 COOKIE_SECRET과 DB_PASSWORD 설정
+3. back 디렉토리에서 .env 파일 생성하여 COOKIE_SECRET, DB_PASSWORD, GOOGLE_EMAIL, GOOGLE_PASSWORD 설정
 ex)COOKIE_SECRET=cookiesecret
    DB_PASSWORD=12345678
+   GOOGLE_EMAIL=hello@gmail.com
+   GOOGLE_PASSWORD=12345678
    front 디렉토리에서 .env 파일 생성이후 COOKIE_SECRET 설정
    ex)COOKIE_SECRET=cookiesecret
 !!) .env 파일은 절대로 깃에 공유되면 안된다.
