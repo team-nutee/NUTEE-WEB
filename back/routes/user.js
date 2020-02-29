@@ -37,13 +37,23 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where: {
-                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
+                userId: req.body.userId
             },
         });
         if (exUser) {
             return (
                 res.status(401).send('이미 사용중인 아이디입니다.')
             );
+        }
+        const nickUser = await db.User.findOne({
+            where:{
+                nick:req.body.nick,
+            }
+        });
+        if(nickUser){
+            return(
+                res.status(403).send('이미 사용중인 닉네임입니다.')
+            )
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
         const newUser = await db.User.create({
