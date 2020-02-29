@@ -289,6 +289,7 @@ router.get('/:id/posts', async (req, res, next) => {
             where: {
                 UserId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
                 RetweetId: null,
+                isDeleted:0,
             },
             include: [{
                 model: db.User,

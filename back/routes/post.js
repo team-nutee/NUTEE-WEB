@@ -95,7 +95,7 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
         if (!post) {
             return res.status(404).send('포스트가 존재하지 않습니다.');
         }
-        await db.Post.update( {isDeleted:'true'},{where: { id: req.params.id } });
+        await db.Post.update( {isDeleted:true},{where: { id: req.params.id } });
         res.send(req.params.id);
     } catch (e) {
         console.error(e);
