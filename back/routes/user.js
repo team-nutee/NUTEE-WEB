@@ -301,10 +301,10 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
 
 router.get('/:id/posts', async (req, res, next) => {
     try {
+        let where = {};
         const posts = await db.Post.findAll({
             where: {
                 UserId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
-                RetweetId: null,
             },
             include: [{
                 model: db.User,
@@ -316,6 +316,15 @@ router.get('/:id/posts', async (req, res, next) => {
                 through: 'Like',
                 as: 'Likers',
                 attributes: ['id'],
+            }, {
+                model: db.Post,
+                as: 'Retweet',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: db.Image,
+                }],
             }],
             order: [['createdAt', 'DESC']],
         });

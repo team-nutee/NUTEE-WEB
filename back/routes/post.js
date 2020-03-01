@@ -73,6 +73,9 @@ router.patch('/', async (req, res, next) => { //게시물 수정
         if (!post) {
             return res.status(404).send('수정할 포스트가 존재하지 않습니다.');
         }
+        if(req.user.id!==req.body.postId){
+            return res.status(403).send('수정한 권한이 없습니다.');
+        }
 
         //게시 글에 대한 수정
         await db.Post.update({

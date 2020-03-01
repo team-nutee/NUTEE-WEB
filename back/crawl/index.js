@@ -26,7 +26,7 @@ const crawl = (className1,className2,className3,className4,className5,className6
         resolve(bachelor_notice);
     });
 });
-//학사
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
@@ -37,7 +37,7 @@ crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     .then(result =>{
         crawlresult[0] = result;
     });
-//수업
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl02_lblTitle",
@@ -48,7 +48,7 @@ crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     .then(result =>{
         crawlresult[1] = result;
     });
-//학점
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
@@ -59,7 +59,7 @@ crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     .then(result =>{
         crawlresult[2] = result;
     });
-//장학
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
@@ -70,7 +70,7 @@ crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     .then(result =>{
         crawlresult[3] = result;
     });
-//일반
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
@@ -81,7 +81,7 @@ crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     .then(result =>{
         crawlresult[4] = result;
     });
-//행사
+
 crawl(".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList2_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl00_lblTitle",
     ".left15 #ctl00_ContentPlaceHolder1_ctl00_rptList_ctl01_lblTitle",
