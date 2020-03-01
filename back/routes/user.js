@@ -43,6 +43,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         if (exUser) {
             return (
                 res.status(401).send('\"message\":\"이미 사용중인 아이디입니다.\"')
+                res.status(409).send('이미 사용중인 아이디입니다.')
             );
         }
         const nickUser = await db.User.findOne({
@@ -53,6 +54,8 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         if(nickUser){
             return(
                 res.status(403).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+
+                res.status(409).send('이미 사용중인 닉네임입니다.')
             )
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
@@ -77,6 +80,7 @@ router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
     if(exUser){
         return (
             res.status(401).send('\"message\":\"이미 가입된 이메일입니다.\"')
+            res.status(409).send('이미 가입된 이메일입니다.')
         );
     }else{
         const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
@@ -311,10 +315,12 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
 
 router.get('/:id/posts', async (req, res, next) => {
     try {
+        let where = {};
         const posts = await db.Post.findAll({
             where: {
                 UserId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
                 RetweetId: null,
+                isDeleted:0,
             },
             include: [{
                 model: db.User,
@@ -326,6 +332,15 @@ router.get('/:id/posts', async (req, res, next) => {
                 through: 'Like',
                 as: 'Likers',
                 attributes: ['id'],
+            }, {
+                model: db.Post,
+                as: 'Retweet',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: db.Image,
+                }],
             }],
             order: [['createdAt', 'DESC']],
         });
@@ -431,6 +446,7 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
         const exUser = await db.User.findOne({where: {schoolEmail: req.body.schoolEmail}});
         if (!exUser) {
             res.status(403).send('\"message\": \"존재하지 않는 이메일입니다.\"');
+            res.status(401).send('존재하지 않는 이메일입니다.');
         } else {
             let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
                 service: 'Gmail',
