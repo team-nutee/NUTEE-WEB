@@ -71,7 +71,7 @@ router.patch('/', async (req, res, next) => { //게시물 수정
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const post = await db.Post.findOne({ where: { id: req.body.postId }});
         if (!post) {
-            return res.status(404).send('수정할 포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"수정할 포스트가 존재하지 않습니다.\"');
         }
 
         //게시 글에 대한 수정
@@ -152,7 +152,7 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         await db.Post.destroy({ where: { id: req.params.id } });
         res.send(req.params.id);
@@ -166,7 +166,7 @@ router.get('/:id/comments', async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         const comments = await db.Comment.findAll({
             where: {
@@ -189,7 +189,7 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         const newComment = await db.Comment.create({
             PostId: post.id,
@@ -243,7 +243,7 @@ router.post('/:id/like', isLoggedIn, async (req, res, next) => {
         console.log('조아요');
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         await post.addLikers(req.user.id);
         res.json({ userId: req.user.id });
@@ -257,7 +257,7 @@ router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         await post.removeLiker(req.user.id);
         res.json({ userId: req.user.id });
@@ -277,10 +277,10 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             }],
         });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
-            return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
+            return res.status(403).send('\"message\": \"자신의 글은 리트윗할 수 없습니다.\"');
         }
         const retweetTargetId = post.RetweetId || post.id;
         const exPost = await db.Post.findOne({
@@ -290,7 +290,7 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             },
         });
         if (exPost) {
-            return res.status(403).send('이미 리트윗했습니다.');
+            return res.status(403).send('\"message\": \"이미 리트윗했습니다.\"');
         }
         const retweet = await db.Post.create({
             UserId: req.user.id,
