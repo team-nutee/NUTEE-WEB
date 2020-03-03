@@ -110,6 +110,8 @@ export default (state = initialState, action) => {
             case SIGN_UP_SUCCESS: {
                 draft.isSigningUp = false;
                 draft.isSignedUp = true;
+                draft.otpCheck = false;
+                draft.emailCheck = false;
                 break;
             }
             case SIGN_UP_FAILURE: {

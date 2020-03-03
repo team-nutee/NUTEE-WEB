@@ -5,6 +5,7 @@ const { TabPane } = Tabs;
 
 const Notice = () =>{
     const {noticeContents,noticeHrefs} = useSelector(state => state.notice);
+    const notice1 = noticeHrefs[0];
     return(
         <Tabs size='small' type="card">
             <TabPane tab="학사" key="1">
@@ -14,10 +15,10 @@ const Notice = () =>{
                     borderColor: '#e6e6e6'
                 }}
                       bordered
-                      dataSource={noticeContents[0]}
+                      dataSource={[noticeContents[0],noticeHrefs[0]]}
                       renderItem={item => (
                           <List.Item>
-                              <a style={{textDecoration:'none', color:'black',fontWeight:'10'}} href={noticeHrefs[0]} target='_blank'>{item}</a>
+                              <a style={{textDecoration:'none', color:'black',fontWeight:'10'}} href={item[1]} target='_blank'>{item[0]}</a>
                           </List.Item>
                       )}
 

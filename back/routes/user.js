@@ -47,7 +47,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         }
         const nickUser = await db.User.findOne({
             where:{
-                nick:req.body.nick,
+                nickname:req.body.nickname,
             }
         });
         if(nickUser){
@@ -72,7 +72,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     }
 });
 
-router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
+router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
     if(exUser){
         return (

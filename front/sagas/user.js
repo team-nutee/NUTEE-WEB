@@ -74,7 +74,6 @@ function* signUp(action) {
             type: SIGN_UP_SUCCESS,
         });
     } catch (e) { // 회원가입 실패
-        alert('이미 존재하는 아이디입니다.');
         yield put({
             type: SIGN_UP_FAILURE,
             error: e,
@@ -88,7 +87,7 @@ function* watchSignUp() {
 
 function otpCheckAPI(otp) {
     // 서버에 요청을 보내는 부분
-    return axios.post('/user/otp', otp);
+    return axios.post('/user/otpcheck', otp);
 }
 
 function* otpCheck(action) {
@@ -110,9 +109,9 @@ function* watchOtpCheck() {
     yield takeEvery(OTP_CHECK_REQUEST, otpCheck);
 }
 
-function emailCheckAPI(email) {
+function emailCheckAPI(schoolEmail) {
     // 서버에 요청을 보내는 부분
-    return axios.post('/user/email', email);
+    return axios.post('/user/otpsend', schoolEmail);
 }
 
 function* emailCheck(action) {
