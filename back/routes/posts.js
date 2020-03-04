@@ -37,7 +37,9 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                 }],
             }, {
                 model: db.Comment,
+                required:false,
                 order: [['createdAt', 'ASC']],
+                where:{isDeleted:false},
                 as:'Comments',
                 include: [{
                     model: db.User,

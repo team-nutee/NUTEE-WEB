@@ -18,6 +18,8 @@ import PostCardContent from '../components/PostCardContent';
 import EditForm from "../components/EditForm";
 import TextareaAutosize from "react-textarea-autosize";
 import Send from "../components/Send";
+import Comments from "../components/Comments";
+import CommentForm from "../components/CommentForm";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -228,72 +230,15 @@ const PostCard = ({post}) => {
                         style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <List.Item
-                                actions={[<a key="edit">수정</a>, <a key="delete">삭제</a>]}
-                            >
-                                <List.Item.Meta
-                                    avatar={(
-                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
-                                              as={`/user/${item.User.id}`}>
-                                            <a><Avatar>{item.User.nickname[0]}</Avatar></a>
-                                        </Link>
-                                    )}
-                                    title={
-                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
-                                              as={`/user/${item.User.id}`}>
-                                            <a href="https://ant.design">{item.User.nickname}</a>
-                                        </Link>
-                                    }
-                                    description={item.content}
-                                />
-                            </List.Item>
+                            <Comments item={item} post={post} />
                         )}
                     />
-                    <Form style={{margin: '0px 0 10px'}} onSubmit={onSubmitComment}>
-                        <div style={{height: "auto", overflow: "hidden", background: '#effbf5'}}>
-                            <div style={{
-                                overflow: 'hidden',
-                                height: 'auto',
-                                background: 'white',
-                                borderRadius: '20px',
-                                marginTop: '5px',
-                                border: '1px solid #e6e6e6'
-                            }}>
-                                <Row gutter={4}>
-                                    <Col span={22}>
-                                        <TextareaAutosize
-                                            style={{
-                                                margin: '0px 0px 0px 0px',
-                                                paddingLeft: '15px',
-                                                resize: 'none',
-                                                outline: 'none',
-                                                lineHeight: '30px',
-                                                overflowY: 'hidden',
-                                                width: '100%',
-                                                minHeight: '30px',
-                                                height: '30px',
-                                                border: 'none'
-                                            }}
-                                            placeholder="댓글을 입력해주세요."
-                                            value={commentText}
-                                            onChange={onChangeCommentText}
-                                            autoFocus={true}
-                                        />
-                                    </Col>
-                                    <Col span={2}>
-                                        <div style={{width: '10px', margin: '10px 0px 0px 10px'}}>
-                                            <a>
-                                                <Send
-                                                    onSubmitComment={onSubmitComment}
-                                                    isAddingComment={isAddingComment}
-                                                />
-                                            </a>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                    </Form>
+                    <CommentForm
+                        onSubmitComment={onSubmitComment}
+                        commentText={commentText}
+                        onChangeCommentText={onChangeCommentText}
+                        isAddingComment={isAddingComment}
+                    />
                 </>
             )}
             <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}

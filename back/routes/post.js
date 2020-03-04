@@ -178,6 +178,7 @@ router.get('/:id/comments', async (req, res, next) => {
         const comments = await db.Comment.findAll({
             where: {
                 PostId: req.params.id,
+                isDeleted:0,
             },
             order: [['createdAt', 'ASC']],
             include: [{
@@ -220,7 +221,7 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
     }
 });
 
-router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
+router.patch('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     try {
         const comment = await db.Comment.findOne({
             where: {
@@ -234,20 +235,20 @@ router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
         if(req.user.id!==comment.UserId){
             return res.status(403).send('수정 할 권한이 없습니다.');
         }
-        await db.Comment.update({ content: req.body.content
+        const result = await db.Comment.update({ content: req.body.content
         }, { where: {
                 id: req.params.id,
                 UserId: req.user.id,
             },
         });
-        res.status(200).json(req.body.content);
+        res.status(200).json(result);
     } catch(err) {
         console.error(err);
         next(err);
     }
 });
 
-router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
+router.delete('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     try {
         const comment = await db.Comment.findOne({
             where: {
@@ -261,8 +262,11 @@ router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
         if(req.user.id!==comment.UserId){
             return res.status(403).send('삭제 할 권한이 없습니다.');
         }
-        await db.Comment.destroy({ where: { id: req.params.id, UserId: req.user.id, } });
-        res.status(200).json(req.params.id);
+        await db.Comment.update({isDeleted:1},{ where: { id: req.params.id, UserId: req.user.id, } });
+        res.status(200).json({
+            postId:req.params.postId,
+            commentId:req.params.id
+        });
     } catch (e) {
         console.error(e);
         next(e);

@@ -39,7 +39,7 @@ const Home = () => {
     return (
         <>
             <LeftContents me={me} span={4} />
-            <Col span={10}>
+            <Col span={10} style={{minWidth:'550px'}}>
                 {me && <PostForm />}
                 {mainPosts.map((c) => {
                     return (

@@ -4,15 +4,23 @@ export const initialState = {
     mainPosts: [], // 화면에 보일 포스트들
     imagePaths: [], // 미리보기 이미지 경로
     editImagePaths:[],// 글 수정 미리보기 이미지 경로
+
     addPostErrorReason: '', // 포스트 업로드 실패 사유
     isAddingPost: false, // 포스트 업로드 중
     postAdded: false, // 포스트 업로드 성공
+
     editPostErrorReason: '', // 포스트 수정 실패 사유
     isEditingPost: false, // 포스트 수정중
     postEdited: false, // 포스트 수정성공
-    isAddingComment: false,
-    addCommentErrorReason: '',
-    commentAdded: false,
+
+    editCommentErrorReason: '', // 댓글 수정 실패 사유
+    isEditingComment: false, // 댓글 수정중
+    commentEdited: false, // 댓글 수정성공
+
+    isAddingComment: false,//댓글 업로드중
+    addCommentErrorReason: '',//댓글업로드 실패사유
+    commentAdded: false,//댓글 업로드 성공
+
     singlePost: null,
 };
 
@@ -61,6 +69,14 @@ export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
+export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
+export const EDIT_COMMENT_FAILURE = 'EDIT_COMMENT_FAILURE';
+
+export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
+export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
+export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
 
 export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST';
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
@@ -142,8 +158,6 @@ export default (state = initialState, action) => {
             case EDIT_POST_SUCCESS: {
                 const index = draft.mainPosts.findIndex(v => v.id === action.data.id);
                 draft.mainPosts[index] = action.data;
-                // draft.mainPosts.splice(index, 1);
-                // draft.mainPosts.splice(index, 1,action.data);
                 draft.isEditingPost = false;
                 draft.postEdited = true;
                 draft.EditImagePaths = [];
@@ -172,6 +186,41 @@ export default (state = initialState, action) => {
                 break;
             }
             case ADD_COMMENT_FAILURE: {
+                draft.isAddingComment = false;
+                draft.addingPostErrorReason = action.error;
+                break;
+            }
+            case EDIT_COMMENT_REQUEST: {
+                draft.isEditingComment = true;
+                draft.editCommentErrorReason = '';
+                draft.commentEdited = false;
+                break;
+            }
+            case EDIT_COMMENT_SUCCESS: {
+                // const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+                // draft.mainPosts[postIndex].Comments = action.data.comment;
+                draft.isEditingComment = false;
+                draft.commentEdited = true;
+                break;
+            }
+            case EDIT_COMMENT_FAILURE: {
+                draft.isEditingComment = false;
+                console.log('why?');
+                draft.editingPostErrorReason = action.error;
+                break;
+            }
+            case REMOVE_COMMENT_REQUEST: {
+                break;
+            }
+            case REMOVE_COMMENT_SUCCESS: {
+                const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+                const commentIndex = draft.mainPosts[postIndex].Comments.findIndex(v => v.id === action.data.commentId);
+                draft.mainPosts[postIndex].Comments.splice(commentIndex,1);
+                draft.isAddingComment = false;
+                draft.commentAdded = true;
+                break;
+            }
+            case REMOVE_COMMENT_FAILURE: {
                 draft.isAddingComment = false;
                 draft.addingPostErrorReason = action.error;
                 break;
