@@ -186,7 +186,7 @@ const Signup = () =>{
                     {passwordError && <div style={{color:'red'}}>비밀번호가 일치하지 않습니다.</div>}
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    {emailCheck?<></>:<br/>}
+                    <br/>
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
@@ -208,7 +208,7 @@ const Signup = () =>{
                     </Row>
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    {otpCheck?<></>:<br/>}
+                    {emailCheck?<></>:<br/>}
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
@@ -229,7 +229,8 @@ const Signup = () =>{
                     </Row>
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    <Checkbox style={{margin:'15px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
+                    {otpCheck?<></>:<br/>}
+                    <Checkbox style={{margin:'0px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
                     {termError && <div style={{color:'red'}}>약관에 동의하셔야 합니다.</div>}
                 </div>
                 <div style={{width:'90px', margin:'0 auto'}}>

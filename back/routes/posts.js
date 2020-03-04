@@ -5,16 +5,17 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => { // GET /api/posts
     try {
-        let where = {};
+        let where = {isDeleted:0};
         if (parseInt(req.query.lastId, 10)) {
             where = {
                 id: {
                     [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10), // less than
                 },
+                isDeleted:0,
             };
         }
         const posts = await db.Post.findAll({
-            where:{isDeleted:0},
+            where,
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],

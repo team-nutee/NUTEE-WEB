@@ -73,7 +73,7 @@ router.patch('/', async (req, res, next) => { //게시물 수정
         if (!post) {
             return res.status(404).send('\"message\": \"수정할 포스트가 존재하지 않습니다.\"');
         }
-        if(req.user.id!==req.body.postId){
+        if(req.user.id!==post.UserId){
             return res.status(403).send('수정한 권한이 없습니다.');
         }
 
@@ -157,11 +157,12 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
         if (!post) {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
-        if(req.user.id!==req.params.postId){
+        if(req.user.id!==post.UserId){
+            console.log(req.user.id,post.UserId);
             return res.status(403).send('삭제 할 권한이 없습니다.');
         }
         await db.Post.update( {isDeleted:true},{where: { id: req.params.id } });
-        res.send(req.params.id);
+        res.status(200).send(req.params.id);
     } catch (e) {
         console.error(e);
         next(e);
@@ -221,7 +222,16 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
 
 router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
     try {
-        if(req.user.id!==req.params.postId){
+        const comment = await db.Comment.findOne({
+            where: {
+                id: req.params.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }],
+        });
+        if(req.user.id!==comment.UserId){
             return res.status(403).send('수정 할 권한이 없습니다.');
         }
         await db.Comment.update({ content: req.body.content
@@ -239,7 +249,16 @@ router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
 
 router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
     try {
-        if(req.user.id!==req.params.postId){
+        const comment = await db.Comment.findOne({
+            where: {
+                id: req.params.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }],
+        });
+        if(req.user.id!==comment.UserId){
             return res.status(403).send('삭제 할 권한이 없습니다.');
         }
         await db.Comment.destroy({ where: { id: req.params.id, UserId: req.user.id, } });
@@ -266,9 +285,6 @@ router.post('/:id/like', isLoggedIn, async (req, res, next) => {
 
 router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
-        if(req.user.id!==req.params.postId){
-            return res.status(403).send('수정 할 권한이 없습니다.');
-        }
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
