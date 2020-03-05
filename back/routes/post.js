@@ -169,6 +169,26 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.post('/:id/report', async (req, res, next) => {
+   try {
+       await db.Report.create({
+           content: req.body.content, // 신고 사유
+           PostId: req.params.id,
+       });
+       const result = await db.Report.findAndCountAll({
+           where : { PostId: req.params.id }
+       });
+       if (result.count>=1) {
+           await db.Post.destroy({ where: { id: req.params.id } });
+           console.log('result.count');
+       }
+       res.status(200).json(req.params.id);
+   } catch (err) {
+       console.error(err);
+       next(err);
+   }
+});
+
 router.get('/:id/comments', async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
