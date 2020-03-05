@@ -249,6 +249,10 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => { // /api/us
         });
         const followers = await user.getFollowings({
             attributes: ['id', 'nickname'],
+            include:[{
+                model: db.Image,
+                attribute:['src'],
+            }],
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
@@ -266,6 +270,10 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => { // /api/use
         }); // req.params.id가 문자열 '0'
         const followers = await user.getFollowers({
             attributes: ['id', 'nickname'],
+            include:[{
+                model: db.Image,
+                attribute:['src'],
+            }],
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
@@ -464,9 +472,6 @@ router.post('/passwordchange',isLoggedIn, async(req,res,next)=> {
             res.status(403).send('\"message\": \"비밀번호 변경에 실패하였습니다.\"')
         );
     }
-    return (
-        res.status(500).send('\"message\": \"500 Server Error\"')
-    );
 });
 
 router.post('/findid', isNotLoggedIn, async(req,res,next)=> {

@@ -208,6 +208,10 @@ router.get('/:id/comments', async (req, res, next) => {
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
             }],
         });
         res.json(comments);

@@ -9,9 +9,9 @@ const ProfileAvatar = ({nickname,imagePath}) => {
     return(
         <>
             {imagePath?
-                <Avatar src={`${TARGET_URL}/${imagePath}`}/>
+                <Avatar style={{border:'1px solid #d8d8d8'}} src={`${TARGET_URL}/${imagePath}`}/>
                 :
-                <Avatar src={`${TARGET_URL}/settings/nutee_profile.png`}/>
+                <Avatar style={{border:'1px solid #d8d8d8'}} src={`${TARGET_URL}/settings/nutee_profile.png`}/>
             }
         </>
     )

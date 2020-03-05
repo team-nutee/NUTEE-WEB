@@ -7,6 +7,8 @@ import {
     REMOVE_FOLLOWER_REQUEST,
     UNFOLLOW_USER_REQUEST
 } from "../reducers/user";
+import Link from "next/link";
+import ProfileAvatar from "./ProfileAvatar";
 
 const RightProfile = ()=>{
     const dispatch = useDispatch();
@@ -54,9 +56,18 @@ const RightProfile = ()=>{
                 renderItem={item => (
                     <List.Item style={{marginTop: '20px'}}>
                         <Card style={{margin: '0 auto'}} actions={[<a onClick={onUnfollow(item.id)}>팔로우 취소</a>]}>
-                            <Avatar size='large' style={{margin: '0px 5px 0px 0px'}}>
-                                {item.nickname[0]}
-                            </Avatar>
+                            <Link
+                                href={{pathname: '/user', query: {id: item.id}}}
+                                as={`/user/${item.id}`}
+                            >
+                                <a>
+                                    {item.Image ?
+                                        <ProfileAvatar nickname={item.nickname} imagePath={item.Image.src}/>
+                                        :
+                                        <ProfileAvatar nickname={item.nickname}/>
+                                    }
+                                </a>
+                            </Link>
                             <h2 style={{
                                 display: 'inline-block',
                                 fontSize: '15px',

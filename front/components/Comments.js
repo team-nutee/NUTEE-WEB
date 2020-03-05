@@ -4,6 +4,7 @@ import Link from "next/link";
 import EditCommentForm from "./EditCommentForm";
 import {useDispatch} from "react-redux";
 import {REMOVE_COMMENT_REQUEST, REMOVE_POST_REQUEST} from "../reducers/post";
+import ProfileAvatar from "./ProfileAvatar";
 
 const Comments = ({item, post}) => {
     const dispatch = useDispatch();
@@ -33,14 +34,20 @@ const Comments = ({item, post}) => {
         <></>
             :
             <List.Item.Meta
-                avatar={
-                    <>
-                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
-                              as={`/user/${item.User.id}`}>
-                            <a><Avatar>{item.User.nickname[0]}</Avatar></a>
-                        </Link>
-                    </>
-                }
+                avatar={(
+                    <Link
+                        href={{pathname: '/user', query: {id: item.User.id}}}
+                        as={`/user/${item.User.id}`}
+                    >
+                        <a>
+                            {item.User.Image?
+                                <ProfileAvatar nickname={item.User.nickname} imagePath={item.User.Image.src}/>
+                                :
+                                <ProfileAvatar nickname={item.User.nickname}/>
+                            }
+                        </a>
+                    </Link>
+                )}
                 description={
                     edit
                         ?
