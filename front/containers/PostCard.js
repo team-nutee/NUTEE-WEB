@@ -20,6 +20,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Send from "../components/Send";
 import Comments from "../components/Comments";
 import CommentForm from "../components/CommentForm";
+import ProfileAvatar from "../components/ProfileAvatar";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -186,7 +187,7 @@ const PostCard = ({post}) => {
                                         href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
                                         as={`/user/${post.Retweet.User.id}`}
                                     >
-                                        <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
+                                        <a><ProfileAvatar imagePath={post.Retweet.User.Image.src} nickname={post.Retweet.User.nickname}/></a>
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
@@ -206,7 +207,7 @@ const PostCard = ({post}) => {
                                 ? (
                                 <Link href={{pathname: '/user', query: {id: post.User.id}}}
                                       as={`/user/${post.User.id}`}>
-                                    <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                                    <a><ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/></a>
                                 </Link>
                             ) :(<>
                                 </>)

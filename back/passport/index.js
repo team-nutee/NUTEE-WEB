@@ -23,6 +23,9 @@ module.exports = () => {
                     model: db.User,
                     as: 'Followers',
                     attributes: ['id'],
+                }, {
+                    model:db.Image,
+                    attributes: ['src'],
                 }],
             });
             return done(null, user); //req.user에 저장됨

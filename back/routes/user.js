@@ -176,6 +176,9 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
                 model: db.User,
                 as: 'Followers',
                 attributes: ['id'],
+            }, {
+                model:db.Image,
+                attributes: ['src'],
             }],
             attributes: ['id', 'nickname'],
         });
@@ -224,6 +227,9 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
                         model: db.User,
                         as: 'Followers',
                         attributes: ['id'],
+                    }, {
+                        model:db.Image,
+                        attributes: ['src'],
                     }],
                     attributes: ['id', 'nickname', 'userId'],
                 });
@@ -320,6 +326,10 @@ router.get('/:id/posts', async (req, res, next) => {
             },
             include: [{
                 model: db.User,
+                include:[{
+                    model: db.Image,
+                    attributes: ['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
@@ -333,6 +343,10 @@ router.get('/:id/posts', async (req, res, next) => {
                 as: 'Retweet',
                 include: [{
                     model: db.User,
+                    include:[{
+                       model:db.Image,
+                       attributes:['src'],
+                    }],
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
@@ -405,6 +419,8 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
 router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{id:req.user.id}});
     const Userpassword = await bcrypt.compare(req.body.password, exUser.password);
+    console.log(exUser);
+    console.log(Userpassword);
     if(Userpassword){
         return(
             res.status(200).send('\"message\": \"비밀번호가 확인이 완료되었습니다.\"')
@@ -471,30 +487,32 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
     }
 });
       
-router.post('/:id/profile', isLoggedIn, upload.single('src'), async (req, res, next) => {
+router.post('/profile', isLoggedIn, upload.single('image'), async (req, res, next) => {
     try {
-        if(req.file) {
+        const image = db.Image.findOne({
+            where:{ userId:req.user.id }
+        });
+        if(image.UserId) {
             await db.Image.update({ src: req.file.filename
-            }, { where: { UserId: req.params.id },
+            }, { where: { UserId: req.user.id },
             })
         } else {
             await db.Image.create({
                 src: req.file.filename,
-                UserId: req.params.id,
+                UserId: req.user.id,
             })
         }
-        res.status(200).send('\"message\": \"성공\"');
-        console.log(req.file);
+        res.status(200).json(req.file.filename);
     } catch (e) {
         console.error(e);
         next(e);
     }
 });
 
-router.delete('/profile/:id', isLoggedIn, async (req, res, next) => {
+router.delete('/profile', isLoggedIn, async (req, res, next) => {
     try {
-        await db.Image.findOne({ where: { UserId: req.params.id } });
-        await db.Image.destroy({ where: { UserId: req.params.id } });
+        await db.Image.findOne({ where: { UserId: req.user.id } });
+        await db.Image.destroy({ where: { UserId: req.user.id } });
         res.status(200).send('\"message\": \"성공\"');
     } catch (e) {
         console.error(e);

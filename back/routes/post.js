@@ -14,7 +14,7 @@ const upload = multer({
         },
         filename(req, file, done) {
             const ext = path.extname(file.originalname);
-            const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+            const basename = path.basename(file.originalname, ext);
             done(null, basename + new Date().valueOf() + ext);
         },
     }),
@@ -25,7 +25,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
     try {
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const newPost = await db.Post.create({
-            content: req.body.content, // ex) '제로초 파이팅 #구독 #좋아요 눌러주세요'
+            content: req.body.content,
             UserId: req.user.id,
         });
         if (hashtags) {

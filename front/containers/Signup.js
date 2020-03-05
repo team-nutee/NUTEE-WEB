@@ -5,6 +5,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import Router from 'next/router';
 import {EMAIL_CHECK_REQUEST, OTP_CHECK_REQUEST, SIGN_UP_REQUEST, SIGN_UP_RESET} from "../reducers/user";
 import Paper from "@material-ui/core/Paper";
+import FindId from "../components/FindId";
+import FindPw from "../components/FindPw";
 
 const TextInput = ({value})=>{
     return(
@@ -245,24 +247,24 @@ const Signup = () =>{
 
         </div>
             <Modal
-                title="아이디 찾기"
                 visible={idVisible}
                 onOk={idOk}
                 onCancel={idCancel}
+                footer={null}
+                closable={false}
+                title='아이디 찾기'
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <FindId setIdVisible={setIdVisible}/>
             </Modal>
             <Modal
-                title="비밀번호 찾기"
                 visible={pwVisible}
                 onOk={pwOk}
                 onCancel={pwCancel}
+                footer={null}
+                closable={false}
+                title='비밀번호 찾기'
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <FindPw setPwVisible={setPwVisible}/>
             </Modal>
         </Paper>
     )

@@ -1,5 +1,6 @@
-import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, takeEvery,takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
+import {message} from 'antd';
 import {
     EDIT_NICKNAME_FAILURE,
     EDIT_NICKNAME_REQUEST,
@@ -33,8 +34,26 @@ import {
     OTP_CHECK_FAILURE,
     UNFOLLOW_USER_FAILURE,
     UNFOLLOW_USER_REQUEST,
-    UNFOLLOW_USER_SUCCESS, EMAIL_CHECK_REQUEST, EMAIL_CHECK_SUCCESS, EMAIL_CHECK_FAILURE,
+    UNFOLLOW_USER_SUCCESS,
+    EMAIL_CHECK_REQUEST,
+    EMAIL_CHECK_SUCCESS,
+    EMAIL_CHECK_FAILURE,
+    EMAIL_FIND_SUCCESS,
+    EMAIL_FIND_FAILURE,
+    EMAIL_FIND_REQUEST,
+    PW_FIND_SUCCESS,
+    PW_FIND_FAILURE,
+    PW_FIND_REQUEST,
+    EDIT_PWCK_REQUEST,
+    EDIT_PWCK_FAILURE,
+    EDIT_PWCK_SUCCESS,
+    EDIT_PW_SUCCESS,
+    EDIT_PW_FAILURE,
+    EDIT_PW_REQUEST,
+    UPLOAD_PROIMG_SUCCESS,
+    UPLOAD_PROIMG_FAILURE, UPLOAD_PROIMG_REQUEST,
 } from '../reducers/user';
+import {UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS} from "../reducers/post";
 
 function logInAPI(loginData) {
     // 서버에 요청을 보내는 부분
@@ -110,7 +129,6 @@ function* watchOtpCheck() {
 }
 
 function emailCheckAPI(schoolEmail) {
-    // 서버에 요청을 보내는 부분
     return axios.post('/user/otpsend', schoolEmail);
 }
 
@@ -131,6 +149,133 @@ function* emailCheck(action) {
 
 function* watchEmailCheck() {
     yield takeEvery(EMAIL_CHECK_REQUEST, emailCheck);
+}
+
+function PWCheckAPI(password) {
+    return axios.post('/user/passwordcheck', {password},{
+        withCredentials:true,
+    });
+}
+
+function* PWCheck(action) {
+    try {
+        const result = yield call(PWCheckAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: EDIT_PWCK_SUCCESS,
+            data: result.data,
+        });
+        message.success('비밀번호 확인 성공')
+    } catch (e) { // 이메일 인증 실패
+        message.error('현재 비밀번호를 다시 확인해주세요.');
+        yield put({
+            type: EDIT_PWCK_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchPWCheck() {
+    yield takeEvery(EDIT_PWCK_REQUEST, PWCheck);
+}
+
+function pwEditAPI(newpassword) {
+    return axios.post('/user/passwordchange', {newpassword},{
+        withCredentials:true,
+    });
+}
+
+function* pwEdit(action) {
+    try {
+        const result = yield call(pwEditAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: EDIT_PW_SUCCESS,
+            data:result.data,
+        });
+        message.success('비밀번호 변경 성공')
+    } catch (e) { // 비밀번호 인증 실패
+        console.error(e);
+        alert('비밀번호 변경에 실패하셨습니다.');
+        yield put({
+            type: EDIT_PW_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchPwEdit() {
+    yield takeEvery(EDIT_PW_REQUEST, pwEdit);
+}
+
+function uploadProfileImgAPI(formData) {
+    return axios.post(`/user/profile`, formData, {
+        withCredentials: true,
+    });
+}
+
+function* uploadProfileImg(action) {
+    try {
+        const result = yield call(uploadProfileImgAPI, action.data);
+        yield put({
+            type: UPLOAD_PROIMG_SUCCESS,
+            data: result.data,
+        });
+    } catch (e) {
+        console.error(e);
+        yield put({
+            type: UPLOAD_PROIMG_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchUploadProfileImg() {
+    yield takeLatest(UPLOAD_PROIMG_REQUEST, uploadProfileImg);
+}
+
+
+function emailFindAPI(schoolEmail) {
+    return axios.post('/user/findid', schoolEmail);
+}
+
+function* emailFind(action) {
+    try {
+        yield call(emailFindAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: EMAIL_FIND_SUCCESS,
+        });
+    } catch (e) { // 이메일 인증 실패
+        alert('이메일 찾기에 실패하셨습니다.');
+        yield put({
+            type: EMAIL_FIND_FAILURE,
+            error: e,
+        });
+    }
+}
+function* watchEmailFind() {
+    yield takeEvery(EMAIL_FIND_REQUEST, emailFind);
+}
+
+function pwFindAPI(data) {
+    return axios.post('/user/reissuance', data);
+}
+
+function* pwFind(action) {
+    try {
+        yield call(pwFindAPI, action.data);
+        yield put({ // put은 dispatch 동일
+            type: PW_FIND_SUCCESS,
+        });
+    } catch (e) { // 이메일 인증 실패
+        alert('비밀번호 찾기에 실패하셨습니다.');
+        yield put({
+            type: PW_FIND_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchPwFind() {
+    yield takeEvery(PW_FIND_REQUEST, pwFind);
 }
 
 function logOutAPI() {
@@ -169,7 +314,6 @@ function loadUserAPI(userId) {
 
 function* loadUser(action) {
     try {
-        // yield call(loadUserAPI);
         const result = yield call(loadUserAPI, action.data);
         yield put({ // put은 dispatch 동일
             type: LOAD_USER_SUCCESS,
@@ -338,7 +482,6 @@ function editNicknameAPI(nickname) {
 
 function* editNickname(action) {
     try {
-        // yield call(loadFollowersAPI);
         const result = yield call(editNicknameAPI, action.data);
         yield put({ // put은 dispatch 동일
             type: EDIT_NICKNAME_SUCCESS,
@@ -371,5 +514,10 @@ export default function* userSaga() {
         fork(watchEditNickname),
         fork(watchOtpCheck),
         fork(watchEmailCheck),
+        fork(watchEmailFind),
+        fork(watchPwFind),
+        fork(watchPwEdit),
+        fork(watchPWCheck),
+        fork(watchUploadProfileImg),
     ]);
 }
