@@ -45,7 +45,11 @@ const MyProfile = ({target}) => {
                       ]}
                 >
                     <Card.Meta
-                        avatar={<ProfileAvatar nickname={target.nickname} imagePath={target.Image.src}/>}
+                        avatar={target.Image?
+                                <ProfileAvatar nickname={target.nickname} imagePath={target.Image.src}/>
+                                :
+                                <ProfileAvatar nickname={target.nickname}/>
+                        }
                         title={!target || me.id === target.id
                             ? <>{target.nickname}</>
                             : target.Followers && target.Followers.find(v => v.id === me.id)

@@ -187,7 +187,13 @@ const PostCard = ({post}) => {
                                         href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
                                         as={`/user/${post.Retweet.User.id}`}
                                     >
-                                        <a><ProfileAvatar imagePath={post.Retweet.User.Image.src} nickname={post.Retweet.User.nickname}/></a>
+                                        <a>
+                                            {post.Retweet.User.Image?
+                                                <ProfileAvatar nickname={post.Retweet.User.nickname} imagePath={post.Retweet.User.Image.src}/>
+                                                :
+                                                <ProfileAvatar nickname={post.Retweet.User.nickname}/>
+                                            }
+                                        </a>
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
@@ -196,6 +202,7 @@ const PostCard = ({post}) => {
                                         likers={post.Likers ? post.Likers.length : 0}
                                         commentN={post.Comments ? post.Comments.length : 0}
                                         postData={post.Retweet.content}
+                                        retweet={1}
                                     />
                                 } // a tag x -> Link
                             />
@@ -207,7 +214,13 @@ const PostCard = ({post}) => {
                                 ? (
                                 <Link href={{pathname: '/user', query: {id: post.User.id}}}
                                       as={`/user/${post.User.id}`}>
-                                    <a><ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/></a>
+                                    <a>
+                                        {post.User.Image?
+                                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                                            :
+                                            <ProfileAvatar nickname={post.User.nickname}/>
+                                        }
+                                    </a>
                                 </Link>
                             ) :(<>
                                 </>)

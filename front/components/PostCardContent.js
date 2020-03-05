@@ -13,7 +13,7 @@ const ShowBox = styled.pre`
     whiteSpace: 'pre-wrap',
 `;
 
-const PostCardContent = ({ postData,commentN,likers }) => {
+const PostCardContent = ({ postData,commentN,likers,retweet }) => {
     const stringLength= (function(s,b,i,c){
         for(b=i=0;c=s.charCodeAt(i++);b+=c>>11?3:c>>7?2:1);
         return b
@@ -48,7 +48,10 @@ const PostCardContent = ({ postData,commentN,likers }) => {
                         }
                         return v;
                     })}
-                    <h5 style={{position:'absolute',right:'25px',bottom:'60px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
+                    {retweet && retweet===1
+                        ?<h5 style={{position:'absolute',right:'15px',bottom:'10px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
+                        :<h5 style={{position:'absolute',right:'25px',bottom:'60px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
+                    }
                 </pre>
                 :
                 <div>
