@@ -321,7 +321,6 @@ router.get('/:id/posts', async (req, res, next) => {
         const posts = await db.Post.findAll({
             where: {
                 UserId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
-                RetweetId: null,
                 isDeleted:0,
             },
             include: [{
@@ -343,13 +342,30 @@ router.get('/:id/posts', async (req, res, next) => {
                 as: 'Retweet',
                 include: [{
                     model: db.User,
-                    include:[{
-                       model:db.Image,
-                       attributes:['src'],
-                    }],
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required:false,
+                    order: [['createdAt', 'ASC']],
+                    where:{isDeleted:false},
+                    as:'Comments',
+                },{
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
+                }],
+            }, {
+                model: db.Comment,
+                required:false,
+                order: [['createdAt', 'ASC']],
+                where:{isDeleted:false},
+                as:'Comments',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
                 }],
             }],
             order: [['createdAt', 'DESC']],
