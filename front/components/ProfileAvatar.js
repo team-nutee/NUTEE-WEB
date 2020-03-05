@@ -11,7 +11,7 @@ const ProfileAvatar = ({nickname,imagePath}) => {
             {imagePath?
                 <Avatar src={`${TARGET_URL}/${imagePath}`}/>
                 :
-                <Avatar>{nickname[0]}</Avatar>
+                <Avatar src={`${TARGET_URL}/settings/nutee_profile.png`}/>
             }
         </>
     )
