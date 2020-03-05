@@ -174,12 +174,22 @@ const PostCard = ({post}) => {
                             )}
                     </>,
                 ]}
-                title={post.RetweetId ? `${post.User.nickname}님이 글을 공유하였습니다.` : null}
+                title={post.RetweetId ?
+                    <>
+                        {post.User.Image?
+                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                            :
+                            <ProfileAvatar nickname={post.User.nickname}/>
+                        }
+                        <a style={{margin:'0px 10px 0px 10px'}}>{post.User.nickname}</a>님이 글을 공유하였습니다.
+                    </>
+                    : null
+                }
             >
                 {post.RetweetId && post.Retweet
                     ? (
                         <Card
-                            cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
+                             style={{marginBottom:'10px'}} cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
                         >
                             <Card.Meta
                                 avatar={(
@@ -198,12 +208,15 @@ const PostCard = ({post}) => {
                                 )}
                                 title={post.Retweet.User.nickname}
                                 description={
+                                    <>
                                     <PostCardContent
                                         likers={post.Likers ? post.Likers.length : 0}
                                         commentN={post.Comments ? post.Comments.length : 0}
                                         postData={post.Retweet.content}
                                         retweet={1}
                                     />
+                                        <h5 style={{position:'absolute',right:'15px',bottom:'15px',fontSize:'12px'}}>댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개  좋아요 {post.Retweet.Likers ? post.Retweet.Likers.length : 0}개</h5>
+                                    </>
                                 } // a tag x -> Link
                             />
                         </Card>

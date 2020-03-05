@@ -38,6 +38,17 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required:false,
+                    order: [['createdAt', 'ASC']],
+                    where:{isDeleted:false},
+                    as:'Comments',
+                },{
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
                 }],
             }, {
                 model: db.Comment,

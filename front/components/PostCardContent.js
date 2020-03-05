@@ -49,7 +49,7 @@ const PostCardContent = ({ postData,commentN,likers,retweet }) => {
                         return v;
                     })}
                     {retweet && retweet===1
-                        ?<h5 style={{position:'absolute',right:'15px',bottom:'10px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
+                        ?<h5 style={{position:'absolute',right:'-5px',bottom:'-25px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
                         :<h5 style={{position:'absolute',right:'25px',bottom:'60px',fontSize:'12px'}}>댓글 {commentN}개  좋아요 {likers}개</h5>
                     }
                 </pre>
