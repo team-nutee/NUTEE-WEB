@@ -185,8 +185,8 @@ router.post('/:id/report', async (req, res, next) => {
            where : { PostId: req.params.id }
        });
        if (result.count>=1) {
-           // await db.Post.destroy({ where: { id: req.params.id } });
-           console.log('신고완료');
+           await db.Post.update({ isDeleted: true }, { where: { id: req.params.id } });
+           console.log('result.count');
        }
        res.status(200).json(req.params.id);
    } catch (err) {
