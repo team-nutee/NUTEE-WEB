@@ -21,6 +21,7 @@ import Send from "../components/Send";
 import Comments from "../components/Comments";
 import CommentForm from "../components/CommentForm";
 import ProfileAvatar from "../components/ProfileAvatar";
+import {TARGET_URL} from "../static";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -35,10 +36,12 @@ const PostCard = ({post}) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const [commentText, setCommentText] = useState('');
     const {me} = useSelector(state => state.user);
-    const {commentAdded, isAddingComment,editImagePaths} = useSelector(state => state.post);
+    const {commentAdded, isAddingComment} = useSelector(state => state.post);
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
+    const [report,setReport] = useState('');
+    const [reportVisible, setReportVisible] = useState(false);
     const showModal = () => {
         setVisible(true);
     };
@@ -47,6 +50,9 @@ const PostCard = ({post}) => {
     };
     const handleCancel = () => {
         setVisible(false);
+    };
+    const reportCancel = () => {
+        setReportVisible(false);
     };
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
@@ -83,6 +89,10 @@ const PostCard = ({post}) => {
 
     const onChangeCommentText = useCallback((e) => {
         setCommentText(e.target.value);
+    }, []);
+
+    const onChangeReport = useCallback((e) => {
+        setReport(e.target.value);
     }, []);
 
     const onToggleLike = useCallback(() => {
@@ -123,6 +133,13 @@ const PostCard = ({post}) => {
             });
         }
     });
+    const onReport = useCallback(()=>{
+        setReportVisible(true);
+    });
+
+    const onSubmitReport = useCallback(()=>{
+        console.log('신고전송');
+    });
 
     const menu1 = (
         <Menu>
@@ -138,7 +155,29 @@ const PostCard = ({post}) => {
     const menu2 = (
         <Menu>
             <Menu.Item>
-                신고
+                <a onClick={onReport}>신고</a>
+                <Modal
+                    title="게시물 신고"
+                    visible={reportVisible}
+                    onOk={onSubmitReport}
+                    onCancel={reportCancel}
+                    footer={null}
+                >
+                    <div style={{width:'80%', margin:'0 auto'}}>
+                        <br/>
+                        <Row gutter={8}>
+                            <Col span={18}>
+                                <Input
+                                    prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                    placeholder='신고사유' value={report} required onChange={onChangeReport}
+                                />
+                            </Col>
+                            <Col span={6}>
+                                <Button onClick={onSubmitReport} >신고</Button>
+                            </Col>
+                        </Row>
+                    </div>
+                </Modal>
             </Menu.Item>
             <Menu.Item>
                 채팅
