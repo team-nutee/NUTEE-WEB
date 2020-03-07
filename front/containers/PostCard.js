@@ -18,6 +18,10 @@ import PostCardContent from '../components/PostCardContent';
 import EditForm from "../components/EditForm";
 import TextareaAutosize from "react-textarea-autosize";
 import Send from "../components/Send";
+import Comments from "../components/Comments";
+import CommentForm from "../components/CommentForm";
+import ProfileAvatar from "../components/ProfileAvatar";
+import {TARGET_URL} from "../static";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -32,10 +36,12 @@ const PostCard = ({post}) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const [commentText, setCommentText] = useState('');
     const {me} = useSelector(state => state.user);
-    const {commentAdded, isAddingComment,editImagePaths} = useSelector(state => state.post);
+    const {commentAdded, isAddingComment} = useSelector(state => state.post);
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
+    const [report,setReport] = useState('');
+    const [reportVisible, setReportVisible] = useState(false);
     const showModal = () => {
         setVisible(true);
     };
@@ -44,6 +50,9 @@ const PostCard = ({post}) => {
     };
     const handleCancel = () => {
         setVisible(false);
+    };
+    const reportCancel = () => {
+        setReportVisible(false);
     };
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
@@ -80,6 +89,10 @@ const PostCard = ({post}) => {
 
     const onChangeCommentText = useCallback((e) => {
         setCommentText(e.target.value);
+    }, []);
+
+    const onChangeReport = useCallback((e) => {
+        setReport(e.target.value);
     }, []);
 
     const onToggleLike = useCallback(() => {
@@ -120,6 +133,13 @@ const PostCard = ({post}) => {
             });
         }
     });
+    const onReport = useCallback(()=>{
+        setReportVisible(true);
+    });
+
+    const onSubmitReport = useCallback(()=>{
+        console.log('신고전송');
+    });
 
     const menu1 = (
         <Menu>
@@ -135,7 +155,29 @@ const PostCard = ({post}) => {
     const menu2 = (
         <Menu>
             <Menu.Item>
-                신고
+                <a onClick={onReport}>신고</a>
+                <Modal
+                    title="게시물 신고"
+                    visible={reportVisible}
+                    onOk={onSubmitReport}
+                    onCancel={reportCancel}
+                    footer={null}
+                >
+                    <div style={{width:'80%', margin:'0 auto'}}>
+                        <br/>
+                        <Row gutter={8}>
+                            <Col span={18}>
+                                <Input
+                                    prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                    placeholder='신고사유' value={report} required onChange={onChangeReport}
+                                />
+                            </Col>
+                            <Col span={6}>
+                                <Button onClick={onSubmitReport} >신고</Button>
+                            </Col>
+                        </Row>
+                    </div>
+                </Modal>
             </Menu.Item>
             <Menu.Item>
                 채팅
@@ -171,12 +213,22 @@ const PostCard = ({post}) => {
                             )}
                     </>,
                 ]}
-                title={post.RetweetId ? `${post.User.nickname}님이 글을 공유하였습니다.` : null}
+                title={post.RetweetId ?
+                    <>
+                        {post.User.Image?
+                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                            :
+                            <ProfileAvatar nickname={post.User.nickname}/>
+                        }
+                        <a style={{margin:'0px 10px 0px 10px'}}>{post.User.nickname}</a>님이 글을 공유하였습니다.
+                    </>
+                    : null
+                }
             >
                 {post.RetweetId && post.Retweet
                     ? (
                         <Card
-                            cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
+                             style={{marginBottom:'10px'}} cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
                         >
                             <Card.Meta
                                 avatar={(
@@ -184,16 +236,26 @@ const PostCard = ({post}) => {
                                         href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
                                         as={`/user/${post.Retweet.User.id}`}
                                     >
-                                        <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
+                                        <a>
+                                            {post.Retweet.User.Image?
+                                                <ProfileAvatar nickname={post.Retweet.User.nickname} imagePath={post.Retweet.User.Image.src}/>
+                                                :
+                                                <ProfileAvatar nickname={post.Retweet.User.nickname}/>
+                                            }
+                                        </a>
                                     </Link>
                                 )}
                                 title={post.Retweet.User.nickname}
                                 description={
+                                    <>
                                     <PostCardContent
                                         likers={post.Likers ? post.Likers.length : 0}
                                         commentN={post.Comments ? post.Comments.length : 0}
                                         postData={post.Retweet.content}
+                                        retweet={1}
                                     />
+                                        <h5 style={{position:'absolute',right:'15px',bottom:'15px',fontSize:'12px'}}>댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개  좋아요 {post.Retweet.Likers ? post.Retweet.Likers.length : 0}개</h5>
+                                    </>
                                 } // a tag x -> Link
                             />
                         </Card>
@@ -204,7 +266,13 @@ const PostCard = ({post}) => {
                                 ? (
                                 <Link href={{pathname: '/user', query: {id: post.User.id}}}
                                       as={`/user/${post.User.id}`}>
-                                    <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                                    <a>
+                                        {post.User.Image?
+                                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                                            :
+                                            <ProfileAvatar nickname={post.User.nickname}/>
+                                        }
+                                    </a>
                                 </Link>
                             ) :(<>
                                 </>)
@@ -228,72 +296,15 @@ const PostCard = ({post}) => {
                         style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <List.Item
-                                actions={[<a key="edit">수정</a>, <a key="delete">삭제</a>]}
-                            >
-                                <List.Item.Meta
-                                    avatar={(
-                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
-                                              as={`/user/${item.User.id}`}>
-                                            <a><Avatar>{item.User.nickname[0]}</Avatar></a>
-                                        </Link>
-                                    )}
-                                    title={
-                                        <Link href={{pathname: '/user', query: {id: item.User.id}}}
-                                              as={`/user/${item.User.id}`}>
-                                            <a href="https://ant.design">{item.User.nickname}</a>
-                                        </Link>
-                                    }
-                                    description={item.content}
-                                />
-                            </List.Item>
+                            <Comments item={item} post={post} />
                         )}
                     />
-                    <Form style={{margin: '0px 0 10px'}} onSubmit={onSubmitComment}>
-                        <div style={{height: "auto", overflow: "hidden", background: '#effbf5'}}>
-                            <div style={{
-                                overflow: 'hidden',
-                                height: 'auto',
-                                background: 'white',
-                                borderRadius: '20px',
-                                marginTop: '5px',
-                                border: '1px solid #e6e6e6'
-                            }}>
-                                <Row gutter={4}>
-                                    <Col span={22}>
-                                        <TextareaAutosize
-                                            style={{
-                                                margin: '0px 0px 0px 0px',
-                                                paddingLeft: '15px',
-                                                resize: 'none',
-                                                outline: 'none',
-                                                lineHeight: '30px',
-                                                overflowY: 'hidden',
-                                                width: '100%',
-                                                minHeight: '30px',
-                                                height: '30px',
-                                                border: 'none'
-                                            }}
-                                            placeholder="댓글을 입력해주세요."
-                                            value={commentText}
-                                            onChange={onChangeCommentText}
-                                            autoFocus={true}
-                                        />
-                                    </Col>
-                                    <Col span={2}>
-                                        <div style={{width: '10px', margin: '10px 0px 0px 10px'}}>
-                                            <a>
-                                                <Send
-                                                    onSubmitComment={onSubmitComment}
-                                                    isAddingComment={isAddingComment}
-                                                />
-                                            </a>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                    </Form>
+                    <CommentForm
+                        onSubmitComment={onSubmitComment}
+                        commentText={commentText}
+                        onChangeCommentText={onChangeCommentText}
+                        isAddingComment={isAddingComment}
+                    />
                 </>
             )}
             <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}

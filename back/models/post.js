@@ -8,10 +8,11 @@ module.exports = (sequelize,DataTypes) => {
             type:DataTypes.BOOLEAN,
             allowNull:false,
             defaultValue:false,
-        }
+        },
     }, {
         charset :'utf8mb4',//한글 + 이모티콘
         collate : 'utf8mb4_general_ci',
+        timestamps: true,
     });
 
     Post.associate = (db) => {

@@ -3,6 +3,7 @@ import MyProfile from "../containers/MyProfile";
 import { Col } from "antd";
 import {useSelector} from "react-redux";
 import ProfileEditModal from "./ProfileEditModal";
+import PwEditModal from "./PwEditModal";
 
 const LeftProfile =({span})=>{
     const {me} = useSelector(state => state.user);
@@ -14,6 +15,7 @@ const LeftProfile =({span})=>{
                     <>
                         <MyProfile target={me}/>
                         <ProfileEditModal/>
+                        <PwEditModal/>
                     </>
                     : <></>}
             </Col>

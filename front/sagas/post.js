@@ -43,6 +43,10 @@ import {
     UPLOAD_EDIT_IMAGES_SUCCESS,
     UPLOAD_EDIT_IMAGES_FAILURE,
     UPLOAD_EDIT_IMAGES_REQUEST,
+    EDIT_COMMENT_SUCCESS,
+    EDIT_COMMENT_FAILURE,
+    EDIT_COMMENT_REQUEST,
+    REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_FAILURE, REMOVE_COMMENT_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -196,6 +200,67 @@ function* addComment(action) {
 
 function* watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);
+}
+
+function editCommentAPI(data) {
+    return axios.patch(`/post/${data.postId}/comment/${data.commentId}`, { content: data.content }, {
+        withCredentials: true,
+    });
+}
+
+function* editComment(action) {
+    try {
+        const result = yield call(editCommentAPI, action.data);
+        yield put({
+            type: EDIT_COMMENT_SUCCESS,
+            data: {
+                postId: action.data.postId,
+                comment: result.data,
+            },
+        });
+        console.log('hey???');
+    } catch (e) {
+        console.error(e);
+        console.log(e);
+        yield put({
+            type: EDIT_COMMENT_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchEditComment() {
+    yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
+}
+
+function removeCommentAPI(data) {
+    return axios.delete(`/post/${data.postId}/comment/${data.commentId}`, {
+        withCredentials: true,
+    });
+}
+
+function* removeComment(action) {
+    try {
+        const result = yield call(removeCommentAPI, action.data);
+        yield put({
+            type: REMOVE_COMMENT_SUCCESS,
+            data: {
+                postId: action.data.postId,
+                commentId:action.data.commentId,
+                comment: result.data,
+            },
+        });
+    } catch (e) {
+        console.error(e);
+        yield put({
+            type: REMOVE_COMMENT_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchRemoveComment() {
+    yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
 function loadCommentsAPI(postId) {
@@ -432,5 +497,7 @@ export default function* postSaga() {
         fork(watchLoadPost),
         fork(watchEditPost),
         fork(watchEditImages),
+        fork(watchEditComment),
+        fork(watchRemoveComment),
     ]);
 }

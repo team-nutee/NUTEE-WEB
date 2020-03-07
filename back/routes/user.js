@@ -37,13 +37,23 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where: {
-                [Op.or]:[{userId: req.body.userId},{nickname:req.body.nickname}]
+                userId: req.body.userId
             },
         });
         if (exUser) {
             return (
-                res.status(401).send('이미 사용중인 아이디입니다.')
+                res.status(409).send('\"message\":\"이미 사용중인 아이디입니다.\"')
             );
+        }
+        const nickUser = await db.User.findOne({
+            where:{
+                nickname:req.body.nickname,
+            }
+        });
+        if(nickUser){
+            return(
+                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+            )
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
         const newUser = await db.User.create({
@@ -62,11 +72,11 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     }
 });
 
-router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
+router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
     if(exUser){
         return (
-            res.status(401).send('이미 가입된 이메일입니다.')
+            res.status(409).send('\"message\":\"이미 가입된 이메일입니다.\"')
         );
     }else{
         const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
@@ -97,7 +107,7 @@ router.get('/otpsend',isNotLoggedIn, async(req,res,next)=>{
         const hash = await bcrypt.hash(otp,12);
         console.timeEnd('otp암호화시간(디비저장)');
         await db.OTP.create({hash:hash});
-        res.status(200).send('입력하신 이메일로 OTP 인증번호가 발송되었습니다.');
+        res.status(200).send('\"message\":\"입력하신 이메일로 OTP 인증번호가 발송되었습니다.\"');
     }
 });
 
@@ -134,14 +144,14 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
                     let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
                     if(checktrue){
                         await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
-                        res.status(200).send('OTP 인증에 성공하였습니다.');
+                        res.status(200).send('\"message\":\"OTP 인증에 성공했습니다.\"');
                         break;
                     }else{
                         continue;
                     }
                 }
                 if(i===0){
-                    res.status(401).send('잘못된 인증번호입니다.');
+                    res.status(401).send('\"message\":\"잘못된 인증번호입니다.\"');
                 }
             });
     }catch(err){
@@ -166,6 +176,9 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
                 model: db.User,
                 as: 'Followers',
                 attributes: ['id'],
+            }, {
+                model:db.Image,
+                attributes: ['src'],
             }],
             attributes: ['id', 'nickname'],
         });
@@ -183,7 +196,7 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
 router.post('/logout', (req, res) => { // /api/user/logout
     req.logout();
     req.session.destroy();
-    res.send('\"logout 성공\"');
+    res.send('\"message\": \"logout 성공\"');
 });
 
 router.post('/login', (req, res, next) => { // POST /api/user/login
@@ -214,6 +227,9 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
                         model: db.User,
                         as: 'Followers',
                         attributes: ['id'],
+                    }, {
+                        model:db.Image,
+                        attributes: ['src'],
                     }],
                     attributes: ['id', 'nickname', 'userId'],
                 });
@@ -233,6 +249,10 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => { // /api/us
         });
         const followers = await user.getFollowings({
             attributes: ['id', 'nickname'],
+            include:[{
+                model: db.Image,
+                attribute:['src'],
+            }],
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
@@ -250,6 +270,10 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => { // /api/use
         }); // req.params.id가 문자열 '0'
         const followers = await user.getFollowers({
             attributes: ['id', 'nickname'],
+            include:[{
+                model: db.Image,
+                attribute:['src'],
+            }],
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
@@ -301,13 +325,18 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
 
 router.get('/:id/posts', async (req, res, next) => {
     try {
+        let where = {};
         const posts = await db.Post.findAll({
             where: {
                 UserId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
-                RetweetId: null,
+                isDeleted:0,
             },
             include: [{
                 model: db.User,
+                include:[{
+                    model: db.Image,
+                    attributes: ['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
@@ -316,6 +345,36 @@ router.get('/:id/posts', async (req, res, next) => {
                 through: 'Like',
                 as: 'Likers',
                 attributes: ['id'],
+            }, {
+                model: db.Post,
+                as: 'Retweet',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required:false,
+                    order: [['createdAt', 'ASC']],
+                    where:{isDeleted:false},
+                    as:'Comments',
+                },{
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
+                }],
+            }, {
+                model: db.Comment,
+                required:false,
+                order: [['createdAt', 'ASC']],
+                where:{isDeleted:false},
+                as:'Comments',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }],
             }],
             order: [['createdAt', 'DESC']],
         });
@@ -372,11 +431,11 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
             }
         });
             return(
-                res.status(200).send('이메일 발송이 완료되었습니다.')
+                res.status(200).send('\"message\": \"이메일 발송이 완료되었습니다.\"')
             );
     }else{
         return(
-            res.status(401).send('아이디/이메일이 일치하지 않습니다.')
+            res.status(401).send('\"message\": \"아이디/이메일이 일치하지 않습니다.\"')
         );
     }
 });
@@ -384,13 +443,15 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
 router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     const exUser = await db.User.findOne({where:{id:req.user.id}});
     const Userpassword = await bcrypt.compare(req.body.password, exUser.password);
+    console.log(exUser);
+    console.log(Userpassword);
     if(Userpassword){
         return(
-            res.status(200).send('비밀번호가 확인이 완료되었습니다.')
+            res.status(200).send('\"message\": \"비밀번호가 확인이 완료되었습니다.\"')
         );
     }else{
         return(
-            res.status(401).send('비밀번호가 일치하지 않습니다.')
+            res.status(401).send('\"message\": \"비밀번호가 일치하지 않습니다.\"')
         );
     }
 });
@@ -404,23 +465,20 @@ router.post('/passwordchange',isLoggedIn, async(req,res,next)=> {
     const newpassword = await db.User.update({password: hash}, {where: {id: req.user.id}});
     if (newpassword) {
         return (
-            res.status(200).send('\"비밀번호가 변경되었습니다.\"')
+            res.status(200).send('\"message\": \"비밀번호가 변경되었습니다.\"')
         );
     } else {
         return (
-            res.status(403).send('\"비밀번호 변경에 실패하였습니다.\"')
+            res.status(403).send('\"message\": \"비밀번호 변경에 실패하였습니다.\"')
         );
     }
-    return (
-        res.status(500).send('\"500 Server Error\"')
-    );
 });
 
 router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
     try {
         const exUser = await db.User.findOne({where: {schoolEmail: req.body.schoolEmail}});
         if (!exUser) {
-            res.status(403).send('존재하지 않는 이메일입니다.');
+            res.status(401).send('\"message\": \"존재하지 않는 이메일입니다.\"');
         } else {
             let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
                 service: 'Gmail',
@@ -442,7 +500,7 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
                     console.log('Email sent: ' + info.response);
                 }
             });
-            res.status(200).send('입력하신 이메일로 아이디가 발송되었습니다.');
+            res.status(200).send('\"message\": \"입력하신 이메일로 아이디가 발송되었습니다.\"');
         }
     } catch (err) {
         console.error(err);
@@ -450,31 +508,33 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
     }
 });
       
-router.post('/:id/profile', isLoggedIn, upload.single('src'), async (req, res, next) => {
+router.post('/profile', isLoggedIn, upload.single('image'), async (req, res, next) => {
     try {
-        if(req.file) {
+        const image = db.Image.findOne({
+            where:{ userId:req.user.id }
+        });
+        if(image.UserId) {
             await db.Image.update({ src: req.file.filename
-            }, { where: { UserId: req.params.id },
+            }, { where: { UserId: req.user.id },
             })
         } else {
             await db.Image.create({
                 src: req.file.filename,
-                UserId: req.params.id,
+                UserId: req.user.id,
             })
         }
-        res.status(200).send('성공');
-        console.log(req.file);
+        res.status(200).json(req.file.filename);
     } catch (e) {
         console.error(e);
         next(e);
     }
 });
 
-router.delete('/profile/:id', isLoggedIn, async (req, res, next) => {
+router.delete('/profile', isLoggedIn, async (req, res, next) => {
     try {
-        await db.Image.findOne({ where: { UserId: req.params.id } });
-        await db.Image.destroy({ where: { UserId: req.params.id } });
-        res.status(200).send('성공');
+        await db.Image.findOne({ where: { UserId: req.user.id } });
+        await db.Image.destroy({ where: { UserId: req.user.id } });
+        res.status(200).send('\"message\": \"성공\"');
     } catch (e) {
         console.error(e);
         next(e);

@@ -1,10 +1,12 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {Form, Input, Checkbox, Button, Row ,Col, Icon} from 'antd';
+import {Form, Input, Checkbox, Button, Row ,Col, Icon,Modal} from 'antd';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import Router from 'next/router';
 import {EMAIL_CHECK_REQUEST, OTP_CHECK_REQUEST, SIGN_UP_REQUEST, SIGN_UP_RESET} from "../reducers/user";
 import Paper from "@material-ui/core/Paper";
+import FindId from "../components/FindId";
+import FindPw from "../components/FindPw";
 
 const TextInput = ({value})=>{
     return(
@@ -39,6 +41,21 @@ const Signup = () =>{
     const dispatch = useDispatch();
     const {isSigningUp,isSignedUp, me,emailCheck,otpCheck} = useSelector(state=>state.user);
 
+    const [idVisible,setIdVisible] = useState(false);
+    const [pwVisible,setPwVisible] = useState(false);
+
+    const idOk = () => {
+        setIdVisible(false);
+    };
+    const idCancel = () => {
+        setIdVisible(false);
+    };
+    const pwOk = () => {
+        setPwVisible(false);
+    };
+    const pwCancel = () => {
+        setPwVisible(false);
+    };
     useEffect(() => {
         if (me) {
             alert('로그인 했으니 메인 페이지로 이동합니다.');
@@ -81,7 +98,7 @@ const Signup = () =>{
                 userId: id,
                 password,
                 nickname:nick,
-                email:email,
+                schoolEmail:email,
             }
         });
         if(!isSignedUp){
@@ -96,13 +113,15 @@ const Signup = () =>{
     },[id, nick, password, passwordCheck, term]);
 
     const onEmailCheck = () => {
-        if(!email.includes('@skhu.office.ac.kr')){
+        if(!email.includes('@office.skhu.ac.kr')){
+            alert('이메일을 잘못 입력하셨습니다.');
             return;
         }
+        alert('작성해주신 이메일을 확인하여 인증 절차를 진행해주세요.');
         dispatch({
             type: EMAIL_CHECK_REQUEST,
             data:{
-                email:email,
+                schoolEmail:email,
             }
         });
     };
@@ -122,7 +141,7 @@ const Signup = () =>{
     },[password]);
 
     const onChangeEmailCheck = useCallback((e) => {
-        setEmailError(!e.target.value.includes('@skhu.office.ac.kr'));
+        setEmailError(!e.target.value.includes('@office.skhu.ac.kr'));
         setEmail(e.target.value);
     },[email]);
 
@@ -169,7 +188,7 @@ const Signup = () =>{
                     {passwordError && <div style={{color:'red'}}>비밀번호가 일치하지 않습니다.</div>}
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    <br />
+                    <br/>
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
@@ -191,7 +210,7 @@ const Signup = () =>{
                     </Row>
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    <br />
+                    {emailCheck?<></>:<br/>}
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
@@ -212,14 +231,41 @@ const Signup = () =>{
                     </Row>
                 </div>
                 <div style={{width:'30%', margin:'0 auto'}}>
-                    <Checkbox style={{margin:'15px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
+                    {otpCheck?<></>:<br/>}
+                    <Checkbox style={{margin:'0px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
                     {termError && <div style={{color:'red'}}>약관에 동의하셔야 합니다.</div>}
                 </div>
                 <div style={{width:'90px', margin:'0 auto'}}>
                     <Button style={{marginTop:'5px'}} type="primary" htmlType="submit" loading={isSigningUp}>가입하기</Button>
                 </div>
+                <br/>
+                <div style={{width:'30%', margin:'0 auto'}}>
+                    <a style={{marginLeft:'115px'}} onClick={setIdVisible} >아이디 찾기</a>
+                    <a style={{float:'right',marginRight:'100px'}} onClick={setPwVisible}>비밀번호 찾기</a>
+                </div>
             </Form>
+
         </div>
+            <Modal
+                visible={idVisible}
+                onOk={idOk}
+                onCancel={idCancel}
+                footer={null}
+                closable={false}
+                title='아이디 찾기'
+            >
+                <FindId setIdVisible={setIdVisible}/>
+            </Modal>
+            <Modal
+                visible={pwVisible}
+                onOk={pwOk}
+                onCancel={pwCancel}
+                footer={null}
+                closable={false}
+                title='비밀번호 찾기'
+            >
+                <FindPw setPwVisible={setPwVisible}/>
+            </Modal>
         </Paper>
     )
 };

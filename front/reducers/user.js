@@ -1,4 +1,5 @@
 import produce from 'immer';
+import {UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS} from "./post";
 
 export const initialState = {
     isLoggingOut: false, // 로그아웃 시도중
@@ -8,7 +9,11 @@ export const initialState = {
     isSigningUp: false, // 회원가입 시도중
     signUpErrorReason: '', // 회원가입 실패 사유
     emailCheck:false, //이메일 중복가입 확인 여부
+    findEmailCheck:false,//아이디 찾기
+    findPwCheck:false,//비밀번호 찾기
     otpCheck: false, //otp 인증 여부
+    isCheckedPw:false,//비밀번호 확인 여부
+    profileImagePath:'',
     me: null, // 내 정보
     followingList: [], // 팔로잉 리스트
     followerList: [], // 팔로워 리스트
@@ -27,6 +32,24 @@ export const EMAIL_CHECK_REQUEST = 'EMAIL_CHECK_REQUEST';
 export const EMAIL_CHECK_SUCCESS = 'EMAIL_CHECK_SUCCESS';
 export const EMAIL_CHECK_FAILURE = 'EMAIL_CHECK_FAILURE';
 
+
+
+export const EMAIL_FIND_REQUEST = 'EMAIL_FIND_REQUEST';
+export const EMAIL_FIND_SUCCESS = 'EMAIL_FIND_SUCCESS';
+export const EMAIL_FIND_FAILURE = 'EMAIL_FIND_FAILURE';
+
+export const PW_FIND_REQUEST = 'PW_FIND_REQUEST';
+export const PW_FIND_SUCCESS = 'PW_FIND_SUCCESS';
+export const PW_FIND_FAILURE = 'PW_FIND_FAILURE';
+
+export const EDIT_PWCK_REQUEST = 'EDIT_PWCK_REQUEST';
+export const EDIT_PWCK_SUCCESS = 'EDIT_PWCK_SUCCESS';
+export const EDIT_PWCK_FAILURE = 'EDIT_PWCK_FAILURE';
+
+export const EDIT_PW_REQUEST = 'EDIT_PW_REQUEST';
+export const EDIT_PW_SUCCESS = 'EDIT_PW_SUCCESS';
+export const EDIT_PW_FAILURE = 'EDIT_PW_FAILURE';
+
 export const OTP_CHECK_REQUEST = 'OTP_CHECK_REQUEST';
 export const OTP_CHECK_SUCCESS = 'OTP_CHECK_SUCCESS';
 export const OTP_CHECK_FAILURE = 'OTP_CHECK_FAILURE';
@@ -40,6 +63,10 @@ export const LOG_IN_FAILURE = 'LOG_IN_FAILURE'; // 액션의 이름
 export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
 export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
+
+export const UPLOAD_PROIMG_REQUEST = 'UPLOAD_PROIMG_REQUEST';
+export const UPLOAD_PROIMG_SUCCESS = 'UPLOAD_PROIMG_SUCCESS';
+export const UPLOAD_PROIMG_FAILURE = 'UPLOAD_PROIMG_FAILURE';
 
 export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
@@ -110,11 +137,23 @@ export default (state = initialState, action) => {
             case SIGN_UP_SUCCESS: {
                 draft.isSigningUp = false;
                 draft.isSignedUp = true;
+                draft.otpCheck = false;
+                draft.emailCheck = false;
                 break;
             }
             case SIGN_UP_FAILURE: {
                 draft.isSigningUp = false;
                 draft.signUpErrorReason = action.error;
+                break;
+            }
+            case UPLOAD_PROIMG_REQUEST: {
+                break;
+            }
+            case UPLOAD_PROIMG_SUCCESS: {
+                draft.profileImagePath = action.data;
+                break;
+            }
+            case UPLOAD_PROIMG_FAILURE: {
                 break;
             }
             case OTP_CHECK_REQUEST: {
@@ -139,6 +178,51 @@ export default (state = initialState, action) => {
             }
             case EMAIL_CHECK_FAILURE: {
                 draft.emailCheck = false;
+                break;
+            }
+            case EDIT_PWCK_REQUEST: {
+                draft.isCheckedPw = false;
+                break;
+            }
+            case EDIT_PWCK_SUCCESS: {
+                draft.isCheckedPw = true;
+                break;
+            }
+            case EDIT_PWCK_FAILURE: {
+                draft.isCheckedPw = false;
+                break;
+            }
+            case EDIT_PW_REQUEST: {
+                break;
+            }
+            case EDIT_PW_SUCCESS: {
+                break;
+            }
+            case EDIT_PW_FAILURE: {
+                break;
+            }
+            case EMAIL_FIND_REQUEST: {
+                draft.findEmailCheck = false;
+                break;
+            }
+            case EMAIL_FIND_SUCCESS: {
+                draft.findEmailCheck = true;
+                break;
+            }
+            case EMAIL_FIND_FAILURE: {
+                draft.findEmailCheck = false;
+                break;
+            }
+            case PW_FIND_REQUEST: {
+                draft.findPwCheck = false;
+                break;
+            }
+            case PW_FIND_SUCCESS: {
+                draft.findPwCheck = true;
+                break;
+            }
+            case PW_FIND_FAILURE: {
+                draft.findPwCheck = false;
                 break;
             }
             case SIGN_UP_RESET:{

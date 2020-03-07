@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import Link from 'next/link';
 import {useSelector,useDispatch} from 'react-redux';
 import {FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST} from "../reducers/user";
+import ProfileAvatar from "../components/ProfileAvatar";
 
 const MyProfile = ({target}) => {
     const dispatch = useDispatch();
@@ -44,7 +45,11 @@ const MyProfile = ({target}) => {
                       ]}
                 >
                     <Card.Meta
-                        avatar={<Avatar>{target.nickname[0]}</Avatar>}
+                        avatar={target.Image?
+                                <ProfileAvatar nickname={target.nickname} imagePath={target.Image.src}/>
+                                :
+                                <ProfileAvatar nickname={target.nickname}/>
+                        }
                         title={!target || me.id === target.id
                             ? <>{target.nickname}</>
                             : target.Followers && target.Followers.find(v => v.id === me.id)

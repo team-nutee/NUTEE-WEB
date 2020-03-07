@@ -5,18 +5,23 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => { // GET /api/posts
     try {
-        let where = {};
+        let where = {isDeleted:0};
         if (parseInt(req.query.lastId, 10)) {
             where = {
                 id: {
                     [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10), // less than
                 },
+                isDeleted:0,
             };
         }
         const posts = await db.Post.findAll({
             where,
             include: [{
                 model: db.User,
+                include:[{
+                    model:db.Image,
+                    attributes: ['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
@@ -33,10 +38,23 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required:false,
+                    order: [['createdAt', 'ASC']],
+                    where:{isDeleted:false},
+                    as:'Comments',
+                },{
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
                 }],
             }, {
                 model: db.Comment,
+                required:false,
                 order: [['createdAt', 'ASC']],
+                where:{isDeleted:false},
                 as:'Comments',
                 include: [{
                     model: db.User,

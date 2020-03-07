@@ -14,7 +14,7 @@ const upload = multer({
         },
         filename(req, file, done) {
             const ext = path.extname(file.originalname);
-            const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+            const basename = path.basename(file.originalname, ext);
             done(null, basename + new Date().valueOf() + ext);
         },
     }),
@@ -25,7 +25,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
     try {
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const newPost = await db.Post.create({
-            content: req.body.content, // ex) '제로초 파이팅 #구독 #좋아요 눌러주세요'
+            content: req.body.content,
             UserId: req.user.id,
         });
         if (hashtags) {
@@ -50,6 +50,10 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST 
             where: { id: newPost.id },
             include: [{
                 model: db.User,
+                include:[{
+                   model:db.Image,
+                   attributes:['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
@@ -71,7 +75,10 @@ router.patch('/', async (req, res, next) => { //게시물 수정
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const post = await db.Post.findOne({ where: { id: req.body.postId }});
         if (!post) {
-            return res.status(404).send('수정할 포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"수정할 포스트가 존재하지 않습니다.\"');
+        }
+        if(req.user.id!==post.UserId){
+            return res.status(403).send('수정한 권한이 없습니다.');
         }
 
         //게시 글에 대한 수정
@@ -152,10 +159,14 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
-        await db.Post.destroy({ where: { id: req.params.id } });
-        res.send(req.params.id);
+        if(req.user.id!==post.UserId){
+            console.log(req.user.id,post.UserId);
+            return res.status(403).send('삭제 할 권한이 없습니다.');
+        }
+        await db.Post.update( {isDeleted:true},{where: { id: req.params.id } });
+        res.status(200).send(req.params.id);
     } catch (e) {
         console.error(e);
         next(e);
@@ -164,6 +175,8 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
 
 router.post('/:id/report', async (req, res, next) => {
    try {
+       console.log(req.body.content);
+       console.log(req.params.id);
        await db.Report.create({
            content: req.body.content, // 신고 사유
            PostId: req.params.id,
@@ -186,16 +199,21 @@ router.get('/:id/comments', async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         const comments = await db.Comment.findAll({
             where: {
                 PostId: req.params.id,
+                isDeleted:0,
             },
             order: [['createdAt', 'ASC']],
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
             }],
         });
         res.json(comments);
@@ -209,7 +227,7 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         const newComment = await db.Comment.create({
             PostId: post.id,
@@ -233,25 +251,52 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
     }
 });
 
-router.patch('/:id/comment', isLoggedIn, async (req, res, next) => {
+router.patch('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     try {
-        await db.Comment.update({ content: req.body.content
+        const comment = await db.Comment.findOne({
+            where: {
+                id: req.params.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }],
+        });
+        if(req.user.id!==comment.UserId){
+            return res.status(403).send('수정 할 권한이 없습니다.');
+        }
+        const result = await db.Comment.update({ content: req.body.content
         }, { where: {
                 id: req.params.id,
                 UserId: req.user.id,
             },
         });
-        res.status(200).json(req.body.content);
+        res.status(200).json(result);
     } catch(err) {
         console.error(err);
         next(err);
     }
 });
 
-router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
+router.delete('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     try {
-        await db.Comment.destroy({ where: { id: req.params.id, UserId: req.user.id, } });
-        res.status(200).json(req.params.id);
+        const comment = await db.Comment.findOne({
+            where: {
+                id: req.params.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+            }],
+        });
+        if(req.user.id!==comment.UserId){
+            return res.status(403).send('삭제 할 권한이 없습니다.');
+        }
+        await db.Comment.update({isDeleted:1},{ where: { id: req.params.id, UserId: req.user.id, } });
+        res.status(200).json({
+            postId:req.params.postId,
+            commentId:req.params.id
+        });
     } catch (e) {
         console.error(e);
         next(e);
@@ -260,10 +305,9 @@ router.delete('/:id/comment', isLoggedIn, async (req, res, next) => {
 
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
-        console.log('조아요');
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         await post.addLikers(req.user.id);
         res.json({ userId: req.user.id });
@@ -277,7 +321,7 @@ router.delete('/:id/like', isLoggedIn, async (req, res, next) => {
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id }});
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         await post.removeLiker(req.user.id);
         res.json({ userId: req.user.id });
@@ -297,10 +341,10 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             }],
         });
         if (!post) {
-            return res.status(404).send('포스트가 존재하지 않습니다.');
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
-            return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
+            return res.status(403).send('\"message\": \"자신의 글은 리트윗할 수 없습니다.\"');
         }
         const retweetTargetId = post.RetweetId || post.id;
         const exPost = await db.Post.findOne({
@@ -310,7 +354,7 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             },
         });
         if (exPost) {
-            return res.status(403).send('이미 리트윗했습니다.');
+            return res.status(403).send('\"message\": \"이미 리트윗했습니다.\"');
         }
         const retweet = await db.Post.create({
             UserId: req.user.id,
