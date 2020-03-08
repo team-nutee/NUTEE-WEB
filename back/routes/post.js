@@ -185,7 +185,7 @@ router.post('/:id/report', async (req, res, next) => {
            where : { PostId: req.params.id }
        });
        if (result.count>=1) {
-           await db.Post.update({ isDeleted: true }, { where: { id: req.params.id } });
+           await db.Post.update({ isBlocked: true }, { where: { id: req.params.id } });
            console.log('result.count');
        }
        res.status(200).json(req.params.id);

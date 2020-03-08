@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "test": "nodemon"
   },
   "author": "MoonHKLee",
   "license": "MIT",
