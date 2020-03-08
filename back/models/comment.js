@@ -11,7 +11,7 @@ module.exports = (sequelize,DataTypes) => {
         },
         commentId: {
             type:DataTypes.INTEGER(11),
-            allowNull: false,
+            allowNull: true,
         },
     }, {
         charset :'utf8mb4',//한글 + 이모티콘

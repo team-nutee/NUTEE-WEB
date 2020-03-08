@@ -231,7 +231,7 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
             PostId: post.id,
             UserId: req.user.id,
             content: req.body.content,
-            commentId: 0,
+            commentId: null,
         });
         await post.addComment(newComment.id);
         const comment = await db.Comment.findOne({
@@ -277,26 +277,26 @@ router.patch('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     }
 });
 
-router.post('/:postId/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api/post/10/2/comment
+router.post('/:postId/comment/:commentId', isLoggedIn, async (req, res, next) => { // POST /api/post/10/comment/2
     try {
         const post = await db.Post.findOne({ where: { id: req.params.postId } });
         if (!post) {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
-        const comment = await db.Comment.findOne({ where: { id: req.params.id } });
+        const comment = await db.Comment.findOne({ where: { id: req.params.commentId } });
         if (!comment) {
             return res.status(404).send('\"message\": \"댓글이 존재하지 않습니다.\"');
         }
-        const Recomment = await db.Comment.create({
+        const recomment = await db.Comment.create({
             PostId: req.params.postId,
             UserId: req.user.id,
             content: req.body.content,
-            commentId: req.params.id,
+            commentId: req.params.commentId,
         });
-        await post.addComment(Recomment.id);
+        await post.addComment(recomment.id);
         const comments = await db.Comment.findOne({
             where: {
-                id: Recomment.id,
+                id: recomment.id,
             },
             include: [{
                 model: db.User,
