@@ -9,6 +9,10 @@ module.exports = (sequelize,DataTypes) => {
             allowNull:false,
             defaultValue:false,
         },
+        commentId: {
+            type:DataTypes.INTEGER(11),
+            allowNull: true,
+        },
     }, {
         charset :'utf8mb4',//한글 + 이모티콘
         collate : 'utf8mb4_general_ci',
