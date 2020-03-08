@@ -231,7 +231,6 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
             PostId: post.id,
             UserId: req.user.id,
             content: req.body.content,
-            commentId: null,
         });
         await post.addComment(newComment.id);
         const comment = await db.Comment.findOne({
