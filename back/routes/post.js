@@ -195,56 +195,12 @@ router.post('/:id/report', async (req, res, next) => {
    }
 });
 
-router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/comments?cur=1
+router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/comments
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
-
-        if (parseInt(req.query.cur, 10)) {
-            let where = {
-                cur: {
-                    [db.Sequelize.Op.lt]: parseInt(req.query.cur, 10),
-                },
-            isDeleted:0,
-            };
-        }
-
-        let curPage = req.query.cur; //요청 페이지 넘버
-        let comment_size = 10; //페이지당 댓글 갯수
-        let page_size = 10; //페이지의 갯수 1~10개
-        let offset;
-
-        if(curPage > 1) {
-            offset = 10 * (curPage - 1);
-        } else {
-            offset = 0;
-        }
-
-        const result = await db.Comment.findAndCountAll({
-            where: {
-                PostId: req.params.id,
-                isDeleted: 0,
-            },
-            offset: offset,
-            limit: 10,
-        });
-
-        let totalPage = Math.ceil(result.count / comment_size );// 전체 페이지 수
-        let totalSet = Math.ceil(totalPage / page_size); //전체 세트 수, 페이지 1~10개가 한 세트
-        let curSet = Math.ceil(curPage / page_size); // 현재 세트 번호
-        let startPage = ((curSet - 1) * 10) + 1; //현재 세트 내 출력될 시작 페이지
-        let endPage = (startPage + page_size) - 1; //현재 세트 내 출력될 마지막 페이지
-
-        const result2 = {
-            "curPage": curPage,
-            "totalPage": totalPage,
-            "totalSet": totalSet,
-            "curSet": curSet,
-            "startPage": startPage,
-            "endPage": endPage,
-        };
 
         const comments = await db.Comment.findAll({
             where: {
@@ -260,13 +216,11 @@ router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/co
                     attributes:['src']
                 }]
             }],
-            offset: offset,
-            limit: 10,
+            limit: parseInt(req.query.limit, 10),
+            offset: parseInt(req.query.offset, 10),
         });
-        res.status(200).json({
-            paging : result2,
-            comments: comments,
-        });
+
+        res.status(200).json(comments);
     } catch (e) {
         console.error(e);
         next(e);
