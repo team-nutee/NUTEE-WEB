@@ -175,8 +175,6 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
 
 router.post('/:id/report', async (req, res, next) => {
    try {
-       console.log(req.body.content);
-       console.log(req.params.id);
        await db.Report.create({
            content: req.body.content, // 신고 사유
            PostId: req.params.id,
@@ -185,8 +183,9 @@ router.post('/:id/report', async (req, res, next) => {
            where : { PostId: req.params.id }
        });
        if (result.count>=1) {
-           await db.Post.update({ isBlocked: true }, { where: { id: req.params.id } });
-           console.log('result.count');
+           const post = await db.Post.update({ isBlocked: true }, { where: { id: req.params.id } });
+           res.status(200).json(post);
+           return;
        }
        res.status(200).json(req.params.id);
    } catch (err) {

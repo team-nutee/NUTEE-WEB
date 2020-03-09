@@ -86,6 +86,10 @@ export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
+export const REPORT_REQUEST = 'REPORT_REQUEST';
+export const REPORT_SUCCESS = 'REPORT_SUCCESS';
+export const REPORT_FAILURE = 'REPORT_FAILURE';
+
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
@@ -282,6 +286,19 @@ export default (state = initialState, action) => {
                 break;
             }
             case RETWEET_FAILURE: {
+                break;
+            }
+            case REPORT_REQUEST: {
+                break;
+            }
+            case REPORT_SUCCESS: {
+                if(action.data.isBlocked){
+                    const index = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+                    draft.mainPosts[index] = action.data;
+                }
+                break;
+            }
+            case REPORT_FAILURE: {
                 break;
             }
             case REMOVE_POST_REQUEST: {
