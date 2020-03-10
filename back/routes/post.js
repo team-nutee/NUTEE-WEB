@@ -255,6 +255,10 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
             }],
         });
         return res.json(comment);
@@ -315,6 +319,10 @@ router.post('/:postId/comment/:parentId', isLoggedIn, async (req, res, next) => 
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
             }],
         });
         return res.json(comments);

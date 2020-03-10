@@ -5,6 +5,9 @@ import {List} from "antd";
 import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
 import EditCommentForm from "./EditCommentForm";
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import DeleteFilled from "@ant-design/icons/lib/icons/DeleteFilled";
+import MessageTwoTone from "@ant-design/icons/lib/icons/MessageTwoTone";
 
 const Recomment = ({item, post}) => {
     const dispatch = useDispatch();
@@ -28,9 +31,9 @@ const Recomment = ({item, post}) => {
     };
     return (
         <List.Item
-            style={{marginLeft:'10px', border:'none'}}
-            actions={!edit ? [<a key="edit" onClick={onEdit}>수정</a>,
-                <a key="delete" onClick={onRemove(post, item)}>삭제</a>] : <></>}
+            style={{border:'none',marginBottom:'-10px',paddingLeft:'10px'}}
+            actions={!edit ? [<a key="edit" onClick={onEdit}><EditOutlined /></a>,
+                <a key="delete" onClick={onRemove(post, item)}><DeleteFilled /></a>] : <></>}
         >{item === null ?
             <></>
             :

@@ -1,17 +1,28 @@
 import React, {useCallback, useState} from 'react';
-import {Avatar, Icon, List} from "antd";
+import {Avatar, Icon, List} from 'antd';
 import Link from "next/link";
 import EditCommentForm from "./EditCommentForm";
 import {useDispatch} from "react-redux";
 import {REMOVE_COMMENT_REQUEST, REMOVE_POST_REQUEST} from "../reducers/post";
 import ProfileAvatar from "./ProfileAvatar";
 import Recomment from "./Recomment";
+import DeleteFilled from "@ant-design/icons/lib/icons/DeleteFilled";
+import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
+import MessageTwoTone from "@ant-design/icons/lib/icons/MessageTwoTone";
+import ReCommentForm from "./ReCommentForm";
 
 const Comments = ({item, post}) => {
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
+    const [reply,setReply] = useState(false);
     const onEdit = () => {
         setEdit(true);
+    };
+    const onReply = () => {
+        setReply(true);
+    };
+    const cancelReply = () => {
+        setReply(false);
     };
     const onRemove = (post, item) => () => {
         const result = confirm('정말로 삭제하시겠습니까?');
@@ -30,9 +41,10 @@ const Comments = ({item, post}) => {
     return (
         <>
             <List.Item
-                style={{marginLeft:'-15px', border:'none'}}
-                actions={!edit ? [<a key="edit" onClick={onEdit}>수정</a>,
-                    <a key="delete" onClick={onRemove(post, item)}>삭제</a>] : <></>}
+                style={{marginLeft:'-15px',marginBottom:'-15px', border:'none'}}
+                actions={!edit ? [<a key="reComment" onClick={onReply}><MessageTwoTone /></a>,
+                    <a key="edit" onClick={onEdit}><EditOutlined /></a>,
+                    <a key="delete" onClick={onRemove(post, item)}><DeleteFilled /></a>] : <></>}
             >{item===null ?
                 <></>
                 :
@@ -84,6 +96,11 @@ const Comments = ({item, post}) => {
                 )
             })
             :
+                <></>
+            }
+            {reply?
+                <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id}/>
+                :
                 <></>
             }
         </>

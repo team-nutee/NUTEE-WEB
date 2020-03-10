@@ -51,7 +51,7 @@ import {
     REMOVE_COMMENT_REQUEST,
     REPORT_SUCCESS,
     REPORT_FAILURE,
-    REPORT_REQUEST,
+    REPORT_REQUEST, ADD_RECOMMENT_SUCCESS, ADD_RECOMMENT_FAILURE, ADD_RECOMMENT_REQUEST,
 } from '../reducers/post';
 import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from '../reducers/user';
 
@@ -205,6 +205,36 @@ function* addComment(action) {
 
 function* watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);
+}
+
+function addReCommentAPI(data) {
+    return axios.post(`/post/${data.postId}/comment/${data.parentId}`, {content: data.content}, {
+        withCredentials: true,
+    });
+}
+
+function* addReComment(action) {
+    try {
+        const result = yield call(addReCommentAPI, action.data);
+        yield put({
+            type: ADD_RECOMMENT_SUCCESS,
+            data: {
+                postId: action.data.postId,
+                parentId: result.data.ParentId,
+                reComment:result.data
+            },
+        });
+    } catch (e) {
+        console.error(e);
+        yield put({
+            type: ADD_RECOMMENT_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchAddReComment() {
+    yield takeLatest(ADD_RECOMMENT_REQUEST, addReComment);
 }
 
 function editCommentAPI(data) {
@@ -530,5 +560,6 @@ export default function* postSaga() {
         fork(watchEditComment),
         fork(watchRemoveComment),
         fork(watchReport),
+        fork(watchAddReComment),
     ]);
 }

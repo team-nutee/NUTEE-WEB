@@ -28,7 +28,7 @@ const Notice = () =>{
     return(
         <Tabs size='small' type="card">
             {list.map((v)=>(
-                <TabPane tab="학사" key={v.key}>
+                <TabPane tab={v.tab} key={v.key}>
                     <List style={{
                         background: 'white',
                         borderRadius: '0',
