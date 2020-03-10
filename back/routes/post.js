@@ -194,12 +194,13 @@ router.post('/:id/report', async (req, res, next) => {
    }
 });
 
-router.get('/:id/comments', async (req, res, next) => {
+router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/comments
     try {
         const post = await db.Post.findOne({ where: { id: req.params.id } });
         if (!post) {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
+
         const comments = await db.Comment.findAll({
             where: {
                 PostId: req.params.id,
@@ -227,9 +228,12 @@ router.get('/:id/comments', async (req, res, next) => {
                     }]
                 }],
             }],
+            limit: parseInt(req.query.limit, 10),
+            offset: parseInt(req.query.offset, 10),
             as:'Comment'
         });
-        res.json(comments);
+
+        res.status(200).json(comments);
     } catch (e) {
         console.error(e);
         next(e);
