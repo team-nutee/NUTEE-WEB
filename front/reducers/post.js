@@ -21,6 +21,10 @@ export const initialState = {
     addCommentErrorReason: '',//댓글업로드 실패사유
     commentAdded: false,//댓글 업로드 성공
 
+    isAddingReComment: false,//답글 업로드중
+    addReCommentErrorReason: '',//답글업로드 실패사유
+    reCommentAdded: false,//답글 업로드 성공
+
     singlePost: null,
 };
 
@@ -82,9 +86,17 @@ export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST';
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
 export const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENTS_FAILURE';
 
+export const ADD_RECOMMENT_REQUEST = 'ADD_RECOMMENT_REQUEST';
+export const ADD_RECOMMENT_SUCCESS = 'ADD_RECOMMENT_SUCCESS';
+export const ADD_RECOMMENT_FAILURE = 'ADD_RECOMMENT_FAILURE';
+
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
+export const REPORT_REQUEST = 'REPORT_REQUEST';
+export const REPORT_SUCCESS = 'REPORT_SUCCESS';
+export const REPORT_FAILURE = 'REPORT_FAILURE';
 
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
@@ -170,6 +182,28 @@ export default (state = initialState, action) => {
             }
             case EDIT_POST_IMAGES: {
                 draft.editImagePaths = action.data;
+                break;
+            }
+            case ADD_RECOMMENT_REQUEST: {
+                draft.isAddingReComment = true;
+                draft.addReCommentErrorReason = '';
+                draft.reCommentAdded = false;
+                break;
+            }
+            case ADD_RECOMMENT_SUCCESS: {
+                const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+                console.log(postIndex);
+                console.log(action.data);
+                const commentIndex = draft.mainPosts[postIndex].Comments.findIndex(v => v.id === action.data.parentId);
+                console.log(commentIndex);
+                draft.mainPosts[postIndex].Comments[commentIndex].ReComment.push(action.data.reComment);
+                draft.isAddingReComment = false;
+                draft.reCommentAdded = true;
+                break;
+            }
+            case ADD_RECOMMENT_FAILURE: {
+                draft.isAddingReComment = false;
+                draft.addReCommentErrorReason = action.error;
                 break;
             }
             case ADD_COMMENT_REQUEST: {
@@ -282,6 +316,19 @@ export default (state = initialState, action) => {
                 break;
             }
             case RETWEET_FAILURE: {
+                break;
+            }
+            case REPORT_REQUEST: {
+                break;
+            }
+            case REPORT_SUCCESS: {
+                if(action.data.isBlocked){
+                    const index = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+                    draft.mainPosts[index] = action.data;
+                }
+                break;
+            }
+            case REPORT_FAILURE: {
                 break;
             }
             case REMOVE_POST_REQUEST: {

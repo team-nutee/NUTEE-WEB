@@ -9,7 +9,7 @@ import {MdSend} from "react-icons/md";
 import {
     ADD_COMMENT_REQUEST,
     LIKE_POST_REQUEST,
-    LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST,
+    LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, REPORT_REQUEST,
     RETWEET_REQUEST,
     UNLIKE_POST_REQUEST,
 } from '../reducers/post';
@@ -26,11 +26,6 @@ import {TARGET_URL} from "../static";
 const CardWrapper = styled.div`
   margin-bottom: 20px;
 `;
-// <Button onClick={showModal}>수정</Button>
-// <Button type="danger" onClick={onRemovePost(post.id)}>삭제</Button>
-// <Modal footer={null} bodyStyle={{padding:'0px', zIndex:1}} title='게시글 수정' visible={visible} onOk={handelOk} onCancel={handleCancel}>
-//     <EditForm postId={post.id}/>
-// </Modal>
 
 const PostCard = ({post}) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -52,6 +47,7 @@ const PostCard = ({post}) => {
         setVisible(false);
     };
     const reportCancel = () => {
+        setReport('');
         setReportVisible(false);
     };
 
@@ -138,7 +134,14 @@ const PostCard = ({post}) => {
     });
 
     const onSubmitReport = useCallback(()=>{
-        console.log('신고전송');
+        dispatch({
+            type: REPORT_REQUEST,
+            data: {
+                postId : post.id,
+                content : report,
+            },
+        });
+        setReportVisible(false);
     });
 
     const menu1 = (
@@ -156,28 +159,6 @@ const PostCard = ({post}) => {
         <Menu>
             <Menu.Item>
                 <a onClick={onReport}>신고</a>
-                <Modal
-                    title="게시물 신고"
-                    visible={reportVisible}
-                    onOk={onSubmitReport}
-                    onCancel={reportCancel}
-                    footer={null}
-                >
-                    <div style={{width:'80%', margin:'0 auto'}}>
-                        <br/>
-                        <Row gutter={8}>
-                            <Col span={18}>
-                                <Input
-                                    prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-                                    placeholder='신고사유' value={report} required onChange={onChangeReport}
-                                />
-                            </Col>
-                            <Col span={6}>
-                                <Button onClick={onSubmitReport} >신고</Button>
-                            </Col>
-                        </Row>
-                    </div>
-                </Modal>
             </Menu.Item>
             <Menu.Item>
                 채팅
@@ -187,108 +168,119 @@ const PostCard = ({post}) => {
 
     return (
         <CardWrapper>
-            <Card
-                cover={post.Images && post.Images[0] && <PostImages images={post.Images}/>}
-                actions={[
-                    <Icon type="retweet" key="retweet" onClick={onRetweet}/>,
-                    <Icon
-                        type="heart"
-                        key="heart"
-                        theme={liked ? 'twoTone' : 'outlined'}
-                        twoToneColor="#eb2f96"
-                        onClick={onToggleLike}
-                    />,
-                    <Icon type="message" key="message" onClick={onToggleComment}/>,
-                    <>
-                        {me && post.UserId === me.id
-                            ? (
-                                <Dropdown overlay={menu1} placement="topRight">
-                                    <Icon type='ellipsis'/>
-                                </Dropdown>
-                            )
-                            : (
-                                <Dropdown overlay={menu2} placement="topRight">
-                                    <Icon type='ellipsis'/>
-                                </Dropdown>
-                            )}
-                    </>,
-                ]}
-                title={post.RetweetId ?
-                    <>
-                        {post.User.Image?
-                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
-                            :
-                            <ProfileAvatar nickname={post.User.nickname}/>
-                        }
-                        <a style={{margin:'0px 10px 0px 10px'}}>{post.User.nickname}</a>님이 글을 공유하였습니다.
-                    </>
-                    : null
-                }
-            >
-                {post.RetweetId && post.Retweet
-                    ? (
-                        <Card
-                             style={{marginBottom:'10px'}} cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
-                        >
-                            <Card.Meta
-                                avatar={(
-                                    <Link
-                                        href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
-                                        as={`/user/${post.Retweet.User.id}`}
-                                    >
-                                        <a>
-                                            {post.Retweet.User.Image?
-                                                <ProfileAvatar nickname={post.Retweet.User.nickname} imagePath={post.Retweet.User.Image.src}/>
-                                                :
-                                                <ProfileAvatar nickname={post.Retweet.User.nickname}/>
-                                            }
-                                        </a>
-                                    </Link>
+            {post.isBlocked ? <Card style={{background: '#F6CED8', textAlign:'center'}}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card> :
+                <Card
+                    cover={post.Images && post.Images[0] && <PostImages images={post.Images}/>}
+                    actions={[
+                        <Icon type="retweet" key="retweet" onClick={onRetweet}/>,
+                        <Icon
+                            type="heart"
+                            key="heart"
+                            theme={liked ? 'twoTone' : 'outlined'}
+                            twoToneColor="#eb2f96"
+                            onClick={onToggleLike}
+                        />,
+                        <Icon type="message" key="message" onClick={onToggleComment}/>,
+                        <>
+                            {me && post.UserId === me.id
+                                ? (
+                                    <Dropdown overlay={menu1} placement="topRight">
+                                        <Icon type='ellipsis'/>
+                                    </Dropdown>
+                                )
+                                : (
+                                    <Dropdown overlay={menu2} placement="topRight">
+                                        <Icon type='ellipsis'/>
+                                    </Dropdown>
                                 )}
-                                title={post.Retweet.User.nickname}
+                        </>,
+                    ]}
+                    title={post.RetweetId ?
+                        <>
+                            {post.User.Image ?
+                                <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                                :
+                                <ProfileAvatar nickname={post.User.nickname}/>
+                            }
+                            <a style={{margin: '0px 10px 0px 10px'}}>{post.User.nickname}</a>님이 글을 공유하였습니다.
+                        </>
+                        : null
+                    }
+                >
+                    {post.RetweetId && post.Retweet
+                        ? (
+                            <Card
+                                style={{marginBottom: '10px'}}
+                                cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
+                            >
+                                <Card.Meta
+                                    avatar={(
+                                        <Link
+                                            href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
+                                            as={`/user/${post.Retweet.User.id}`}
+                                        >
+                                            <a>
+                                                {post.Retweet.User.Image ?
+                                                    <ProfileAvatar nickname={post.Retweet.User.nickname}
+                                                                   imagePath={post.Retweet.User.Image.src}/>
+                                                    :
+                                                    <ProfileAvatar nickname={post.Retweet.User.nickname}/>
+                                                }
+                                            </a>
+                                        </Link>
+                                    )}
+                                    title={post.Retweet.User.nickname}
+                                    description={
+                                        <>
+                                            <PostCardContent
+                                                likers={post.Likers ? post.Likers.length : 0}
+                                                commentN={post.Comments ? post.Comments.length : 0}
+                                                postData={post.Retweet.content}
+                                                retweet={1}
+                                            />
+                                            <h5 style={{
+                                                position: 'absolute',
+                                                right: '15px',
+                                                bottom: '15px',
+                                                fontSize: '12px'
+                                            }}>댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개
+                                                좋아요 {post.Retweet.Likers ? post.Retweet.Likers.length : 0}개</h5>
+                                        </>
+                                    } // a tag x -> Link
+                                />
+                            </Card>
+                        )
+                        : (
+                            <Card.Meta
+                                avatar={post.User.id
+                                    ? (
+                                        <Link href={{pathname: '/user', query: {id: post.User.id}}}
+                                              as={`/user/${post.User.id}`}>
+                                            <a>
+                                                {post.User.Image ?
+                                                    <ProfileAvatar nickname={post.User.nickname}
+                                                                   imagePath={post.User.Image.src}/>
+                                                    :
+                                                    <ProfileAvatar nickname={post.User.nickname}/>
+                                                }
+                                            </a>
+                                        </Link>
+                                    ) : (<>
+                                    </>)
+                                }
+                                title={post.User.nickname}
                                 description={
-                                    <>
                                     <PostCardContent
                                         likers={post.Likers ? post.Likers.length : 0}
                                         commentN={post.Comments ? post.Comments.length : 0}
-                                        postData={post.Retweet.content}
-                                        retweet={1}
+                                        postData={post.content}
                                     />
-                                        <h5 style={{position:'absolute',right:'15px',bottom:'15px',fontSize:'12px'}}>댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개  좋아요 {post.Retweet.Likers ? post.Retweet.Likers.length : 0}개</h5>
-                                    </>
                                 } // a tag x -> Link
+                                loading={true}
                             />
-                        </Card>
-                    )
-                    : (
-                        <Card.Meta
-                            avatar={post.User.id
-                                ? (
-                                <Link href={{pathname: '/user', query: {id: post.User.id}}}
-                                      as={`/user/${post.User.id}`}>
-                                    <a>
-                                        {post.User.Image?
-                                            <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
-                                            :
-                                            <ProfileAvatar nickname={post.User.nickname}/>
-                                        }
-                                    </a>
-                                </Link>
-                            ) :(<>
-                                </>)
-                            }
-                            title={post.User.nickname}
-                            description={
-                                <PostCardContent
-                                    likers={post.Likers ? post.Likers.length : 0}
-                                    commentN={post.Comments ? post.Comments.length : 0}
-                                    postData={post.content}
-                                />
-                            } // a tag x -> Link
-                            loading={true}
-                        />
-                    )}
-            </Card>
+                        )}
+                </Card>
+            }
             {commentFormOpened && (
                 <>
                     <List
@@ -296,7 +288,8 @@ const PostCard = ({post}) => {
                         style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <Comments item={item} post={post} />
+                            <Comments item={item} post={post} >
+                            </Comments>
                         )}
                     />
                     <CommentForm
@@ -310,6 +303,28 @@ const PostCard = ({post}) => {
             <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}
                    onOk={handelOk} onCancel={handleCancel}>
                 <EditForm postId={post.id} postContent={post.content} postImages={post.Images} setVisible={setVisible} visible={visible}/>
+            </Modal>
+            <Modal
+                title="게시물 신고"
+                visible={reportVisible}
+                onOk={onSubmitReport}
+                onCancel={reportCancel}
+                footer={null}
+            >
+                <div style={{width:'80%', margin:'0 auto'}}>
+                    <br/>
+                    <Row gutter={8}>
+                        <Col span={18}>
+                            <Input
+                                prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                placeholder='신고사유' value={report} required onChange={onChangeReport}
+                            />
+                        </Col>
+                        <Col span={6}>
+                            <Button onClick={onSubmitReport} >신고</Button>
+                        </Col>
+                    </Row>
+                </div>
             </Modal>
         </CardWrapper>
     );

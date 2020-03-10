@@ -175,8 +175,6 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
 
 router.post('/:id/report', async (req, res, next) => {
    try {
-       console.log(req.body.content);
-       console.log(req.params.id);
        await db.Report.create({
            content: req.body.content, // 신고 사유
            PostId: req.params.id,
@@ -185,8 +183,9 @@ router.post('/:id/report', async (req, res, next) => {
            where : { PostId: req.params.id }
        });
        if (result.count>=1) {
-           await db.Post.update({ isDeleted: true }, { where: { id: req.params.id } });
-           console.log('result.count');
+           const post = await db.Post.update({ isBlocked: true }, { where: { id: req.params.id } });
+           res.status(200).json(post);
+           return;
        }
        res.status(200).json(req.params.id);
    } catch (err) {
@@ -206,6 +205,7 @@ router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/co
             where: {
                 PostId: req.params.id,
                 isDeleted:0,
+                ParentId : null,
             },
             order: [['createdAt', 'ASC']],
             include: [{
@@ -215,9 +215,22 @@ router.get('/:id/comments', async (req, res, next) => { //POST /api/post/1000/co
                     model:db.Image,
                     attributes:['src']
                 }]
+            }, {
+                model: db.Comment,
+                as:'ReComment',
+                required:false,
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                    include:[{
+                        model:db.Image,
+                        attributes:['src']
+                    }]
+                }],
             }],
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
+            as:'Comment'
         });
 
         res.status(200).json(comments);
@@ -246,6 +259,10 @@ router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api
             include: [{
                 model: db.User,
                 attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
             }],
         });
         return res.json(comment);
@@ -279,6 +296,43 @@ router.patch('/:postId/comment/:id', isLoggedIn, async (req, res, next) => {
     } catch(err) {
         console.error(err);
         next(err);
+    }
+});
+
+router.post('/:postId/comment/:parentId', isLoggedIn, async (req, res, next) => { // POST /api/post/10/comment/2
+    try {
+        const post = await db.Post.findOne({ where: { id: req.params.postId } });
+        if (!post) {
+            return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
+        }
+        const comment = await db.Comment.findOne({ where: { id: req.params.parentId } });
+        if (!comment) {
+            return res.status(404).send('\"message\": \"댓글이 존재하지 않습니다.\"');
+        }
+        const reComment = await db.Comment.create({
+            PostId: req.params.postId,
+            UserId: req.user.id,
+            content: req.body.content,
+            ParentId: req.params.parentId,
+        });
+        await post.addComment(reComment.id);
+        const comments = await db.Comment.findOne({
+            where: {
+                id: reComment.id,
+            },
+            include: [{
+                model: db.User,
+                attributes: ['id', 'nickname'],
+                include:[{
+                    model:db.Image,
+                    attributes:['src']
+                }]
+            }],
+        });
+        return res.json(comments);
+    } catch (e) {
+        console.error(e);
+        return next(e);
     }
 });
 

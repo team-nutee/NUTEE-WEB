@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, throttle, call } from 'redux-saga/effects';
+import {all, fork, takeLatest, put, throttle, call} from 'redux-saga/effects';
 import axios from 'axios';
 import {
     ADD_POST_FAILURE,
@@ -46,9 +46,14 @@ import {
     EDIT_COMMENT_SUCCESS,
     EDIT_COMMENT_FAILURE,
     EDIT_COMMENT_REQUEST,
-    REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_FAILURE, REMOVE_COMMENT_REQUEST,
+    REMOVE_COMMENT_SUCCESS,
+    REMOVE_COMMENT_FAILURE,
+    REMOVE_COMMENT_REQUEST,
+    REPORT_SUCCESS,
+    REPORT_FAILURE,
+    REPORT_REQUEST, ADD_RECOMMENT_SUCCESS, ADD_RECOMMENT_FAILURE, ADD_RECOMMENT_REQUEST,
 } from '../reducers/post';
-import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from '../reducers/user';
 
 function addPostAPI(postData) {
     return axios.post('/post', postData, {
@@ -174,7 +179,7 @@ function* watchLoadUserPosts() {
 }
 
 function addCommentAPI(data) {
-    return axios.post(`/post/${data.postId}/comment`, { content: data.content }, {
+    return axios.post(`/post/${data.postId}/comment`, {content: data.content}, {
         withCredentials: true,
     });
 }
@@ -202,8 +207,38 @@ function* watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
+function addReCommentAPI(data) {
+    return axios.post(`/post/${data.postId}/comment/${data.parentId}`, {content: data.content}, {
+        withCredentials: true,
+    });
+}
+
+function* addReComment(action) {
+    try {
+        const result = yield call(addReCommentAPI, action.data);
+        yield put({
+            type: ADD_RECOMMENT_SUCCESS,
+            data: {
+                postId: action.data.postId,
+                parentId: result.data.ParentId,
+                reComment:result.data
+            },
+        });
+    } catch (e) {
+        console.error(e);
+        yield put({
+            type: ADD_RECOMMENT_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchAddReComment() {
+    yield takeLatest(ADD_RECOMMENT_REQUEST, addReComment);
+}
+
 function editCommentAPI(data) {
-    return axios.patch(`/post/${data.postId}/comment/${data.commentId}`, { content: data.content }, {
+    return axios.patch(`/post/${data.postId}/comment/${data.commentId}`, {content: data.content}, {
         withCredentials: true,
     });
 }
@@ -246,7 +281,7 @@ function* removeComment(action) {
             type: REMOVE_COMMENT_SUCCESS,
             data: {
                 postId: action.data.postId,
-                commentId:action.data.commentId,
+                commentId: action.data.commentId,
                 comment: result.data,
             },
         });
@@ -481,6 +516,31 @@ function* watchLoadPost() {
     yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
 
+function reportAPI(data) {
+    return axios.post(`/post/${data.postId}/report`, data, {
+        withCredentials: true,
+    });
+}
+
+function* report(action) {
+    try {
+        const result = yield call(reportAPI, action.data);
+        yield put({ // post reducer의 데이터를 수정
+            type: REPORT_SUCCESS,
+            data: result.data,
+        });
+    } catch (e) {
+        yield put({
+            type: REPORT_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchReport() {
+    yield takeLatest(REPORT_REQUEST, report);
+}
+
 export default function* postSaga() {
     yield all([
         fork(watchLoadMainPosts),
@@ -499,5 +559,7 @@ export default function* postSaga() {
         fork(watchEditImages),
         fork(watchEditComment),
         fork(watchRemoveComment),
+        fork(watchReport),
+        fork(watchAddReComment),
     ]);
 }
