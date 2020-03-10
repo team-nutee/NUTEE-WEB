@@ -173,6 +173,47 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
     }
 });
 
+router.get('/search', async (req, res, next) => { // GET api/post/search?searchTitle=""
+    try {
+        const searchTitle = req.query.searchTitle;
+        const searchWriter = req.query.searchWriter;
+        if (!searchTitle.length || !searchWriter.length) { // 키워드에 공백만 존재
+            return res.status(400).send('Invalid target');
+        }
+
+        const postTitle = await db.Post.findAll({
+            where: {
+                content: {
+                    [db.Sequelize.Op.like]: '%'+searchTitle+'%'
+                },
+                isDeleted: 0
+            },
+            order: [['createdAt', 'DESC']]
+        });
+
+        const postWriter = await db.User.findAll({
+            where: {
+                nickname: {
+                    [db.Sequelize.Op.like]: '%'+searchWriter+'%'
+                }
+            },
+            order: [['createdAt', 'DESC']]
+        });
+
+        if (!postTitle || !postWriter) { // 검색 결과 none
+            return res.status(404).send('Not found');
+        }
+
+        res.status(200).json({
+            postTitle: postTitle,
+            postWriter: postWriter
+        });
+    } catch (e) {
+        console.error(e);
+        next(e);
+    }
+});
+
 router.post('/:id/report', async (req, res, next) => {
    try {
        console.log(req.body.content);
