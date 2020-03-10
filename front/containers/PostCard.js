@@ -288,7 +288,8 @@ const PostCard = ({post}) => {
                         style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <Comments item={item} post={post} />
+                            <Comments item={item} post={post} >
+                            </Comments>
                         )}
                     />
                     <CommentForm

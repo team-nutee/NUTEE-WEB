@@ -9,10 +9,6 @@ module.exports = (sequelize,DataTypes) => {
             allowNull:false,
             defaultValue:false,
         },
-        commentId: {
-            type:DataTypes.INTEGER(11),
-            allowNull: true,
-        },
     }, {
         charset :'utf8mb4',//한글 + 이모티콘
         collate : 'utf8mb4_general_ci',
@@ -21,6 +17,7 @@ module.exports = (sequelize,DataTypes) => {
     Comment.associate = (db) => {
         db.Comment.belongsTo(db.User);
         db.Comment.belongsTo(db.Post);
+        db.Comment.hasMany(db.Comment,{as:'ReComment', foreignKey:'ParentId'});
     };
     return Comment;
 };
