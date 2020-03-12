@@ -15,7 +15,7 @@ const ReCommentForm =({post,commentId,cancelReply})=>{
         if (!me) {
             return alert('로그인이 필요합니다.');
         }
-        return dispatch({
+        dispatch({
             type: ADD_RECOMMENT_REQUEST,
             data: {
                 postId: post.id,
@@ -23,16 +23,11 @@ const ReCommentForm =({post,commentId,cancelReply})=>{
                 content: commentText,
             },
         });
+        cancelReply();
     }, [me && me.id, commentText]);
     const onChangeCommentText = useCallback((e) => {
         setCommentText(e.target.value);
     }, []);
-
-    useEffect(() => {
-        if(reCommentAdded){
-            cancelReply();
-        }
-    }, [reCommentAdded]);
 
     return(
         <Form onSubmit={onSubmitComment}>
