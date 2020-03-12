@@ -11,11 +11,13 @@ import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import MessageTwoTone from "@ant-design/icons/lib/icons/MessageTwoTone";
 import ReCommentForm from "./ReCommentForm";
 import {LOAD_FOLLOWINGS_FAILURE, LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS} from "../reducers/user";
+import RecommentBox from "./RecommentBox";
 
 const Comments = ({item, post}) => {
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
     const [reply,setReply] = useState(false);
+    const [showReply,setShowReply] = useState(false);
     const onEdit = () => {
         setEdit(true);
     };
@@ -91,12 +93,8 @@ const Comments = ({item, post}) => {
             </List.Item>
             {item.ReComment
                 ?
-                item.ReComment.map((v)=>{
-                return(
-                    <Recomment item={v} post={post}/>
-                )
-            })
-            :
+                    <RecommentBox reCom={item.ReComment} post={post} setReply={setReply} />
+                :
                 <></>
             }
             {reply?
