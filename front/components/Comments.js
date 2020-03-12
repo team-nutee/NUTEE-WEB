@@ -17,7 +17,6 @@ const Comments = ({item, post}) => {
     const dispatch = useDispatch();
     const [edit, setEdit] = useState(false);
     const [reply,setReply] = useState(false);
-    const [showReply,setShowReply] = useState(false);
     const onEdit = () => {
         setEdit(true);
     };
@@ -93,7 +92,7 @@ const Comments = ({item, post}) => {
             </List.Item>
             {item.ReComment
                 ?
-                    <RecommentBox reCom={item.ReComment} post={post} setReply={setReply} />
+                    <RecommentBox reCom={item.ReComment} post={post} onReply={onReply} />
                 :
                 <></>
             }

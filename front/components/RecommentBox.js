@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from 'react';
 import Recomment from "./Recomment";
 
-const RecommentBox = ({reCom, post,setReply}) => {
+const RecommentBox = ({reCom, post,onReply}) => {
     const [show, setShow] = useState(false);
 
     const onRecomment = ()=>{
         setShow(true);
-        setReply(true);
+        onReply();
     };
     return (show ?
             reCom.map((v) => {
