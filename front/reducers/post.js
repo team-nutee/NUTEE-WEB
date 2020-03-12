@@ -259,9 +259,19 @@ export default (state = initialState, action) => {
                 draft.addingPostErrorReason = action.error;
                 break;
             }
+            case LOAD_COMMENTS_REQUEST: {
+                break;
+            }
             case LOAD_COMMENTS_SUCCESS: {
                 const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
-                draft.mainPosts[postIndex].Comments = action.data.comments;
+                if(action.data.offset===0) {
+                    draft.mainPosts[postIndex].Comments = action.data.comments;
+                }else{
+                    draft.mainPosts[postIndex].Comments = draft.mainPosts[postIndex].Comments.concat(action.data.comments);
+                }
+                break;
+            }
+            case LOAD_COMMENTS_FAILURE: {
                 break;
             }
             case LOAD_MAIN_POSTS_REQUEST:

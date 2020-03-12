@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Avatar, Button, Card, Comment, Form, Icon, Input, List, Modal, Skeleton, Dropdown, Menu, Row, Col} from 'antd';
+import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col} from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
-import {MdSend} from "react-icons/md";
-
 import {
     ADD_COMMENT_REQUEST,
     LIKE_POST_REQUEST,
@@ -16,12 +14,9 @@ import {
 import PostImages from '../components/PostImages';
 import PostCardContent from '../components/PostCardContent';
 import EditForm from "../components/EditForm";
-import TextareaAutosize from "react-textarea-autosize";
-import Send from "../components/Send";
 import Comments from "../components/Comments";
 import CommentForm from "../components/CommentForm";
 import ProfileAvatar from "../components/ProfileAvatar";
-import {TARGET_URL} from "../static";
 
 const CardWrapper = styled.div`
   margin-bottom: 20px;
@@ -37,6 +32,10 @@ const PostCard = ({post}) => {
     const [visible, setVisible] = useState(false);
     const [report,setReport] = useState('');
     const [reportVisible, setReportVisible] = useState(false);
+
+    const [offset,setOffset] = useState(0);
+    const { mainPosts } = useSelector(state => state.post);
+
     const showModal = () => {
         setVisible(true);
     };
@@ -58,10 +57,33 @@ const PostCard = ({post}) => {
         if (!commentFormOpened) {
             dispatch({
                 type: LOAD_COMMENTS_REQUEST,
-                data: post.id,
+                data: {
+                    postId:post.id,
+                    offset:offset,
+                },
             });
+            setOffset(offset+5);
         }
     }, []);
+
+    const onLoadMoreComments = () => {
+        dispatch({
+            type: LOAD_COMMENTS_REQUEST,
+            data: {
+                postId:post.id,
+                offset:offset,
+            },
+        });
+        setOffset(offset+5);
+    };
+
+    const loadMore =
+        (mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !== 0)&&
+        mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length % 5 === 0 ? (
+            <div style={{margin:'0px 0px 10px 30px',textAlign:'center'}}>
+                <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
+            </div>
+        ) : null;
 
 
     const onSubmitComment = useCallback((e) => {
@@ -286,10 +308,10 @@ const PostCard = ({post}) => {
                     <List
                         itemLayout="horizontal"
                         style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
+                        loadMore={loadMore}
                         dataSource={post.Comments || []}
                         renderItem={item => (
-                            <Comments item={item} post={post} >
-                            </Comments>
+                            <Comments item={item} post={post} />
                         )}
                     />
                     <CommentForm

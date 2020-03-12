@@ -298,8 +298,10 @@ function* watchRemoveComment() {
     yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
-function loadCommentsAPI(postId) {
-    return axios.get(`/post/${postId}/comments`);
+function loadCommentsAPI(data, limit = 5) {
+    return axios.get(`/post/${data.postId}/comments?offset=${data.offset}&limit=${limit}`,{
+        withCredentials: true,
+    });
 }
 
 function* loadComments(action) {
@@ -308,8 +310,9 @@ function* loadComments(action) {
         yield put({
             type: LOAD_COMMENTS_SUCCESS,
             data: {
-                postId: action.data,
+                postId: action.data.postId,
                 comments: result.data,
+                offset: action.data.offset,
             },
         });
     } catch (e) {

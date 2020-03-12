@@ -6,10 +6,10 @@ const router = express.Router();
 router.get('/', async (req, res, next) => { // GET /api/posts
     try {
         let where = {isDeleted:0};
-        if (parseInt(req.query.lastId, 10)) {
+        if (parseInt(req.query.lastId)) {
             where = {
                 id: {
-                    [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10), // less than
+                    [db.Sequelize.Op.lt]: parseInt(req.query.lastId), // less than
                 },
                 isDeleted:0,
             };
@@ -62,7 +62,7 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                 }],
             }],
             order: [['createdAt', 'DESC']], // DESC는 내림차순, ASC는 오름차순
-            limit: parseInt(req.query.limit, 10),
+            limit: parseInt(req.query.limit),
         });
         res.json(posts);
     } catch (e) {

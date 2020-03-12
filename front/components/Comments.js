@@ -10,6 +10,7 @@ import DeleteFilled from "@ant-design/icons/lib/icons/DeleteFilled";
 import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
 import MessageTwoTone from "@ant-design/icons/lib/icons/MessageTwoTone";
 import ReCommentForm from "./ReCommentForm";
+import {LOAD_FOLLOWINGS_FAILURE, LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS} from "../reducers/user";
 
 const Comments = ({item, post}) => {
     const dispatch = useDispatch();

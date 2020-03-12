@@ -227,7 +227,9 @@ router.get('/:id/comments', async (req, res, next) => {
                     }]
                 }],
             }],
-            as:'Comment'
+            as:'Comment',
+            limit: parseInt(req.query.limit),
+            offset: parseInt(req.query.offset),
         });
         res.json(comments);
     } catch (e) {
