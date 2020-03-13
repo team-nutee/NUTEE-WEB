@@ -13,6 +13,7 @@ const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
 const hashtagAPIRouter = require('./routes/hashtag');
 const noticeAPIRouter = require('./routes/notice');
+const searchAPIRouter = require('./routes/search');
 
 dotenv.config();
 const app = express();
@@ -47,6 +48,7 @@ app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
 app.use('/api/hashtag', hashtagAPIRouter);
 app.use('/api/notice', noticeAPIRouter);
+app.use('/api/search', searchAPIRouter);
 
 app.listen(9425, () => {
     console.log('server is running on http://localhost:9425');
