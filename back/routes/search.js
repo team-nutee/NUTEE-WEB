@@ -1,4 +1,4 @@
-const _ =require('underscore');
+const underscore =require('underscore');
 
 const express = require('express');
 const db = require('../models');
@@ -157,7 +157,7 @@ router.get('', async (req, res,next) => {
                 }
                 return 0;
             });
-        const result = _.uniq(searchAll,'id');
+        const result = underscore.uniq(searchAll,'id');
         res.json(result);
     } catch (e) {
         console.error(e);
