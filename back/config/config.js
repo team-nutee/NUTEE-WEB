@@ -8,7 +8,7 @@ module.exports={
     database: 'nutee_test',
     host: 'nutee.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
-    port:'3306',
+    port:3306,
     timezone:'+09:00'
   },
   test: {

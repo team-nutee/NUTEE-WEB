@@ -51,15 +51,6 @@ const NodeBird = ({ Component, store, pageProps }) => {
                 }, {
                     rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css",
                 }]}
-                style={{
-                    "cssText": `
-                        @font-face { font-family: 'BMDOHYEON';
-                           src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
-                           font-weight: normal;
-                           font-style: normal;
-                        }
-                    `
-                }}
             />
             <AppLayout>
                 <Component {...pageProps} />
