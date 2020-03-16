@@ -139,13 +139,52 @@ router.post('/images', upload.array('image'), (req, res) => {
 
 router.get('/:id', async (req, res, next) => {
     try {
-        const post = await db.Post.findOne({
-            where: { id: req.params.id },
+        const post = await db.Post.findAll({
+            where: {id: req.params.id},
             include: [{
                 model: db.User,
+                include: [{
+                    model: db.Image,
+                    attributes: ['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
+            }, {
+                model: db.User,
+                through: 'Like',
+                as: 'Likers',
+                attributes: ['id'],
+            }, {
+                model: db.Post,
+                as: 'Retweet',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required: false,
+                    order: [['createdAt', 'ASC']],
+                    where: {isDeleted: false},
+                    as: 'Comments',
+                }, {
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
+                }],
+            }, {
+                model: db.Comment,
+                required: false,
+                order: [['createdAt', 'ASC']],
+                where: {isDeleted: false},
+                as: 'Comments',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
+                }],
             }],
         });
         res.json(post);
