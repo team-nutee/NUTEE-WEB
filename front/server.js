@@ -28,7 +28,7 @@ app.prepare().then(() => {
         cookie: {
             httpOnly: true,
             secure: false,
-            sameSite:'Strict',
+            sameSite:'None',
         },
     }));
 

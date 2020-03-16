@@ -36,7 +36,7 @@ app.use(expressSession({
     cookie: {
         httpOnly: true,
         secure: false, // https를 쓸 때 true
-        sameSite: 'Strict',//크롬 80의 이슈로 인해서 사용하지 않으면 쿠키 사용 불가능
+        sameSite: 'None',//크롬 80의 이슈로 인해서 사용하지 않으면 쿠키 사용 불가능
     },
     name: 'rnbck',
 }));
