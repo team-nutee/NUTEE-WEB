@@ -78,7 +78,8 @@ const PostCard = ({post}) => {
     };
 
     const loadMore =
-        (mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !== 0)&&
+        (mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments &&
+            mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !== 0)&&
         mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length % 5 === 0 ? (
             <div style={{margin:'0px 0px 10px 30px',textAlign:'center'}}>
                 <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>

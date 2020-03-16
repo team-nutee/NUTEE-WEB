@@ -9,6 +9,7 @@ module.exports={
     host: 'localhost',
     dialect: 'mysql',
     port:3307,
+    timezone:'+09:00'
   },
   test: {
     username: 'nutee',
@@ -17,6 +18,7 @@ module.exports={
     host: 'nutee.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     port:3306,
+    timezone:'+09:00'
   },
   production: {
     username: 'nutee',
@@ -25,5 +27,6 @@ module.exports={
     host: 'nutee.cmwlqxe5se7d.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     port:3306,
+    timezone:'+09:00'
   }
 };
