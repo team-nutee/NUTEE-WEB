@@ -139,7 +139,7 @@ router.post('/images', upload.array('image'), (req, res) => {
 
 router.get('/:id', async (req, res, next) => {
     try {
-        const post = await db.Post.findAll({
+        const post = await db.Post.findOne({
             where: {id: req.params.id},
             include: [{
                 model: db.User,
