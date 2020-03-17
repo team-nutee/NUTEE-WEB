@@ -25,7 +25,8 @@ const AppLayout = ({ children }) => {
                 <Row style={{background: '#effbf5', paddingTop: '10px', width:'100%'}} type='flex' justify='center' gutter={8}>
                     {children}
                 </Row>
-                : <Signup></Signup>
+                :
+                <Signup/>
             }
         </div>
     );

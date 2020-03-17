@@ -13,7 +13,7 @@ import reducer from '../reducers';
 import rootSaga from '../sagas';
 import {LOAD_USER_REQUEST} from "../reducers/user";
 
-const NodeBird = ({ Component, store, pageProps }) => {
+const Nutee = ({ Component, store, pageProps }) => {
     return (
         <Container>
         <Provider store={store}>
@@ -61,13 +61,13 @@ const NodeBird = ({ Component, store, pageProps }) => {
 };
 
 
-NodeBird.propTypes = {
+Nutee.propTypes = {
     Component: PropTypes.elementType.isRequired,
     store: PropTypes.object.isRequired,
     pageProps: PropTypes.object.isRequired,
 };
 //SSR 을 진행할 때 서버인 경우와 클라이언티인 경우를 두 가지 경우를 생각해야 하기 때문에 3항 연산자를 이용하여 구분을 해주어야한다.
-NodeBird.getInitialProps = async (context) => {
+Nutee.getInitialProps = async (context) => {
     console.log(context);
     const { ctx, Component } = context;
     let pageProps = {};
@@ -102,4 +102,4 @@ const configureStore = (initialState, options) => {
     return store;
 };
 
-export default withRedux(configureStore)(withReduxSaga(NodeBird));
+export default withRedux(configureStore)(withReduxSaga(Nutee));
