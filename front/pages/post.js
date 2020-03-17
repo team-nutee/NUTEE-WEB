@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { LOAD_POST_REQUEST } from '../reducers/post';
-import TARGET_URL from "../static";
+import {TARGET_URL} from "../static";
 
 const Post = ({ id }) => {
     const { singlePost } = useSelector(state => state.post);
