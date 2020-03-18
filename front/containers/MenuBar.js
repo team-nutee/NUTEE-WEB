@@ -17,7 +17,7 @@ const MenuBar = ({me}) => {
         });
     }, []);
     return (
-        <div style={{background: '#13c276', height: '40px', padding: '5px',position:'fixed',top:'0',width:'100%',zIndex:'1'}}>
+        <div style={{background: '#13c276', height: '40px', padding: '5px',position:'fixed',top:'0',minWidth:'1130px',width:'100%',zIndex:'1'}}>
             <div style={{display: 'inline-block', marginRight: '20px',width:'100%', minWidth: '320px'}}>
                 <div style={{float: "left",marginLeft:'10%', marginRight: '20px'}}>
                     <Link href="/" prefetch>
@@ -33,7 +33,7 @@ const MenuBar = ({me}) => {
                 {me ?
                     <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
                         href="/profile" prefetch><a><b
-                        style={{color: "white"}}>프로필</b></a></Link></div> : <></>
+                        style={{color: "white",fontSize:'20px'}}>프로필</b></a></Link></div> : <></>
                 }
                 {/*<div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link*/}
                 {/*    href="/chat" prefetch><a><b*/}
@@ -60,7 +60,7 @@ const MenuBar = ({me}) => {
                                 <b style={{color: '#13c276'}}>로그아웃</b>
                             </Button>
                         </div>
-                        : <div style={{float:'right', marginRight:'7%'}}><LoginForm></LoginForm></div>
+                        : <div style={{float:'right'}}><LoginForm></LoginForm></div>
                 }
             </div>
         </div>

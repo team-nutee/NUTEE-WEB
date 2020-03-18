@@ -68,15 +68,15 @@ const ProfileEditModal = () => {
                 <div style={{width:'25%', margin:'0 auto'}}>
                     <input type="file" hidden ref={imageInput} onChange={onChangeImages} />
                     {
-                        profileImagePath
+                        me.Image
                             ?
                             <img
-                                src={`${TARGET_URL}/${profileImagePath}`}
+                                src={`${TARGET_URL}/${me.Image.src}`}
                                 style={{
                                     width: '100px',
                                     height: '100px',
                                     borderRadius: '50px',
-                                    border: '1px solid #e6e6e6'
+                                    border: '1px solid #e6e6e6',
                                 }}
                                 onClick={onClickImageUpload}
                             />
