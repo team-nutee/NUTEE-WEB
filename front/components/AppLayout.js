@@ -17,18 +17,38 @@ const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
 
     return (
-        <div style={{minWidth:'1130px'}}>
+        <>
+        <div style={{minWidth:'1130px',background: '#effbf5',minHeight:'100vh'}}>
             {/*메뉴바*/}
             <MenuBar me={me} />
             {/*본문 내용*/}
             {me ?
-                <Row style={{background: '#effbf5', paddingTop: '50px', width:'100%'}} type='flex' justify='center' gutter={8}>
+                <Row style={{paddingTop: '50px', width:'100%'}} type='flex' justify='center' gutter={8}>
                     {children}
                 </Row>
                 :
                 <Signup/>
             }
         </div>
+            <style jsx>
+                {
+                    `
+                    div {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                    button {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                    Input {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                   `
+                }
+            </style>
+            </>
     );
 };
 

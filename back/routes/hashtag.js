@@ -18,8 +18,12 @@ router.get('/:tag', async (req, res, next) => {
             include: [{
                 model: db.Hashtag,
                 where: { name: decodeURIComponent(req.params.tag) },
-            }, {
+            },{
                 model: db.User,
+                include: [{
+                    model: db.Image,
+                    attributes: ['src'],
+                }],
                 attributes: ['id', 'nickname'],
             }, {
                 model: db.Image,
@@ -36,6 +40,27 @@ router.get('/:tag', async (req, res, next) => {
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
+                }, {
+                    model: db.Comment,
+                    required: false,
+                    order: [['createdAt', 'ASC']],
+                    where: {isDeleted: false},
+                    as: 'Comments',
+                }, {
+                    model: db.User,
+                    through: 'Like',
+                    as: 'Likers',
+                    attributes: ['id'],
+                }],
+            }, {
+                model: db.Comment,
+                required: false,
+                order: [['createdAt', 'ASC']],
+                where: {isDeleted: false},
+                as: 'Comments',
+                include: [{
+                    model: db.User,
+                    attributes: ['id', 'nickname'],
                 }],
             }],
             order: [['createdAt', 'DESC']],

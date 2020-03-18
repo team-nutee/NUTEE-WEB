@@ -11,6 +11,7 @@ const ShowBox = styled.pre`
     line-height: 1.2em;
     height: 12em; /* line-height 가 1.2em 이고 3라인을 자르기 때문에 height는 1.2em * 3 = 3.6em */
     whiteSpace: 'pre-wrap',
+    font-family:"Do Hyeon", sans-serif;
 `;
 
 const PostCardContent = ({ postData,commentN,likers,retweet }) => {
@@ -33,6 +34,8 @@ const PostCardContent = ({ postData,commentN,likers,retweet }) => {
                     wordWrap: 'break-word',
                     whiteSpace: 'pre-wrap',
                     wordBreak:'break-all',
+                    fontFamily:"Do Hyeon",
+                    fontSize:'15px'
                 }}>
                     {postData.split(/(#[^\s]+)/g).map((v) => {
                         if (v.match(/#[^\s]+/)) {

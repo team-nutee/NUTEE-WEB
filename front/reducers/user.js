@@ -151,6 +151,12 @@ export default (state = initialState, action) => {
             }
             case UPLOAD_PROIMG_SUCCESS: {
                 draft.profileImagePath = action.data;
+                if(draft.me.Image){
+                    draft.me.Image.src = action.data;
+                }else{
+                    draft.me.Image = {};
+                    draft.me.Image.src = action.data;
+                }
                 break;
             }
             case UPLOAD_PROIMG_FAILURE: {
