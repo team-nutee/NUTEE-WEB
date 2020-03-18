@@ -14,7 +14,7 @@ const User = () => {
 
     return (
         <>
-        <LeftUser span={4} />
+        <LeftUser span={5} />
         <Col span={10}>
             <div>
                 {mainPosts.map(c => (

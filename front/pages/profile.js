@@ -15,7 +15,7 @@ const Profile = () => {
 
     return (
         <>
-            <LeftProfile span={4}/>
+            <LeftProfile span={5}/>
             <Col span={10}>
                 <div>
                     {mainPosts.map(c => (

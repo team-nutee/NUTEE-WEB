@@ -192,11 +192,13 @@ export default (state = initialState, action) => {
             }
             case ADD_RECOMMENT_SUCCESS: {
                 const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
-                console.log(postIndex);
-                console.log(action.data);
                 const commentIndex = draft.mainPosts[postIndex].Comments.findIndex(v => v.id === action.data.parentId);
-                console.log(commentIndex);
-                draft.mainPosts[postIndex].Comments[commentIndex].ReComment.push(action.data.reComment);
+                if(draft.mainPosts[postIndex].Comments[commentIndex].ReComment===undefined){
+                    draft.mainPosts[postIndex].Comments[commentIndex].ReComment = [];
+                    draft.mainPosts[postIndex].Comments[commentIndex].ReComment.push(action.data.reComment);
+                }else{
+                    draft.mainPosts[postIndex].Comments[commentIndex].ReComment.push(action.data.reComment);
+                }
                 draft.isAddingReComment = false;
                 draft.reCommentAdded = true;
                 break;

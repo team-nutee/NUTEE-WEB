@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col} from 'antd';
+import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col,Alert} from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
@@ -62,7 +62,6 @@ const PostCard = ({post}) => {
                     offset:offset,
                 },
             });
-            console.log('뭐지',commentFormOpened);
             setOffset(offset+5);
         }
     }, []);
@@ -92,7 +91,11 @@ const PostCard = ({post}) => {
         e.preventDefault();
         console.log('댓글작성');
         if (!me) {
-            return alert('로그인이 필요합니다.');
+            return <Alert
+                message="로그인이 필요합니다."
+                type="success"
+                showIcon
+            />;
         }
         return dispatch({
             type: ADD_COMMENT_REQUEST,
@@ -117,7 +120,11 @@ const PostCard = ({post}) => {
 
     const onToggleLike = useCallback(() => {
         if (!me) {
-            return alert('로그인이 필요합니다!');
+            return <Alert
+                message="로그인이 필요합니다."
+                type="success"
+                showIcon
+            />;
         }
         if (liked) { // 좋아요 누른 상태
             dispatch({
@@ -134,7 +141,11 @@ const PostCard = ({post}) => {
 
     const onRetweet = useCallback(() => {
         if (!me) {
-            return alert('로그인이 필요합니다.');
+            return <Alert
+                message="로그인이 필요합니다."
+                type="success"
+                showIcon
+            />
         }
         return dispatch({
             type: RETWEET_REQUEST,

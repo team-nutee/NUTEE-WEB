@@ -442,7 +442,7 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             return res.status(404).send('\"message\": \"포스트가 존재하지 않습니다.\"');
         }
         if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
-            return res.status(403).send('\"message\": \"자신의 글은 리트윗할 수 없습니다.\"');
+            return res.status(403).send('\"message\": \"자신의 글은 공유할 수 없습니다.\"');
         }
         const retweetTargetId = post.RetweetId || post.id;
         const exPost = await db.Post.findOne({
@@ -452,7 +452,7 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
             },
         });
         if (exPost) {
-            return res.status(403).send('\"message\": \"이미 리트윗했습니다.\"');
+            return res.status(403).send('\"message\": \"이미 공유했습니다.\"');
         }
         const retweet = await db.Post.create({
             UserId: req.user.id,

@@ -9,6 +9,17 @@ import {
 } from "../reducers/user";
 import Link from "next/link";
 import ProfileAvatar from "./ProfileAvatar";
+import styled from "styled-components";
+
+const Box = styled.div`
+    position: sticky;
+    top: 50px;
+    height: 93vh;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+       display: none;
+    }
+`;
 
 const RightProfile = ()=>{
     const dispatch = useDispatch();
@@ -44,6 +55,7 @@ const RightProfile = ()=>{
 
     return(
         <Col span={6} style={{minWidth: '270px'}}>
+            <Box>
             <List
                 style={{marginBottom: '20px', backgroundColor: 'WHITE'}}
                 grid={{gutter: 4}}
@@ -101,6 +113,7 @@ const RightProfile = ()=>{
                     </List.Item>
                 )}
             />
+            </Box>
         </Col>
     )
 };
