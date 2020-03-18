@@ -62,6 +62,7 @@ const PostCard = ({post}) => {
                     offset:offset,
                 },
             });
+            console.log('뭐지',commentFormOpened);
             setOffset(offset+5);
         }
     }, []);

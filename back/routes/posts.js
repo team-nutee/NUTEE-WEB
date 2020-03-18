@@ -54,11 +54,31 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                 model: db.Comment,
                 required:false,
                 order: [['createdAt', 'ASC']],
-                where:{isDeleted:false},
+                where:{
+                    isDeleted: false,
+                    ParentId : null,
+                },
                 as:'Comments',
                 include: [{
                     model: db.User,
                     attributes: ['id', 'nickname'],
+                    include:[{
+                        model:db.Image,
+                        attributes:['src']
+                    }]
+                }, {
+                    model: db.Comment,
+                    as:'ReComment',
+                    where: {isDeleted:false},
+                    required:false,
+                    include: [{
+                        model: db.User,
+                        attributes: ['id', 'nickname'],
+                        include:[{
+                            model:db.Image,
+                            attributes:['src']
+                        }]
+                    }],
                 }],
             }],
             order: [['createdAt', 'DESC']], // DESC는 내림차순, ASC는 오름차순

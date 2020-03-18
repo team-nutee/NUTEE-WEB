@@ -77,6 +77,16 @@ const Recomment = ({item, post}) => {
                 }
             />
         }
+            <style jsx>
+                {
+                    `
+                    pre {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                   `
+                }
+            </style>
         </List.Item>
     )
 };

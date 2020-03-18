@@ -44,7 +44,7 @@ router.get('/:tag', async (req, res, next) => {
                     model: db.Comment,
                     required: false,
                     order: [['createdAt', 'ASC']],
-                    where: {isDeleted: false},
+                    where: {isDeleted: false, ParentId:null},
                     as: 'Comments',
                 }, {
                     model: db.User,
@@ -56,7 +56,7 @@ router.get('/:tag', async (req, res, next) => {
                 model: db.Comment,
                 required: false,
                 order: [['createdAt', 'ASC']],
-                where: {isDeleted: false},
+                where: {isDeleted: false,ParentId:null},
                 as: 'Comments',
                 include: [{
                     model: db.User,

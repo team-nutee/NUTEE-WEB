@@ -7,6 +7,7 @@ import styled from "styled-components";
 import LeftContents from "../components/LeftContents";
 import RightContents from "../components/RightContents";
 import {Col} from "antd";
+import PostForm from "../containers/PostForm";
 
 const Hashtag = ({tag}) => {
     const dispatch = useDispatch();
@@ -33,23 +34,17 @@ const Hashtag = ({tag}) => {
         };
     }, [mainPosts.length]);
 
-    const CardWrapper = styled.div`
-  margin-bottom: 20px;
-`;
-
     return (
         <>
-            <LeftContents me={me}/>
-            <Col span={10}>
-                <CardWrapper>
-                    <div>
-                        {mainPosts.map(c => (
-                            <PostCard key={c.id} post={c}/>
-                        ))}
-                    </div>
-                </CardWrapper>
+            <LeftContents me={me} span={4} />
+            <Col span={10} style={{minWidth:'550px'}}>
+                {mainPosts.map((c) => {
+                    return (
+                        <PostCard key={c.id} post={c} />
+                    );
+                })}
             </Col>
-            <RightContents/>
+            <RightContents />
         </>
     );
 };

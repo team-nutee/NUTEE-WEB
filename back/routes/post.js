@@ -257,6 +257,9 @@ router.get('/:id/comments', async (req, res, next) => {
                 model: db.Comment,
                 as:'ReComment',
                 required:false,
+                where:{
+                    isDeleted:false
+                },
                 include: [{
                     model: db.User,
                     attributes: ['id', 'nickname'],

@@ -41,7 +41,7 @@ const AppLayout = ({ children }) => {
                         font-family:"Do Hyeon", sans-serif;
                         font-weight: 200;
                     }
-                    Input {
+                    textarea {
                         font-family:"Do Hyeon", sans-serif;
                         font-weight: 200;
                     }

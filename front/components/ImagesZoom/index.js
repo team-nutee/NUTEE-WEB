@@ -14,16 +14,7 @@ const ImagesZoom = ({ images, onClose, onBackDrop }) => {
                     <CloseBtn type="close" onClick={onClose}/>
                     <div>
                         <Slider
-                            customPaging={function(i) {
-                                return (
-                                    <a>
-                                        <img style={{width:'10px', height:'8px', borderRadius:'0px'}} src={`${TARGET_URL}/${images[i].src}`}/>
-                                    </a>
-                                );
-                            }}
-                            arrows={true}
                             dots
-                            dotsClass={'slick-dots slick-thumb'}
                             infinite={false}
                             slidesToShow={1}
                             slidesToScroll={1}

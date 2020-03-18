@@ -36,6 +36,7 @@ const CommentForm =({onSubmitComment,commentText,onChangeCommentText,isAddingCom
                                 onChange={onChangeCommentText}
                                 autoFocus={true}
                             />
+
                         </Col>
                         <Col span={2}>
                             <div style={{width: '10px', margin: '10px 0px 0px 10px'}}>
