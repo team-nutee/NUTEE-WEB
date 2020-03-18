@@ -18,7 +18,7 @@ const AppLayout = ({ children }) => {
 
     return (
         <>
-        <div style={{minWidth:'1130px',background: '#effbf5'}}>
+        <div style={{minWidth:'1130px',background: '#effbf5',minHeight:'100vh'}}>
             {/*메뉴바*/}
             <MenuBar me={me} />
             {/*본문 내용*/}
@@ -34,6 +34,14 @@ const AppLayout = ({ children }) => {
                 {
                     `
                     div {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                    button {
+                        font-family:"Do Hyeon", sans-serif;
+                        font-weight: 200;
+                    }
+                    Input {
                         font-family:"Do Hyeon", sans-serif;
                         font-weight: 200;
                     }

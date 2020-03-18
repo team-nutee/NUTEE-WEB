@@ -12,6 +12,7 @@ const Hashtag = ({tag}) => {
     const dispatch = useDispatch();
 
     const {mainPosts, hasMorePost} = useSelector(state => state.post);
+    const {me} = useSelector(state => state.user);
 
     const onScroll = useCallback(() => {
         if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
@@ -38,7 +39,7 @@ const Hashtag = ({tag}) => {
 
     return (
         <>
-            <LeftContents/>
+            <LeftContents me={me}/>
             <Col span={10}>
                 <CardWrapper>
                     <div>
