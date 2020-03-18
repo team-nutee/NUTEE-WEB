@@ -37,7 +37,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     try {
         const exUser = await db.User.findOne({
             where: {
-                userId: req.body.userId
+                userId: req.body.nickname,
             },
         });
         if (exUser) {
@@ -68,6 +68,48 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
     } catch (e) {
         console.error(e);
         // 에러 처리를 여기서
+        return next(e);
+    }
+});
+
+router.post('/idcheck',isNotLoggedIn,async(req,res,next)=>{
+    try {
+        const exUser = await db.User.findOne({
+            where: {
+                userId: req.body.userId
+            },
+        });
+        if (exUser) {
+            return (
+                res.status(409).send('\"message\":\"이미 사용중인 아이디입니다.\"')
+            );
+        }else{
+            return(
+                res.status(200).send('\"message\":\"아이디 중복체크 성공.\"')
+            )
+        }
+    }catch(e){
+        return next(e);
+    }
+});
+
+router.post('/nicknamecheck',isNotLoggedIn,async(req,res,next)=>{
+    try {
+        const exUser = await db.User.findOne({
+            where: {
+                userId: req.body.userId
+            },
+        });
+        if (exUser) {
+            return (
+                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+            );
+        }else{
+            return(
+                res.status(200).send('\"message\":\"닉네임 중복체크 성공.\"')
+            )
+        }
+    }catch(e){
         return next(e);
     }
 });

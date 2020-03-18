@@ -17,12 +17,12 @@ const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
 
     return (
-        <div>
+        <div style={{minWidth:'1130px'}}>
             {/*메뉴바*/}
             <MenuBar me={me} />
             {/*본문 내용*/}
             {me ?
-                <Row style={{background: '#effbf5', paddingTop: '10px', width:'100%'}} type='flex' justify='center' gutter={8}>
+                <Row style={{background: '#effbf5', paddingTop: '50px', width:'100%'}} type='flex' justify='center' gutter={8}>
                     {children}
                 </Row>
                 :

@@ -22,7 +22,7 @@ const LoginForm = () => {
     }, [id, password]);
 
     return (
-        <Form style={{marginTop:'4px', minWidth:'450px'}} onSubmit={onSubmitForm} >
+        <Form style={{marginTop:'4px', minWidth:'450px', }} onSubmit={onSubmitForm} >
             <div style={{float:"left", marginRight: '5px', marginLeft: '0px'}}>
                 <Input placeholder={'Id'} size={"small"} name="user-id" value={id} onChange={onChangeId} required />
             </div>

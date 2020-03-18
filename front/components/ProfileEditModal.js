@@ -55,7 +55,7 @@ const ProfileEditModal = () => {
 
     return(
         <div>
-            <Button type="primary" onClick={showModal}>
+            <Button style={{width:'220px', marginTop: '10px',float:'right'}} onClick={showModal}>
                 프로필 변경
             </Button>
             <Modal

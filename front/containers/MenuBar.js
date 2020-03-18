@@ -16,58 +16,54 @@ const MenuBar = ({me}) => {
             type: LOG_OUT_REQUEST,
         });
     }, []);
-    return(
-        <Row style={{background: '#13c276',width:'100%', minWidth: '1160px', height: '40px', padding: '5px'}}>
-            <Col span={8}>
-                <div style={{float: "right", marginRight: '20px',minWidth: '300px'}}>
-                    <div style={{float: "left", marginRight: '20px'}}>
-                        <Link href="/" prefetch>
-                            <a>
-                                <img
-                                    style={{height: '30px', width: '30px'}}
-                                    src={`${TARGET_URL}/settings/nutee_circle.png`}/>
-                            </a>
-                        </Link>
-                    </div>
-                    <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/" prefetch><a><b
-                        style={{color: "white"}}>누티</b></a></Link></div>
-                    {me ?
-                        <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
-                            href="/profile" prefetch><a><b
-                            style={{color: "white"}}>프로필</b></a></Link></div> : <></>
-                    }
-                    <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
-                        href="/chat" prefetch><a><b
-                        style={{color: "white"}}>채팅</b></a></Link></div>
-                    <div style={{float: "left", marginTop: '3px'}}>
-                        {me ?
-                            <Input.Search
-                                size={"small"}
-                                placeholder={"input search text"}
-                                style={{verticalAlign: 'middle'}}
-                                onSearch={onSearch}
-                            />
-                            :
-                            <></>
-                        }
-                    </div>
+    return (
+        <div style={{background: '#13c276', height: '40px', padding: '5px',position:'fixed',top:'0',width:'100%',zIndex:'1'}}>
+            <div style={{display: 'inline-block', marginRight: '20px',width:'100%', minWidth: '320px'}}>
+                <div style={{float: "left",marginLeft:'10%', marginRight: '20px'}}>
+                    <Link href="/" prefetch>
+                        <a>
+                            <img
+                                style={{height: '30px', width: '30px'}}
+                                src={`${TARGET_URL}/settings/nutee_circle.png`}/>
+                        </a>
+                    </Link>
                 </div>
-            </Col>
-            <Col span={14}>
-            </Col>
-            <Col span={2}>{
-                me
-                    ? <div style={{float: "right"}}>
-                        <Button size={"small"}
-                                style={{marginTop: '4px', marginRight:'10px'}}
-                                shape={"round"}
-                                onClick={onLogout}>
-                            <b style={{color: '#13c276'}}>로그아웃</b>
-                        </Button>
-                    </div>
-                    : <div style={{float: "right"}}><LoginForm></LoginForm></div>
-            }</Col>
-        </Row>
+                {/*<div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/" prefetch><a><b*/}
+                {/*    style={{color: "white"}}>누티</b></a></Link></div>*/}
+                {me ?
+                    <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
+                        href="/profile" prefetch><a><b
+                        style={{color: "white"}}>프로필</b></a></Link></div> : <></>
+                }
+                {/*<div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link*/}
+                {/*    href="/chat" prefetch><a><b*/}
+                {/*    style={{color: "white"}}>채팅</b></a></Link></div>*/}
+                <div style={{float: "left", marginTop: '3px'}}>
+                    {me ?
+                        <Input.Search
+                            size={"small"}
+                            placeholder={"input search text"}
+                            style={{verticalAlign: 'middle'}}
+                            onSearch={onSearch}
+                        />
+                        :
+                        <></>
+                    }
+                </div>
+                {
+                    me
+                        ? <div style={{float:'right', marginRight:'7%'}}>
+                            <Button size={"small"}
+                                    style={{marginTop: '4px', marginRight: '10px'}}
+                                    shape={"round"}
+                                    onClick={onLogout}>
+                                <b style={{color: '#13c276'}}>로그아웃</b>
+                            </Button>
+                        </div>
+                        : <div style={{float:'right', marginRight:'7%'}}><LoginForm></LoginForm></div>
+                }
+            </div>
+        </div>
     )
 };
 
