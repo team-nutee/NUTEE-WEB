@@ -50,6 +50,8 @@ const Nutee = ({ Component, store, pageProps }) => {
                     rel: 'stylesheet', href: 'https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css',
                 }, {
                     rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css",
+                }, {
+                    rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Do+Hyeon|Nanum+Gothic&display=swap",
                 }]}
             />
             <AppLayout>

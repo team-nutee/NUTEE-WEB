@@ -38,7 +38,7 @@ const Notice = () =>{
                           dataSource={noticeContents[v.key]}
                           renderItem={(item,i) =>(
                               <List.Item>
-                                  <a style={{textDecoration:'none', color:'black',fontWeight:'10'}} href={noticeHrefs[v.key][i]} target='_blank'>{item}</a>
+                                  <a style={{textDecoration:'none', color:'black',fontWeight:'10',marginLeft:'-40px'}} href={noticeHrefs[v.key][i]} target='_blank'>{item}</a>
                               </List.Item>
                           )}
                     />

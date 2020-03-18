@@ -552,13 +552,16 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
       
 router.post('/profile', isLoggedIn, upload.single('image'), async (req, res, next) => {
     try {
-        const image = db.Image.findOne({
-            where:{ userId:req.user.id }
+        const image = await db.Image.findOne({
+            where:{ UserId:req.user.id }
         });
-        if(image.UserId) {
-            await db.Image.update({ src: req.file.filename
+        if(image) {
+            await db.Image.update({
+                src: req.file.filename
             }, { where: { UserId: req.user.id },
-            })
+            });
+            res.status(200).json(req.file.filename);
+            return;
         } else {
             await db.Image.create({
                 src: req.file.filename,

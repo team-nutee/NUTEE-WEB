@@ -152,25 +152,25 @@ const Signup = () =>{
 
     return(
         <Paper zDepth={1}>
-        <div style={{background: '#effbf5', height:'700px', paddingBottom:'45%'}}>
+        <div style={{background: '#effbf5', height:'100vh', paddingBottom:'45%', paddingTop:'40px'}}>
             <h1 style={{textAlign:"center"}}>새 계정 만들기</h1>
-            <h3 style={{textAlign:"center"}}>빠르고 쉽습니다.</h3>
+            <h3 style={{textAlign:"center"}}>NUTEE에 오신것을 환영합니다!</h3>
             <Form onSubmit={onSubmit} style={{padding:10 }}>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />}
                         name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                     />
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }}/>}
                         name="user-nick" value={nick} placeholder='닉네임' required onChange={onChangeNick}
                     />
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -178,7 +178,7 @@ const Signup = () =>{
                         value={password} required onChange={onChangePassword}
                     />
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -187,7 +187,7 @@ const Signup = () =>{
                     />
                     {passwordError && <div style={{color:'red'}}>비밀번호가 일치하지 않습니다.</div>}
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <br/>
                     <Row gutter={8}>
                         <Col span={18}>
@@ -209,7 +209,7 @@ const Signup = () =>{
                         </Col>
                     </Row>
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     {emailCheck?<></>:<br/>}
                     <Row gutter={8}>
                         <Col span={18}>
@@ -230,7 +230,7 @@ const Signup = () =>{
                         </Col>
                     </Row>
                 </div>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     {otpCheck?<></>:<br/>}
                     <Checkbox style={{margin:'0px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
                     {termError && <div style={{color:'red'}}>약관에 동의하셔야 합니다.</div>}
@@ -239,7 +239,7 @@ const Signup = () =>{
                     <Button style={{marginTop:'5px'}} type="primary" htmlType="submit" loading={isSigningUp}>가입하기</Button>
                 </div>
                 <br/>
-                <div style={{width:'30%', margin:'0 auto'}}>
+                <div style={{width:'35%', margin:'0 auto'}}>
                     <a style={{marginLeft:'115px'}} onClick={setIdVisible} >아이디 찾기</a>
                     <a style={{float:'right',marginRight:'100px'}} onClick={setPwVisible}>비밀번호 찾기</a>
                 </div>
