@@ -28,7 +28,6 @@ app.prepare().then(() => {
         cookie: {
             httpOnly: true,
             secure: false,
-            domain: '.15.164.50.161',
         },
     }));
 
