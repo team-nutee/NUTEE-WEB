@@ -1,14 +1,15 @@
 import React, {useCallback} from 'react';
 import {Button, Col, Input, Row} from "antd";
 import Link from "next/link";
+import Router from "next/router";
 import LoginForm from "./LoginForm";
 import {useDispatch} from "react-redux";
 import {LOG_OUT_REQUEST} from "../reducers/user";
 import {TARGET_URL} from "../static";
 
 const MenuBar = ({me}) => {
-    const onSearch = (value) => {
-        // Router.push({ pathname: '/hashtag', query: { tag: value } }, `/hashtag/${value}`);
+    const onSearch = (text) => {
+        Router.push({ pathname: '/search', query: { text: text } }, `/search/${text}`);
     };
     const dispatch = useDispatch();
     const onLogout = useCallback(() => {
@@ -35,9 +36,6 @@ const MenuBar = ({me}) => {
                         </a>
                     </Link>
                 </div>
-
-                {/*<div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link href="/" prefetch><a><b*/}
-                {/*    style={{color: "white"}}>누티</b></a></Link></div>*/}
                 {me ?
                     <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link
                         href="/profile" prefetch><a><b
@@ -46,11 +44,10 @@ const MenuBar = ({me}) => {
                 {/*<div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link*/}
                 {/*    href="/chat" prefetch><a><b*/}
                 {/*    style={{color: "white"}}>채팅</b></a></Link></div>*/}
-                <div style={{float: "left", marginTop: '3px'}}>
+                <div style={{float: "left",marginLeft:'20px'}}>
                     {me ?
                         <Input.Search
-                            size={"small"}
-                            placeholder={"input search text"}
+                            placeholder={"검색어를 입력하세요."}
                             style={{verticalAlign: 'middle'}}
                             onSearch={onSearch}
                         />

@@ -51,7 +51,12 @@ import {
     REMOVE_COMMENT_REQUEST,
     REPORT_SUCCESS,
     REPORT_FAILURE,
-    REPORT_REQUEST, ADD_RECOMMENT_SUCCESS, ADD_RECOMMENT_FAILURE, ADD_RECOMMENT_REQUEST,
+    REPORT_REQUEST,
+    ADD_RECOMMENT_SUCCESS,
+    ADD_RECOMMENT_FAILURE,
+    ADD_RECOMMENT_REQUEST,
+    LOAD_SEARCH_POSTS_SUCCESS,
+    LOAD_SEARCH_POSTS_FAILURE, LOAD_SEARCH_POSTS_REQUEST,
 } from '../reducers/post';
 import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from '../reducers/user';
 
@@ -153,6 +158,29 @@ function* loadHashtagPosts(action) {
 
 function* watchLoadHashtagPosts() {
     yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
+
+function loadSearchPostsAPI(text, lastId) {
+    return axios.get(`/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`);
+}
+
+function* loadSearchPosts(action) {
+    try {
+        const result = yield call(loadSearchPostsAPI, action.data, action.lastId);
+        yield put({
+            type: LOAD_SEARCH_POSTS_SUCCESS,
+            data: result.data,
+        });
+    } catch (e) {
+        yield put({
+            type: LOAD_SEARCH_POSTS_FAILURE,
+            error: e,
+        });
+    }
+}
+
+function* watchLoadSearchPosts() {
+    yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadSearchPosts);
 }
 
 function loadUserPostsAPI(id) {
@@ -551,6 +579,7 @@ export default function* postSaga() {
         fork(watchAddComment),
         fork(watchLoadComments),
         fork(watchLoadHashtagPosts),
+        fork(watchLoadSearchPosts),
         fork(watchLoadUserPosts),
         fork(watchUploadImages),
         fork(watchLikePost),
@@ -564,5 +593,6 @@ export default function* postSaga() {
         fork(watchRemoveComment),
         fork(watchReport),
         fork(watchAddReComment),
+
     ]);
 }

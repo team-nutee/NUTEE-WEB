@@ -36,6 +36,10 @@ export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
 export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
 export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
 
+export const LOAD_SEARCH_POSTS_REQUEST = 'LOAD_SEARCH_POSTS_REQUEST';
+export const LOAD_SEARCH_POSTS_SUCCESS = 'LOAD_SEARCH_POSTS_SUCCESS';
+export const LOAD_SEARCH_POSTS_FAILURE = 'LOAD_SEARCH_POSTS_FAILURE';
+
 export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
 export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
@@ -276,6 +280,7 @@ export default (state = initialState, action) => {
             case LOAD_COMMENTS_FAILURE: {
                 break;
             }
+            case LOAD_SEARCH_POSTS_REQUEST:
             case LOAD_MAIN_POSTS_REQUEST:
             case LOAD_HASHTAG_POSTS_REQUEST:
             case LOAD_USER_POSTS_REQUEST: {
@@ -283,6 +288,7 @@ export default (state = initialState, action) => {
                 draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
                 break;
             }
+            case LOAD_SEARCH_POSTS_SUCCESS:
             case LOAD_MAIN_POSTS_SUCCESS:
             case LOAD_HASHTAG_POSTS_SUCCESS:
             case LOAD_USER_POSTS_SUCCESS: {
@@ -292,6 +298,7 @@ export default (state = initialState, action) => {
                 draft.hasMorePost = action.data.length === 10;
                 break;
             }
+            case LOAD_SEARCH_POSTS_FAILURE:
             case LOAD_MAIN_POSTS_FAILURE:
             case LOAD_HASHTAG_POSTS_FAILURE:
             case LOAD_USER_POSTS_FAILURE: {

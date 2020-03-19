@@ -35,6 +35,10 @@ app.prepare().then(() => {
         return app.render(req, res, '/hashtag', { tag: req.params.tag });
     });
 
+    server.get('/search/:text', (req, res) => {
+        return app.render(req, res, '/search', { text: req.params.text });
+    });
+
     server.get('/user/:id', (req, res) => {
         return app.render(req, res, '/user', { id: req.params.id });
     });
