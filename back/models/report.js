@@ -11,6 +11,7 @@ module.exports = (sequelize,DataTypes) => {
 
     Report.associate = (db) => {
         db.Report.belongsTo(db.Post);
+        db.Report.belongsTo(db.User);
     };
     return Report;
 };

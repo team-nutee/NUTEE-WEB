@@ -167,6 +167,7 @@ router.post('/:id/report', async (req, res, next) => {
        await db.Report.create({
            content: req.body.content, // 신고 사유
            PostId: req.params.id,
+           UserId: req.user.id // reporter
        });
        const result = await db.Report.findAndCountAll({
            where : { PostId: req.params.id }
@@ -174,6 +175,19 @@ router.post('/:id/report', async (req, res, next) => {
        if (result.count>=1) {
            await db.Post.update({ isDeleted: true }, { where: { id: req.params.id } });
            console.log('result.count');
+           await db.Post.update({ isBlocked: true }, { where: { id: req.params.id } });
+           const posts = await db.Report.findOne({
+               where: { PostId: req.params.id},
+               include: [{
+                   model: db.User,
+                   attributes: ['userId', 'nickname'], // reporter information
+               }, {
+                   model: db.Post, // 신고된 게시물 내용
+                   attributes: ['id', 'content']
+               }]
+           });
+           res.status(200).json(posts);
+           return;
        }
        res.status(200).json(req.params.id);
    } catch (err) {
