@@ -429,12 +429,22 @@ router.get('/:id/posts', async (req, res, next) => {
 
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     try {
+        const exUser = await db.User.findOne({
+            where: {
+                nickname:req.body.nickname
+            }
+        });
+        if(exUser) {
+            return (
+                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+            );
+        }
         await db.User.update({
             nickname: req.body.nickname,
         }, {
             where: { id: req.user.id },
         });
-        res.send(req.body.nickname);
+        res.status(200).send(req.body.nickname);
     } catch (e) {
         console.error(e);
         next(e);
