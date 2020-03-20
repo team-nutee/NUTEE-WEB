@@ -12,10 +12,10 @@ const Search = ({text}) => {
     const {mainPosts, hasMorePost} = useSelector(state => state.post);
     const {me} = useSelector(state => state.user);
 
-    const onScroll = useCallback(() => {
+    const onScroll = useCallback(async() => {
         if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
             if (hasMorePost) {
-                dispatch({
+                await dispatch({
                     type: LOAD_SEARCH_POSTS_REQUEST,
                     lastId: mainPosts[mainPosts.length - 1].id,
                     data: text,

@@ -75,7 +75,6 @@ Nutee.getInitialProps = async (context) => {
     let pageProps = {};
     const state = ctx.store.getState();
     const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
-    console.log('cookie',cookie);
     if(ctx.isServer && cookie){
         axios.defaults.headers.Cookie = cookie;
     }

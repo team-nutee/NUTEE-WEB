@@ -36,6 +36,10 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                 include: [{
                     model: db.User,
                     attributes: ['id', 'nickname'],
+                    includes:[{
+                        model:db.Image,
+                        attribute:['src'],
+                    }]
                 }, {
                     model: db.Image,
                 }, {
