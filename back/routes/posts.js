@@ -35,11 +35,11 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                 as: 'Retweet',
                 include: [{
                     model: db.User,
-                    attributes: ['id', 'nickname'],
                     includes:[{
                         model:db.Image,
                         attribute:['src'],
-                    }]
+                    }],
+                    attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
                 }, {
