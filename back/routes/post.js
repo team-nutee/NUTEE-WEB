@@ -160,6 +160,10 @@ router.get('/:id', async (req, res, next) => {
                 as: 'Retweet',
                 include: [{
                     model: db.User,
+                    include: [{
+                        model: db.Image,
+                        attributes: ['src'],
+                    }],
                     attributes: ['id', 'nickname'],
                 }, {
                     model: db.Image,
@@ -177,13 +181,33 @@ router.get('/:id', async (req, res, next) => {
                 }],
             }, {
                 model: db.Comment,
-                required: false,
+                required:false,
                 order: [['createdAt', 'ASC']],
-                where: {isDeleted: false},
-                as: 'Comments',
+                where:{
+                    isDeleted: false,
+                    ParentId : null,
+                },
+                as:'Comments',
                 include: [{
                     model: db.User,
                     attributes: ['id', 'nickname'],
+                    include:[{
+                        model:db.Image,
+                        attributes:['src']
+                    }]
+                }, {
+                    model: db.Comment,
+                    as:'ReComment',
+                    where: {isDeleted:false},
+                    required:false,
+                    include: [{
+                        model: db.User,
+                        attributes: ['id', 'nickname'],
+                        include:[{
+                            model:db.Image,
+                            attributes:['src']
+                        }]
+                    }],
                 }],
             }],
         });
