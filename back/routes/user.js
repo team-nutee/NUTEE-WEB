@@ -155,6 +155,10 @@ router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
 
 router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 라우터
     try{
+        if(!req.body.otpcheck) {
+            res.status(401).send('\"message\":\"인증번호를 입력해주세요.\"');
+        }
+
         function timedecrement(){
             let now = new Date();
             let year = now.getFullYear();
@@ -182,7 +186,7 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
         db.OTP.findAndCountAll({where:{createdAt:{[Op.gt]:timedesc3}}})
             .then(async (result)=>{
                 let i;
-                for(i = result.count;i>0;i--){
+                for(i = result.count; i>0; i--){
                     let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
                     if(checktrue){
                         await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
