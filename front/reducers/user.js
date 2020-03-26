@@ -1,5 +1,4 @@
 import produce from 'immer';
-import {UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS} from "./post";
 
 export const initialState = {
     isLoggingOut: false, // 로그아웃 시도중

@@ -70,7 +70,6 @@ Nutee.propTypes = {
 };
 //SSR 을 진행할 때 서버인 경우와 클라이언티인 경우를 두 가지 경우를 생각해야 하기 때문에 3항 연산자를 이용하여 구분을 해주어야한다.
 Nutee.getInitialProps = async (context) => {
-    console.log(context);
     const { ctx, Component } = context;
     let pageProps = {};
     const state = ctx.store.getState();

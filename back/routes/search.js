@@ -7,7 +7,6 @@ const router = express.Router();
 router.get('/:text', async (req, res,next) => {
     try {
         const searchText = decodeURIComponent(req.params.text);
-        console.log(searchText);
         const writer = await db.User.findOne({
             where: {
                 nickname: {

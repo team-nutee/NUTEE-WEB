@@ -15,7 +15,6 @@ dotenv.config();
 
 app.prepare().then(() => {
     const server = express();
-
     server.use(morgan('dev'));
     server.use('/', express.static(path.join(__dirname,'images')));
     server.use(express.json());
