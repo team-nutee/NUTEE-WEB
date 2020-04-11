@@ -18,6 +18,7 @@ module.exports = (sequelize,DataTypes) => {
         db.Comment.belongsTo(db.User);
         db.Comment.belongsTo(db.Post);
         db.Comment.hasMany(db.Comment,{as:'ReComment', foreignKey:'ParentId'});
+        db.Comment.belongsToMany(db.User, {through:'commentLike', as: 'commentLikers'});
     };
     return Comment;
 };
