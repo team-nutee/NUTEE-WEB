@@ -196,6 +196,11 @@ router.get('/:id', async (req, res, next) => {
                         attributes:['src']
                     }]
                 }, {
+                    model: db.User,
+                    through: 'commentLike',
+                    as: 'commentLikers',
+                    attributes: ['id'],
+                }, {
                     model: db.Comment,
                     as:'ReComment',
                     where: {isDeleted:false},
@@ -441,9 +446,6 @@ router.post('/comment/:id/like', isLoggedIn, async (req, res, next) => {
                 attributes: ['id'],
 }],
         });
-        if(req.user.id === comment.UserId) {
-            return res.status(403).send('\"message\": \"자신의 댓글은 좋아요를 누를 수 없습니다.\"');
-        }
         if (!comment) {
             return res.status(404).send('\"message\": \"댓글이 존재하지 않습니다.\"');
         }
