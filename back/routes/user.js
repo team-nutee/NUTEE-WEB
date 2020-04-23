@@ -193,7 +193,7 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
                         res.status(200).send('\"message\":\"OTP 인증에 성공했습니다.\"');
                         break;
                     }else{
-                        continue;
+
                     }
                 }
                 if(i===0){

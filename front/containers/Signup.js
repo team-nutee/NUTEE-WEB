@@ -39,7 +39,7 @@ const Signup = () =>{
     const [email,setEmail] = useState('');
     const [otp,onChangeOtp,setOtp] = useInput('');
     const dispatch = useDispatch();
-    const {isSigningUp,isSignedUp, me,emailCheck,otpCheck} = useSelector(state=>state.user);
+    const {isSigningUp,isSignedUp, me,emailCheck, otpCheck} = useSelector(state=>state.user);
 
     const [idVisible,setIdVisible] = useState(false);
     const [pwVisible,setPwVisible] = useState(false);
@@ -88,7 +88,7 @@ const Signup = () =>{
             alert('이메일이 인증되지 않았습니다.');
             return;
         }
-        if(!otp){
+        if(!otpCheck){
             alert('otp 인증이 완료되지 않았습니다.');
             return;
         }
@@ -197,7 +197,7 @@ const Signup = () =>{
                             />
                             {emailError && <div style={{color:'red'}}>올바른 이메일의 형태가 아닙니다.</div>}
                             {emailCheck
-                                ?<div style={{color:'blue'}}>이메일이 인증되었습니다.</div>
+                                ?<div style={{color:'blue'}}>사용 가능한 이메일입니다.</div>
                                 :<></>
                             }
                         </Col>
