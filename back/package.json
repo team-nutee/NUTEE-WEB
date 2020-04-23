@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
-    "test": "nodemon"
+    "dev": "cross-env NODE_ENV=dev nodemon",
+    "test": "cross-env NODE_ENV=test nodemon",
+    "prod": "cross-env NODE_ENV=prod node index2.js"
   },
   "author": "MoonHKLee",
   "license": "MIT",

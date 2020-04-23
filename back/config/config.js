@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 module.exports={
-  development: {
+  dev: {
     username: 'root',
     password: process.env.DB_PASSWORD,
     database: 'nutee',
@@ -18,7 +18,7 @@ module.exports={
     dialect: 'mysql',
     port:3306,
   },
-  production: {
+  prod: {
     username: 'nutee',
     password: process.env.DB_PASSWORD,
     database: 'nutee',
