@@ -187,7 +187,7 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
             .then(async (result)=>{
                 let i;
                 for(i = result.count; i>0; i--){
-                    let checktrue = bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
+                    let checktrue = await bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
                     if(checktrue){
                         await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
                         res.status(200).send('\"message\":\"OTP 인증에 성공했습니다.\"');
