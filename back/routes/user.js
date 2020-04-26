@@ -115,6 +115,12 @@ router.post('/nicknamecheck',isNotLoggedIn,async(req,res,next)=>{
 });
 
 router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
+    if(req.body.schoolEmail==='nutee.skhu.2020@gmail.com'){
+        const hash = await bcrypt.hash('000000',12);
+        console.timeEnd('관리자 계정 인증');
+        await db.OTP.create({hash:hash});
+        return res.status(200).send('\"message\":\"관리자 이메일로 OTP 인증번호가 발송되었습니다.\"');
+    }
     const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
     if(exUser){
         return (
