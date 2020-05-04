@@ -20,7 +20,7 @@ const crawl = (className1,category, url) => new Promise((resolve)=>{
 });
 
 //학사
-crawl(".left15 span",
+crawl(".left15",
     '학사공지',
     'http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10004&searchBun=51')
     .then(result =>{
@@ -28,7 +28,7 @@ crawl(".left15 span",
     });
 
 //수업
-crawl(".left15 span",
+crawl(".left15",
     '수업공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10005&searchBun=53")
     .then(result =>{
@@ -36,7 +36,7 @@ crawl(".left15 span",
     });
 
 //학점
-crawl(".left15 span",
+crawl(".left15",
     '학점교류',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10038&searchBun=89")
     .then(result =>{
@@ -44,7 +44,7 @@ crawl(".left15 span",
     });
 
 //장학
-crawl(".left15 span",
+crawl(".left15",
     '장학공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10006&searchBun=75")
     .then(result =>{
@@ -52,7 +52,7 @@ crawl(".left15 span",
     });
 
 //일반
-crawl(".left15 span",
+crawl(".left15",
     '일반공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10007")
     .then(result =>{
@@ -60,7 +60,7 @@ crawl(".left15 span",
     });
 
 //행사
-crawl(".left15 span",
+crawl(".left15",
     '행사공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10008")
     .then(result =>{
