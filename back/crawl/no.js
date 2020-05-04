@@ -6,55 +6,55 @@ const crawl = (className1, category, url) => new Promise((resolve)=>{
         let bachelor_notice = [];
         let tag = $(className1);
 
-        let list = []; // 공지 제목
+        let num = []; // 공지 No.
 
         bachelor_notice.push(category);
         tag.each(function(i, elem) {
-            list[i] = $(this).find('a').text();
+            num[i] = $(this).children('td:first-child').text();
 
-            bachelor_notice.push(list[i]);
+            bachelor_notice.push(num[i]);
         });
 
         resolve(bachelor_notice);
     });
 });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     '학사공지',
     'http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10004&searchBun=51')
     .then(result =>{
         crawlresult[0] = result;
     });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     "수업공지",
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10005&searchBun=53")
     .then(result =>{
         crawlresult[1] = result;
     });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     '학점교류',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10038&searchBun=89")
     .then(result =>{
         crawlresult[2] = result;
     });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     '장학공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10006&searchBun=75")
     .then(result =>{
         crawlresult[3] = result;
     });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     '일반공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10007")
     .then(result =>{
         crawlresult[4] = result;
     });
 
-crawl(".left15",
+crawl(".board_list tbody tr",
     '행사공지',
     "http://www.skhu.ac.kr/board/boardlist.aspx?bsid=10008")
     .then(result =>{

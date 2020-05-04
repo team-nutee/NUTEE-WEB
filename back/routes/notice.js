@@ -3,12 +3,14 @@ const router = express.Router();
 
 const index1 = require('../crawl/index');
 const href = require('../crawl/href');
+const no = require('../crawl/no');
 
 router.get('/',async(req,res,next)=>{
     try{
         let crawlresult = {
             content: index1,
-            hrefs: href
+            hrefs: href,
+            no: no
         };
         res.json(crawlresult);
     }catch(err){
