@@ -97,7 +97,7 @@ router.post('/nicknamecheck',isNotLoggedIn,async(req,res,next)=>{
     try {
         const exUser = await db.User.findOne({
             where: {
-                userId: req.body.userId
+                nickname: req.body.nickname
             },
         });
         if (exUser) {
