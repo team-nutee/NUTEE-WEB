@@ -71,6 +71,11 @@ router.get('/', async (req, res, next) => { // GET /api/posts
                         attributes:['src']
                     }]
                 }, {
+                    model: db.User,
+                    through: 'commentLike',
+                    as: 'commentLikers',
+                    attributes: ['id'],
+                }, {
                     model: db.Comment,
                     as:'ReComment',
                     where: {isDeleted:false},
