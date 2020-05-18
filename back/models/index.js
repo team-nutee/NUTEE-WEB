@@ -12,6 +12,7 @@ db.Post = require('./post')(sequelize,Sequelize);
 db.User = require('./user')(sequelize,Sequelize);
 db.OTP = require('./otp')(sequelize,Sequelize);
 db.Report = require('./report')(sequelize,Sequelize);
+db.Recommendation = require('./recommendation')(sequelize,Sequelize);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

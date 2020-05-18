@@ -62,6 +62,11 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
             password: hashedPassword,
             schoolEmail:req.body.schoolEmail,
         });
+        if(req.body.recommendation !== ""){
+            await db.Recommendation.create({
+                userId:req.body.recommendation,
+            });
+        }
         console.log(newUser);
         return res.status(200).json(newUser);
 
