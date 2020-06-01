@@ -93,7 +93,7 @@ router.get('/', async (req, res, next) => { // GET /api/posts
             order: [['createdAt', 'DESC']], // DESC는 내림차순, ASC는 오름차순
             limit: parseInt(req.query.limit),
         });
-        res.json(posts);
+        res.status(200).json(posts);
     } catch (e) {
         console.error(e);
         next(e);

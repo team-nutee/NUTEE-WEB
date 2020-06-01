@@ -30,7 +30,7 @@ const upload = multer({
 router.get('/', isLoggedIn, (req, res) => { // /api/user/
     const user = Object.assign({}, req.user.toJSON());
     delete user.password;
-    return res.json(user);
+    return res.status(200).json(user);
 });
 
 router.post('/', async (req, res, next) => { // POST /api/user 회원가입
@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         });
         if (exUser) {
             return (
-                res.status(409).send('\"message\":\"이미 사용중인 아이디입니다.\"')
+                res.status(409).json({ message: "이미 사용 중인 아이디입니다." })
             );
         }
         const nickUser = await db.User.findOne({
@@ -52,7 +52,7 @@ router.post('/', async (req, res, next) => { // POST /api/user 회원가입
         });
         if(nickUser){
             return(
-                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+                res.status(409).json({ message: "이미 사용 중인 닉네임입니다." })
             )
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12); // salt는 10~13 사이로
@@ -81,11 +81,11 @@ router.post('/idcheck',isNotLoggedIn,async(req,res,next)=>{
         });
         if (exUser) {
             return (
-                res.status(409).send('\"message\":\"이미 사용중인 아이디입니다.\"')
+                res.status(409).json({ message: "이미 사용 중인 아이디입니다." })
             );
         }else{
             return(
-                res.status(200).send('\"message\":\"아이디 중복체크 성공.\"')
+                res.status(200).json({ message: "아이디 중복체크 성공" })
             )
         }
     }catch(e){
@@ -102,11 +102,11 @@ router.post('/nicknamecheck',isNotLoggedIn,async(req,res,next)=>{
         });
         if (exUser) {
             return (
-                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+                res.status(409).json({ message: "이미 사용 중인 닉네임입니다." })
             );
         }else{
             return(
-                res.status(200).send('\"message\":\"닉네임 중복체크 성공.\"')
+                res.status(200).json({ message: "닉네임 중복체크 성공" })
             )
         }
     }catch(e){
@@ -119,12 +119,12 @@ router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
         const hash = await bcrypt.hash('000000',12);
         console.timeEnd('관리자 계정 인증');
         await db.OTP.create({hash:hash});
-        return res.status(200).send('\"message\":\"관리자 이메일로 OTP 인증번호가 발송되었습니다.\"');
+        return res.status(200).json({ message: "관리자 이메일로 OTP 인증번호가 발송되었습니다." })
     }
     const exUser = await db.User.findOne({where:{schoolEmail:req.body.schoolEmail}});
     if(exUser){
         return (
-            res.status(409).send('\"message\":\"이미 가입된 이메일입니다.\"')
+            res.status(409).json({ message: "이미 가입된 이메일입니다." })
         );
     }else{
         const otp = await Math.floor(Math.random()*100000+10000).toString(); // 메일에 보내질 OTP 내용입니다.
@@ -155,14 +155,14 @@ router.post('/otpsend',isNotLoggedIn, async(req,res,next)=>{
         const hash = await bcrypt.hash(otp,12);
         console.timeEnd('otp암호화시간(디비저장)');
         await db.OTP.create({hash:hash});
-        res.status(200).send('\"message\":\"입력하신 이메일로 OTP 인증번호가 발송되었습니다.\"');
+        res.status(200).json({ message: "입력하신 이메일로 OTP 인증번호가 발송되었습니다." })
     }
 });
 
 router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 라우터
     try{
         if(!req.body.otpcheck) {
-            res.status(401).send('\"message\":\"인증번호를 입력해주세요.\"');
+            res.status(401).json({ message: "인증번호를 입력해주세요." })
         }
 
         function timedecrement(){
@@ -196,14 +196,14 @@ router.post('/otpcheck', isNotLoggedIn, async (req,res,next)=>{ // OTP 확인 �
                     let checktrue = await bcrypt.compare(req.body.otpcheck ,result.rows[i-1].dataValues.hash);
                     if(checktrue){
                         await db.OTP.destroy({where:{hash:result.rows[i-1].dataValues.hash}});
-                        res.status(200).send('\"message\":\"OTP 인증에 성공했습니다.\"');
+                        res.status(200).json({ message: "OTP 인증에 성공했습니다." });
                         break;
                     }else{
 
                     }
                 }
                 if(i===0){
-                    res.status(401).send('\"message\":\"잘못된 인증번호입니다.\"');
+                    res.status(401).json({ message: "잘못된 인증번호입니다." });
                 }
             });
     }catch(err){
@@ -238,7 +238,7 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
         jsonUser.Posts = jsonUser.Posts ? jsonUser.Posts : 0;
         jsonUser.Followings = jsonUser.Followings ? jsonUser.Followings : 0;
         jsonUser.Followers = jsonUser.Followers ? jsonUser.Followers : 0;
-        res.json(jsonUser);
+        res.status(200).json(jsonUser);
     } catch (e) {
         console.error(e);
         next(e);
@@ -248,7 +248,7 @@ router.get('/:id', async (req, res, next) => { // 남의 정보 가져오는 것
 router.post('/logout', (req, res) => { // /api/user/logout
     req.logout();
     req.session.destroy();
-    res.send('\"message\": \"logout 성공\"');
+    res.status(200).json({ message: "logout 성공" });
 });
 
 router.post('/login', (req, res, next) => { // POST /api/user/login
@@ -258,7 +258,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
             return next(err);
         }
         if (info) {
-            return res.status(401).send(info.reason);
+            return res.status(401).json(info.reason);
         }
         return req.login(user, async (loginErr) => {
             try {
@@ -286,7 +286,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
                     attributes: ['id', 'nickname', 'userId'],
                 });
                 console.log(fullUser);
-                return res.json(fullUser);
+                return res.status(200).json(fullUser);
             } catch (e) {
                 next(e);
             }
@@ -308,7 +308,7 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => { // /api/us
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
-        res.json(followers);
+        res.status(200).json(followers);
     } catch (e) {
         console.error(e);
         next(e);
@@ -329,7 +329,7 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => { // /api/use
             limit: parseInt(req.query.limit, 10),
             offset: parseInt(req.query.offset, 10),
         });
-        res.json(followers);
+        res.status(200).json(followers);
     } catch (e) {
         console.error(e);
         next(e);
@@ -342,7 +342,7 @@ router.delete('/:id/follower', isLoggedIn, async (req, res, next) => {
             where: { id: req.user.id },
         });
         await me.removeFollower(req.params.id);
-        res.send(req.params.id);
+        res.status(200).json({ Id: req.params.id });
     } catch (e) {
         console.error(e);
         next(e);
@@ -355,7 +355,7 @@ router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
             where: { id: req.user.id },
         });
         await me.addFollowing(req.params.id);
-        res.send(req.params.id);
+        res.status(200).json({ Id: req.params.id });
     } catch (e) {
         console.error(e);
         next(e);
@@ -368,7 +368,7 @@ router.delete('/:id/follow', isLoggedIn, async (req, res, next) => {
             where: { id: req.user.id },
         });
         await me.removeFollowing(req.params.id);
-        res.send(req.params.id);
+        res.status(200).json({ Id: req.params.id });
     } catch (e) {
         console.error(e);
         next(e);
@@ -434,7 +434,7 @@ router.get('/:id/posts', async (req, res, next) => {
             }],
             order: [['createdAt', 'DESC']],
         });
-        res.json(posts);
+        res.status(200).json(posts);
     } catch (e) {
         console.error(e);
         next(e);
@@ -450,7 +450,7 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
         });
         if(exUser) {
             return (
-                res.status(409).send('\"message\":\"이미 사용중인 닉네임입니다.\"')
+                res.status(409).json({ message: "이미 사용중인 닉네임입니다." })
             );
         }
         await db.User.update({
@@ -458,7 +458,7 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
         }, {
             where: { id: req.user.id },
         });
-        res.status(200).send(req.body.nickname);
+        res.status(200).json({ nickname: req.body.nickname });
     } catch (e) {
         console.error(e);
         next(e);
@@ -497,11 +497,11 @@ router.post('/reissuance',isNotLoggedIn, async(req,res,next)=>{
             }
         });
             return(
-                res.status(200).send('\"message\": \"이메일 발송이 완료되었습니다.\"')
+                res.status(200).json({ message: "이메일 발송이 완료되었습니다." })
             );
     }else{
         return(
-            res.status(401).send('\"message\": \"아이디/이메일이 일치하지 않습니다.\"')
+            res.status(401).json({ message: "아이디/이메일이 일치하지 않습니다." })
         );
     }
 });
@@ -513,11 +513,11 @@ router.post('/passwordcheck',isLoggedIn, async(req,res,next)=>{
     console.log(Userpassword);
     if(Userpassword){
         return(
-            res.status(200).send('\"message\": \"비밀번호가 확인이 완료되었습니다.\"')
+            res.status(200).json({ message: "비밀번호 확인이 완료되었습니다." })
         );
     }else{
         return(
-            res.status(401).send('\"message\": \"비밀번호가 일치하지 않습니다.\"')
+            res.status(401).json({ message: "비밀번호가 일치하지 않습니다." })
         );
     }
 });
@@ -531,11 +531,11 @@ router.post('/passwordchange',isLoggedIn, async(req,res,next)=> {
     const newpassword = await db.User.update({password: hash}, {where: {id: req.user.id}});
     if (newpassword) {
         return (
-            res.status(200).send('\"message\": \"비밀번호가 변경되었습니다.\"')
+            res.status(200).json({ message: "비밀번호가 변경되었습니다." })
         );
     } else {
         return (
-            res.status(403).send('\"message\": \"비밀번호 변경에 실패하였습니다.\"')
+            res.status(403).json({ message: "비밀번호 변경에 실패하였습니다." })
         );
     }
 });
@@ -544,7 +544,7 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
     try {
         const exUser = await db.User.findOne({where: {schoolEmail: req.body.schoolEmail}});
         if (!exUser) {
-            res.status(401).send('\"message\": \"존재하지 않는 이메일입니다.\"');
+            res.status(401).json({ message: "존재하지 않는 이메일입니다." });
         } else {
             let transporter = await nodemailer.createTransport({ // 보내는사람 메일 설정입니다.
                 service: 'Gmail',
@@ -566,7 +566,7 @@ router.post('/findid', isNotLoggedIn, async(req,res,next)=> {
                     console.log('Email sent: ' + info.response);
                 }
             });
-            res.status(200).send('\"message\": \"입력하신 이메일로 아이디가 발송되었습니다.\"');
+            res.status(200).json({ message: "입력하신 이메일로 아이디가 발송되었습니다." });
         }
     } catch (err) {
         console.error(err);
@@ -592,7 +592,7 @@ router.post('/profile', isLoggedIn, upload.single('image'), async (req, res, nex
                 UserId: req.user.id,
             })
         }
-        res.status(200).json(req.file.filename);
+        res.status(200).json({ filename: req.file.filename });
     } catch (e) {
         console.error(e);
         next(e);
@@ -603,7 +603,7 @@ router.delete('/profile', isLoggedIn, async (req, res, next) => {
     try {
         await db.Image.findOne({ where: { UserId: req.user.id } });
         await db.Image.destroy({ where: { UserId: req.user.id } });
-        res.status(200).send('\"message\": \"성공\"');
+        res.status(200).json({ message: "성공" });
     } catch (e) {
         console.error(e);
         next(e);

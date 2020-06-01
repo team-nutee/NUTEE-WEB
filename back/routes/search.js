@@ -159,7 +159,7 @@ router.get('/:text', async (req, res,next) => {
                     return 0;
                 });
             const result = underscore.uniq(searchAll,'id');
-            res.json(result);
+            res.status(200).json(result);
         }else{
             let where = {
                 isDeleted:0,
@@ -228,7 +228,7 @@ router.get('/:text', async (req, res,next) => {
                 order: [['createdAt', 'DESC']], // DESC는 내림차순, ASC는 오름차순
                 limit: parseInt(req.query.limit, 10),
             });
-            res.json(searchByContents);
+            res.status(200).json(searchByContents);
         }
 
     } catch (e) {
