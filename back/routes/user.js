@@ -93,7 +93,7 @@ router.post('/idcheck',isNotLoggedIn,async(req,res,next)=>{
     }
 });
 
-router.post('/nicknamecheck',isNotLoggedIn,async(req,res,next)=>{
+router.post('/nicknamecheck',async(req,res,next)=>{
     try {
         const exUser = await db.User.findOne({
             where: {
