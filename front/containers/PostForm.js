@@ -23,9 +23,7 @@ const PostForm = () => {
             return alert('게시글을 작성하세요.');
         }
         const formData = new FormData();
-        imagePaths.forEach((i) => {
-            formData.append('image', i);
-        });
+        formData.append('image', imagePaths);
         formData.append('content', text);
         formData.append('id', '1');
         dispatch({

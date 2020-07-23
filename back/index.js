@@ -51,6 +51,6 @@ app.use('/api/hashtag', hashtagAPIRouter);
 app.use('/api/notice', noticeAPIRouter);
 app.use('/api/search', searchAPIRouter);
 
-app.listen(9425, () => {
-    console.log('server is running on http://localhost:9425');
+app.listen(9426, () => {
+    console.log('server is running on http://localhost:9426');
 });
