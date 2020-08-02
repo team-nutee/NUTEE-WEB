@@ -287,7 +287,7 @@ const PostCard = ({post}) => {
                         )
                         : (
                             <Card.Meta
-                                avatar={post.User.id
+                                avatar={post.UserId
                                     ? (
                                         <Link href={{pathname: '/user', query: {id: post.User.id}}}
                                               as={`/user/${post.User.id}`}>
@@ -303,7 +303,7 @@ const PostCard = ({post}) => {
                                     ) : (<>
                                     </>)
                                 }
-                                title={post.User.nickname}
+                                title={"hello"}
                                 description={
                                     <PostCardContent
                                         likers={post.Likers ? post.Likers.length : 0}
