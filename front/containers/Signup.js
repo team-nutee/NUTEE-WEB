@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {Form, Input, Checkbox, Button, Row ,Col, Icon,Modal} from 'antd';
+import {Divider, Form, Input, Checkbox, Button, Row ,Col, Icon, Modal} from 'antd';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import Router from 'next/router';
@@ -152,25 +152,25 @@ const Signup = () =>{
 
     return(
         <Paper zDepth={1}>
-        <div style={{background: '#effbf5', height:'100vh', paddingBottom:'45%', paddingTop:'40px'}}>
+        <div style={{background: '#f0faf5', height:'100%', paddingTop:'18vh', paddingBottom:'20vh'  }}>
             <h1 style={{textAlign:"center"}}>새 계정 만들기</h1>
             <h3 style={{textAlign:"center"}}>NUTEE에 오신것을 환영합니다!</h3>
-            <Form onSubmit={onSubmit} style={{padding:10 }}>
-                <div style={{width:'35%', margin:'0 auto'}}>
+            <Form onSubmit={onSubmit} style={{ padding: '10' }}>
+                <div style={{width: '35vw', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />}
                         name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                     />
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }}/>}
                         name="user-nick" value={nick} placeholder='닉네임' required onChange={onChangeNick}
                     />
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -178,7 +178,7 @@ const Signup = () =>{
                         value={password} required onChange={onChangePassword}
                     />
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     <br />
                     <Input
                         prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
@@ -187,13 +187,13 @@ const Signup = () =>{
                     />
                     {passwordError && <div style={{color:'red'}}>비밀번호가 일치하지 않습니다.</div>}
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     <br/>
-                    <Row gutter={8}>
-                        <Col span={18}>
+                    <Row gutter={8}> 
+                        <Col span={16}>
                             <Input
                                 prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }}/>}
-                                name="user-email" placeholder='학내 이메일 (@office.skhu.ac.kr)' value={email} required onChange={onChangeEmailCheck}
+                                name="user-email" placeholder='이메일 (@office.skhu.ac.kr)' value={email} required onChange={onChangeEmailCheck}
                             />
                             {emailError && <div style={{color:'red'}}>올바른 이메일의 형태가 아닙니다.</div>}
                             {emailCheck
@@ -201,7 +201,7 @@ const Signup = () =>{
                                 :<></>
                             }
                         </Col>
-                        <Col span={6}>
+                        <Col span={8}>
                             {emailCheck
                                 ?<Button disabled style={{width:'100%'}} onClick={onEmailCheck} >이메일 인증</Button>
                                 :<Button style={{width:'100%'}} onClick={onEmailCheck} >이메일 인증</Button>
@@ -209,7 +209,7 @@ const Signup = () =>{
                         </Col>
                     </Row>
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     {emailCheck?<></>:<br/>}
                     <Row gutter={8}>
                         <Col span={18}>
@@ -218,33 +218,40 @@ const Signup = () =>{
                                 name="user-otp" value={otp} placeholder='otp' required onChange={onChangeOtp}
                             />
                             {otpCheck
-                                ?<div style={{color:'blue'}}>otp가 인증되었습니다.</div>
+                                ?<div style={{color:'green'}}>otp가 인증되었습니다.</div>
                                 :<></>
                             }
                         </Col>
                         <Col span={6}>
                             {otpCheck
-                                ?<Button disabled style={{width:'100%'}} onClick={onOtpCheck}>otp 확인</Button>
-                                :<Button style={{width:'100%'}} onClick={onOtpCheck}>otp 확인</Button>
+                                ?<Button disabled style={{width:'100%',  }} onClick={onOtpCheck}>otp 확인</Button>
+                                :<Button style={{width:'100%', }} onClick={onOtpCheck}>otp 확인</Button>
                             }
                         </Col>
                     </Row>
                 </div>
-                <div style={{width:'35%', margin:'0 auto'}}>
+                <div style={{width:'35vw', margin:'0 auto'}}>
                     {otpCheck?<></>:<br/>}
                     <Checkbox style={{margin:'0px 5px 5px 0px'}} name="user-term" value={term} onChange={onChangeTerm}/><a>NUTEE 회원 약관</a>에 동의합니다.
                     {termError && <div style={{color:'red'}}>약관에 동의하셔야 합니다.</div>}
                 </div>
-                <div style={{width:'90px', margin:'0 auto'}}>
-                    <Button style={{marginTop:'5px'}} type="primary" htmlType="submit" loading={isSigningUp}>가입하기</Button>
+                <div style={{width:'85px', margin:'0 auto', }}>
+                   
+                    <Button style={{marginTop:'15px',  background: '#13c276', borderColor : "white" }} type="primary" htmlType="submit" loading={isSigningUp}>가입하기</Button>
+              
                 </div>
                 <br/>
-                <div style={{width:'35%', margin:'0 auto'}}>
-                    <a style={{marginLeft:'115px'}} onClick={setIdVisible} >아이디 찾기</a>
-                    <a style={{float:'right',marginRight:'100px'}} onClick={setPwVisible}>비밀번호 찾기</a>
+                <div style={{width:'35vw', margin:'0 auto'}}>
+                    <Row>
+                        <Col>
+                    <a style={{float:'left', marginLeft: '5vw'}} onClick={setIdVisible} >아이디 찾기</a>
+                    </Col>
+                    <Col >
+                    <a style={{float:'right', marginRight: '5vw' }} onClick={setPwVisible}>비밀번호 찾기</a>
+                    </Col></Row>
+                    
                 </div>
             </Form>
-
         </div>
             <Modal
                 visible={idVisible}
