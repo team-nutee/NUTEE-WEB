@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { Col, Input, Card, Menu, Row, Item, List, Typography, Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import LoginForm from '../containers/LoginForm';
+import { Row } from 'antd';
+import { useSelector } from 'react-redux';
 import MyProfile from '../containers/MyProfile';
-import Signup from "../containers/Signup";
 import { LOG_OUT_REQUEST } from "../reducers/user";
 import axios from "axios";
+
 import MenuBar from "../containers/MenuBar";
 import LeftContents from "./LeftContents";
 import MainContents from "./MainContents";
 import RightContents from "./RightContents";
 import styled from 'styled-components';
-import theme from '../style/theme';
+
+import Signin from '../pages/signup';
+import LoginForm from '../containers/loginForm';
+
 
 const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
@@ -28,7 +30,8 @@ const AppLayout = ({ children }) => {
                         {children}
                     </Row>
                     :
-                    <Signup />
+                    //<Signin /> 
+                    <LoginForm />
                 }
             </div>
             <style jsx>
@@ -41,7 +44,6 @@ const AppLayout = ({ children }) => {
                    `
                 }
             </style>
-
         </>
     );
 };

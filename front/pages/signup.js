@@ -1,11 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Divider, Form, Input, Checkbox, Button, Row, Col, Icon, Modal } from 'antd';
+import { Form, Input, Checkbox, Button, Row, Col, Icon, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import Link from "next/link";
-import { EMAIL_CHECK_REQUEST, OTP_CHECK_REQUEST, SIGN_UP_REQUEST, SIGN_UP_RESET } from "../reducers/user";
+import { 
+    EMAIL_CHECK_REQUEST, 
+    OTP_CHECK_REQUEST, 
+    SIGN_UP_REQUEST, 
+    SIGN_UP_RESET
+} from "../reducers/user";
 import Paper from "@material-ui/core/Paper";
+import { useInput } from '../hooks/useInput';
 import FindId from "../components/FindId";
 import FindPw from "../components/FindPw";
 
@@ -17,14 +22,6 @@ const TextInput = ({ value }) => {
 
 TextInput.propTypes = {
     value: PropTypes.string
-};
-
-export const useInput = (initValue = null) => {
-    const [value, setValue] = useState(initValue);
-    const handler = useCallback((e) => {//useCallback-> 함수 내부에서 쓰는 state를 deps 배열에 넣는다.
-        setValue(e.target.value);
-    }, []);
-    return [value, handler, setValue];
 };
 
 const Signup = () => {
@@ -59,12 +56,11 @@ const Signup = () => {
     };
     useEffect(() => {
         if (me) {
-            alert('로그인 했으니 메인 페이지로 이동합니다.');
-            Router.push('/');//해당 페이지로 이동
+            alert('메인 페이지로 이동합니다.');
+            Router.push('/');
         }
-    }, [me && me.id]);   //웬만하면 객체와 객체를 비교하지 않는게 좋다. 연산이 어려워진다.
-    //me라는 객체를 비교하는 것보다, 그 안의 고유 데이터를 사용해서 비교하자.
-
+    }, [me && me.id]); 
+ 
     useEffect(() => {
         if (isSignedUp) {
             alert('회원가입 성공');
@@ -152,8 +148,8 @@ const Signup = () => {
     }, [term]);
 
     return (
-        <Paper zDepth={1} style={{ maxWidth: '1200px', minWidth: '320px',  }}>
-            <div style={{ width: '100vw', padding: '18vh 0' }}>
+        <Paper zDepth={1} style={{ height: '100vh', minWidth: '320px'}}>
+            <div style={{ background: '#f0faf5', padding: '18vh 0' }}>
                 <h1 style={{ textAlign: "center" }}>새 계정 만들기</h1>
                 <h3 style={{ textAlign: "center" }}>NUTEE에 오신것을 환영합니다!</h3>
                 <Form onSubmit={onSubmit} style={{ padding: '10' }}>
@@ -246,7 +242,7 @@ const Signup = () => {
                         <div style={{ fontSize:'12px', width: '35vw', minwidth: '310px', maxWidth: '450px', margin: '0 auto'  }}>
                             <a style={{ float: 'left', margin:'0 auto 0 3vw'}}onClick={setIdVisible} >아이디 찾기</a>
                             <a style={{ float: 'right', margin: '0 3vw 0 auto'}} onClick={setPwVisible}>비밀번호 찾기</a> 
-                         {/* <Link href="/" prefetch>
+                         {/* <Link href="/">
                                 <a style={{ float: 'right', margin: 'auto'}}>로그인 하기</a>
                             </Link> */}
                        </div>   
@@ -277,4 +273,5 @@ const Signup = () => {
         </Paper>
     )
 };
+
 export default Signup;
