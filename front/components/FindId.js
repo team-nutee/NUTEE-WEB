@@ -48,7 +48,7 @@ const FindId = ({setIdVisible}) => {
                         {emailError && <div style={{color:'red'}}>올바른 이메일의 형태가 아닙니다.</div>}
                     </Col>
                     <Col span={6}>
-                        <Button type={"primary"} style={{width:'100%'}} onClick={onEmailFind} >전송</Button>
+                        <Button type={"primary"} style={{width:'100%', background: '#13c276',}} onClick={onEmailFind} >전송</Button>
                     </Col>
                 </Row>
             </div>

@@ -149,7 +149,7 @@ const Signup = () => {
     }, [term]);
 
     return (
-        <Paper zDepth={1} style={{ height: '100vh', minWidth: '320px'}}>
+        <Paper zDepth={1} style={{ height: '100vh', minWidth: '320px', background: '#f0faf5'}}>
             <div style={{ background: '#f0faf5', padding: '18vh 0' }}>
                 <h1 style={{ textAlign: "center" }}>새 계정 만들기</h1>
                 <h3 style={{ textAlign: "center" }}>NUTEE에 오신것을 환영합니다!</h3>
@@ -243,9 +243,6 @@ const Signup = () => {
                         <div style={{ fontSize:'12px', width: '35vw', minwidth: '310px', maxWidth: '450px', margin: '0 auto'  }}>
                             <a style={{ float: 'left', margin:'0 auto 0 3vw'}}onClick={setIdVisible} >아이디 찾기</a>
                             <a style={{ float: 'right', margin: '0 3vw 0 auto'}} onClick={setPwVisible}>비밀번호 찾기</a> 
-                         {/* <Link href="/">
-                                <a style={{ float: 'right', margin: 'auto'}}>로그인 하기</a>
-                            </Link> */}
                        </div>   
                     </Row>
                 </Form>

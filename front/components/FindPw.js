@@ -61,7 +61,7 @@ const FindPw = ({setPwVisible}) => {
             <div style={{width: '20%', margin: '0 auto'}}>
                 <br/>
                 <br/>
-                <Button type={"primary"} style={{width: '100%'}} onClick={onEmailFind}>전송</Button>
+                <Button type={"primary"} style={{width: '100%', background: '#13c276',}} onClick={onEmailFind}>전송</Button>
             </div>
         </Form>
     )

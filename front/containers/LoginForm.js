@@ -43,7 +43,7 @@ const LoginForm = () => {
     }, [id, password]);
 
     return (
-        <Paper zDepth={1} style={{ height: '100vh', minWidth: '320px', background: '#f0faf5' }} >
+        <Paper zDepth={1} style={{ height: '100vh', minWidth: '320px', background: '#f0faf5'}} >
             <div style={{ background: '#f0faf5', padding: '30vh 0' }}>
                 <h1 style={{ textAlign: "center", padding: '5vh auto' }}>로그인</h1>
                 <h3 style={{ textAlign: "center" }}>NUTEE에 오신것을 환영합니다!</h3>
