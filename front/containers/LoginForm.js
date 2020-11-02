@@ -81,9 +81,6 @@ const LoginForm = () => {
                                 <a style={{ float: 'right', margin: '0 auto' }} onClick={setPwVisible}>비밀번호 찾기</a>
                             </div>
                         </Row>
-                        <Row>
-                            <Link href="/signup"><a><Button>회원가입</Button></a></Link>
-                        </Row> 
                     </Col>
                 </Form>
             </div>

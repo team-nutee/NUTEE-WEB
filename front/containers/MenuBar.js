@@ -41,30 +41,25 @@ const MenuBar = ({ me }) => {
                                 </a>
                             </Link>
                         </div>
-                    </Row>
-                    <Row>
                         {me ?
                             <>
-                                <div style={{ float: "left", marginRight: '15px', marginTop: '11px' }}><Link
+                                <div style={{ float: "left", marginRight: '17px', marginTop: '11px' }}><Link
                                     href="/profile"><a>
                                         <b style={{ color: '#13c276', fontSize: '25px' }}>프로필</b></a></Link></div>
+                                <div style={{ float: "left", marginLeft: '20px', marginTop: '4px' }}>
+
+                                    <Input.Search
+                                        placeholder={"검색어를 입력하세요."}
+                                        style={{ verticalAlign: 'middle' }}
+                                        onSearch={onSearch}
+                                    />
+
+                                </div>
                             </>
                             : <></>}
                         {/* <div style={{float: "left", marginRight: '20px', marginTop: '4px'}}><Link> */}
                         {/*    href="/chat" prefetch><a><b*/}
                         {/*    style={{color: "white"}}>채팅</b></a></Link></div>*/}
-
-                        <div style={{ float: "left", marginLeft: '20px', marginTop: '4px' }}>
-                            {me ?
-                                <Input.Search
-                                    placeholder={"검색어를 입력하세요."}
-                                    style={{ verticalAlign: 'middle' }}
-                                    onSearch={onSearch}
-                                />
-                                :
-                                <></>
-                            }
-                        </div>
                     </Row>
                 </Col>
                 <Col span={12}>

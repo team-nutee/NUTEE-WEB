@@ -54,13 +54,14 @@ const Signup = () => {
     const pwCancel = () => {
         setPwVisible(false);
     };
+
     useEffect(() => {
-        if (me) {
-            alert('메인 페이지로 이동합니다.');
+        if(me) {
+            alert('메인페이지로 이동합니다.')
             Router.push('/');
         }
-    }, [me && me.id]); 
- 
+    }, [me && me.id]);
+
     useEffect(() => {
         if (isSignedUp) {
             alert('회원가입 성공');
