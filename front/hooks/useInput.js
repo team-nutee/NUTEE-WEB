@@ -1,9 +1,12 @@
 import { useState, useCallback } from 'react';
 
-export const useInput = (initValue = null) => {
-  const [value, setter] = useState(initValue);
+const useInput = (initialValue = null) => {
+  const [value, setValue] = useState(initialValue);
   const handler = useCallback((e) => {
-    setter(e.target.value);
+    setValue(e.target.value);
   }, []);
-  return [value, handler];
+  return [value, handler, setValue];
 }; 
+export default useInput;
+
+//각각의 setState => 하나의 useInput
