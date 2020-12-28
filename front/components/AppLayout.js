@@ -1,36 +1,27 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
 import { useSelector } from 'react-redux';
-import MyProfile from '../containers/MyProfile';
-import { LOG_OUT_REQUEST } from "../reducers/user";
-import axios from "axios";
-
-import MenuBar from "../containers/MenuBar";
-import LeftContents from "./LeftContents";
-import MainContents from "./MainContents";
-import RightContents from "./RightContents";
-import styled from 'styled-components';
-
-import Signin from '../pages/signup';
-import LoginForm from '../containers/loginForm';
-
+import MenuBar from "./MenuBar";
+import LoginForm from './LoginForm';
 
 const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
+
+    const divWrapper = useMemo(() => ({ minHeight: '100vh', background: '#f0faf5' }), []);
+    const rowWrapper = useMemo(() => ({ paddingTop: '50px', width: '100%' }), []);
+ 
     return (
         <>
-            <div className={'main'} style={{ minHeight: '100vh', background: '#f0faf5'}}>
+            <div className={'main'} style={divWrapper}>
                 {/*메뉴바*/}
                 <MenuBar me={me} />
                 {/*본문 내용*/}
                 {me ?
-                    <Row style={{ paddingTop: '50px', width: '100%' }} type='flex' justify='center' gutter={8}>
+                    <Row style={rowWrapper} type='flex' justify='center' gutter={8}>
                         {children}
                     </Row>
                     :
-                    //<Signin /> 
                     <LoginForm />
                 }
             </div>

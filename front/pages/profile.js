@@ -1,21 +1,20 @@
 import React from 'react';
 import { Col } from 'antd';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
     LOAD_FOLLOWERS_REQUEST,
     LOAD_FOLLOWINGS_REQUEST,
 } from '../reducers/user';
 import {LOAD_USER_POSTS_REQUEST} from '../reducers/post';
-import PostCard from '../containers/PostCard';
-import LeftProfile from "../components/LeftProfile";
-import RightProfile from "../components/RightProfile";
+import PostCard from '../components/post/PostCard';
+import LeftProfile from "../components/profiles/LeftProfile";
 
 const Profile = () => {
-    const {mainPosts} = useSelector(state => state.post);
+    const { mainPosts } = useSelector(state => state.post);
 
     return (
         <>
-            <LeftProfile span={5}/>
+            <LeftProfile span={7}/>
             <Col span={10}>
                 <div>
                     {mainPosts.map(c => (
@@ -23,7 +22,6 @@ const Profile = () => {
                     ))}
                 </div>
             </Col>
-            <RightProfile/>
         </>
     );
 };
@@ -43,7 +41,6 @@ Profile.getInitialProps = async (context) => {
         type: LOAD_USER_POSTS_REQUEST,
         data: state.user.me && state.user.me.id,
     });
-
     // 이 쯤에서 LOAD_USERS_SUCCESS 돼서 me가 생김.
 };
 

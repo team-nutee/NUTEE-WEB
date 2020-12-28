@@ -1,12 +1,10 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef, } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import PostForm from '../containers/PostForm';
-import PostCard from '../containers/PostCard';
+import PostForm from '../components/post/PostForm';
+import PostCard from '../components/post/PostCard';
 import { LOAD_MAIN_POSTS_REQUEST } from '../reducers/post';
-import LeftContents from "../components/LeftContents";
-import MainContents from "../components/MainContents";
-import RightContents from "../components/RightContents";
-import {Col, Row} from "antd";
+import LeftContents from "../components/contents/LeftContents";
+import { Col, Row } from "antd";
 
 const Home = () => {
     const { me } = useSelector(state => state.user);
@@ -35,11 +33,15 @@ const Home = () => {
             window.removeEventListener('scroll', onScroll);
         };
     }, [mainPosts.length]);
+    
+    const mainpostWrapper = useMemo(() => ({ minWidth: '550px' }), []);
 
     return (
-        <>
-            <LeftContents me={me} span={5} />
-            <Col span={10} style={{minWidth:'550px'}}>
+        <Row gutter={8}>
+            <Col>
+                <LeftContents me={me} span={5} />
+            </Col>
+            <Col span={10} style={mainpostWrapper}>
                 {me && <PostForm />}
                 {mainPosts.map((c) => {
                     return (
@@ -47,8 +49,7 @@ const Home = () => {
                     );
                 })}
             </Col>
-            <RightContents />
-        </>
+        </Row>
     );
 };
 

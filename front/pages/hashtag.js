@@ -1,13 +1,11 @@
-import React, {useCallback, useEffect} from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {useDispatch, useSelector} from 'react-redux';
-import {LOAD_HASHTAG_POSTS_REQUEST} from '../reducers/post';
-import PostCard from '../containers/PostCard';
-import styled from "styled-components";
+import { useDispatch, useSelector } from 'react-redux';
+import { LOAD_HASHTAG_POSTS_REQUEST } from '../reducers/post';
+import PostCard from '../components/PostCard';
 import LeftContents from "../components/LeftContents";
 import RightContents from "../components/RightContents";
-import {Col} from "antd";
-import PostForm from "../containers/PostForm";
+import { Col } from "antd";
 
 const Hashtag = ({tag}) => {
     const dispatch = useDispatch();
@@ -34,10 +32,12 @@ const Hashtag = ({tag}) => {
         };
     }, [mainPosts.length]);
 
+    const colWrapper = useMemo(() => ({ minWidth:'550px' }), []);
+
     return (
         <>
             <LeftContents me={me} span={5} />
-            <Col span={10} style={{minWidth:'550px'}}>
+            <Col span={10} style={colWrapper}>
                 {mainPosts.map((c) => {
                     return (
                         <PostCard key={c.id} post={c} />

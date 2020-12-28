@@ -1,15 +1,15 @@
-import React, {useCallback, useState} from 'react';
-import {Avatar, Button, Col, Form, Icon, Input, Modal, Row} from 'antd';
-import {EDIT_NICKNAME_REQUEST, EDIT_PW_REQUEST, EDIT_PWCK_REQUEST} from "../reducers/user";
-import {useDispatch, useSelector} from "react-redux";
-import {TARGET_URL} from "../static";
-import {LOAD_USER_POSTS_REQUEST} from "../reducers/post";
+import React, { useCallback, useState } from 'react';
+import { Avatar, Button, Col, Form, Icon, Input, Modal, Row } from 'antd';
+import { EDIT_NICKNAME_REQUEST, EDIT_PW_REQUEST, EDIT_PWCK_REQUEST } from "../../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import { TARGET_URL } from "../../static";
+import { LOAD_USER_POSTS_REQUEST } from "../../reducers/post";
 
 const PwEditModal = () => {
-    const [visible,setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [editPWCK, setEditPWCK] = useState('');
     const [editPW, setEditPW] = useState('');
-    const { me} = useSelector(state => state.user);
+    const { me } = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     const showModal = () => {
@@ -24,7 +24,7 @@ const PwEditModal = () => {
         setEditPWCK(e.target.value);
     }, []);
 
-    const onEditPWCK = useCallback(async(e) => {
+    const onEditPWCK = useCallback(async (e) => {
         e.preventDefault();
         await dispatch({
             type: EDIT_PWCK_REQUEST,
@@ -36,7 +36,7 @@ const PwEditModal = () => {
         setEditPW(e.target.value);
     }, []);
 
-    const onEditPW = useCallback(async(e) => {
+    const onEditPW = useCallback(async (e) => {
         e.preventDefault();
         await dispatch({
             type: EDIT_PW_REQUEST,
@@ -44,9 +44,13 @@ const PwEditModal = () => {
         });
     }, [editPW]);
 
-    return(
+    const buttonWrapper = useMemo(() => ({ width: '220px', marginTop: '10px', float: 'right' }), []);
+    const divWrapper = useMemo(() => ({ width: '52%', margin: '0 auto' }), []);
+    const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
+
+    return (
         <div>
-            <Button style={{width:'220px', marginTop: '10px',float:'right'}} onClick={showModal}>
+            <Button style={buttonWrapper} onClick={showModal}>
                 비밀번호 변경
             </Button>
             <Modal
@@ -56,12 +60,12 @@ const PwEditModal = () => {
                 onCancel={handleCancel}
                 footer={null}
             >
-                <div style={{width:'52%', margin:'0 auto'}}>
-                    <br/>
+                <div style={divWrapper}>
+                    <br />
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                prefix={<Icon type="lock" style={prefixWrapper} />}
                                 type='password' placeholder='현재 비밀번호' name="user-password"
                                 value={editPWCK} required onChange={onChangePWCK}
                             />
@@ -71,12 +75,12 @@ const PwEditModal = () => {
                         </Col>
                     </Row>
                 </div>
-                <div style={{width:'52%', margin:'0 auto'}}>
-                    <br/>
+                <div style={divWrapper}>
+                    <br />
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                prefix={<Icon type="lock" style={prefixWrapper} />}
                                 type='password' placeholder='변경할 비밀번호' name="user-password2"
                                 value={editPW} required onChange={onChangePW}
                             />

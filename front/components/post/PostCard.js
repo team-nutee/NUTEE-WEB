@@ -1,39 +1,42 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col,Alert} from 'antd';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col, Alert } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
     ADD_COMMENT_REQUEST,
     LIKE_POST_REQUEST,
-    LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, REPORT_REQUEST,
+    LOAD_COMMENTS_REQUEST,
+    REMOVE_POST_REQUEST,
+    REPORT_REQUEST,
     RETWEET_REQUEST,
     UNLIKE_POST_REQUEST,
-} from '../reducers/post';
-import PostImages from '../components/PostImages';
-import PostCardContent from '../components/PostCardContent';
-import EditForm from "../components/EditForm";
-import Comments from "../components/Comments";
-import CommentForm from "../components/CommentForm";
-import ProfileAvatar from "../components/ProfileAvatar";
+} from '../../reducers/post';
+import PostImages from './PostImages';
+import PostCardContent from './PostCardContent';
+import EditForm from "./EditForm";
+import Comments from "../comments/Comments";
+import CommentForm from "../comments/CommentForm";
+import ProfileAvatar from "../profiles/ProfileAvatar";
 
 const CardWrapper = styled.div`
+    min-width : 550px; 
   margin-bottom: 20px;
 `;
 
-const PostCard = ({post}) => {
+const PostCard = ({ post }) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const [commentText, setCommentText] = useState('');
-    const {me} = useSelector(state => state.user);
-    const {commentAdded, isAddingComment} = useSelector(state => state.post);
+    const { me } = useSelector(state => state.user);
+    const { commentAdded, isAddingComment } = useSelector(state => state.post);
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
-    const [report,setReport] = useState('');
+    const [report, setReport] = useState('');
     const [reportVisible, setReportVisible] = useState(false);
 
-    const [offset,setOffset] = useState(0);
+    const [offset, setOffset] = useState(0);
     const { mainPosts } = useSelector(state => state.post);
 
     const showModal = () => {
@@ -52,17 +55,27 @@ const PostCard = ({post}) => {
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
 
+    const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
+    const listWrapper = useMemo(() => ({ background: 'white', border: '1px solid #e6e6e6', paddingBottom: '0px' }), []);
+    const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
+    const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
+    const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
+    const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
+    const modalWrapper = useMemo(() => ({ padding: '0px', zIndex: 1 }), []);
+    const blockDivWrapper = useMemo(() => ({ width: '80%', margin: '0 auto' }), []);
+    const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
+
     const onToggleComment = useCallback(() => {
         setCommentFormOpened(prev => !prev);
         if (!commentFormOpened) {
             dispatch({
                 type: LOAD_COMMENTS_REQUEST,
                 data: {
-                    postId:post.id,
-                    offset:offset,
+                    postId: post.id,
+                    offset: offset,
                 },
             });
-            setOffset(offset+5);
+            setOffset(offset + 5);
         }
     }, []);
 
@@ -70,22 +83,21 @@ const PostCard = ({post}) => {
         dispatch({
             type: LOAD_COMMENTS_REQUEST,
             data: {
-                postId:post.id,
-                offset:offset,
+                postId: post.id,
+                offset: offset,
             },
         });
-        setOffset(offset+5);
+        setOffset(offset + 5);
     };
 
     const loadMore =
         (mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments &&
-            mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !== 0)&&
-        mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length % 5 === 0 ? (
-            <div style={{margin:'0px 0px 10px 30px',textAlign:'center'}}>
-                <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
-            </div>
-        ) : null;
-
+            mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !== 0) &&
+            mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length % 5 === 0 ? (
+                <div style={loadMoreDivWrapper}>
+                    <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
+                </div>
+            ) : null;
 
     const onSubmitComment = useCallback((e) => {
         e.preventDefault();
@@ -164,16 +176,16 @@ const PostCard = ({post}) => {
             });
         }
     });
-    const onReport = useCallback(()=>{
+    const onReport = useCallback(() => {
         setReportVisible(true);
     });
 
-    const onSubmitReport = useCallback(()=>{
+    const onSubmitReport = useCallback(() => {
         dispatch({
             type: REPORT_REQUEST,
             data: {
-                postId : post.id,
-                content : report,
+                postId: post.id,
+                content: report,
             },
         });
         setReportVisible(false);
@@ -203,11 +215,11 @@ const PostCard = ({post}) => {
 
     return (
         <CardWrapper>
-            {post.isBlocked ? <Card style={{background: '#F6CED8', textAlign:'center'}}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card> :
+            {post.isBlocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card> :
                 <Card
-                    cover={post.Images && post.Images[0] && <PostImages images={post.Images}/>}
+                    cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
                     actions={[
-                        <Icon type="retweet" key="retweet" onClick={onRetweet}/>,
+                        <Icon type="retweet" key="retweet" onClick={onRetweet} />,
                         <Icon
                             type="heart"
                             key="heart"
@@ -215,17 +227,17 @@ const PostCard = ({post}) => {
                             twoToneColor="#eb2f96"
                             onClick={onToggleLike}
                         />,
-                        <Icon type="message" key="message" onClick={onToggleComment}/>,
+                        <Icon type="message" key="message" onClick={onToggleComment} />,
                         <>
                             {me && post.UserId === me.id
                                 ? (
                                     <Dropdown overlay={menu1} placement="topRight">
-                                        <Icon type='ellipsis'/>
+                                        <Icon type='ellipsis' />
                                     </Dropdown>
                                 )
                                 : (
                                     <Dropdown overlay={menu2} placement="topRight">
-                                        <Icon type='ellipsis'/>
+                                        <Icon type='ellipsis' />
                                     </Dropdown>
                                 )}
                         </>,
@@ -233,11 +245,11 @@ const PostCard = ({post}) => {
                     title={post.RetweetId ?
                         <>
                             {post.User.Image ?
-                                <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src}/>
+                                <ProfileAvatar nickname={post.User.nickname} imagePath={post.User.Image.src} />
                                 :
-                                <ProfileAvatar nickname={post.User.nickname}/>
+                                <ProfileAvatar nickname={post.User.nickname} />
                             }
-                            <a style={{margin: '0px 10px 0px 10px'}}>{post.User.nickname}</a>님이 글을 공유하였습니다.
+                            <a style={aWrapper}>{post.User.nickname}</a>님이 글을 공유하였습니다.
                         </>
                         : null
                     }
@@ -245,21 +257,21 @@ const PostCard = ({post}) => {
                     {post.RetweetId && post.Retweet
                         ? (
                             <Card
-                                style={{marginBottom: '10px'}}
-                                cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
+                                style={retweetCardWrapper}
+                                cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
                             >
                                 <Card.Meta
                                     avatar={(
                                         <Link
-                                            href={{pathname: '/user', query: {id: post.Retweet.User.id}}}
+                                            href={{ pathname: '/user', query: { id: post.Retweet.User.id } }}
                                             as={`/user/${post.Retweet.User.id}`}
                                         >
                                             <a>
                                                 {post.Retweet.User.Image ?
                                                     <ProfileAvatar nickname={post.Retweet.User.nickname}
-                                                                   imagePath={post.Retweet.User.Image.src}/>
+                                                        imagePath={post.Retweet.User.Image.src} />
                                                     :
-                                                    <ProfileAvatar nickname={post.Retweet.User.nickname}/>
+                                                    <ProfileAvatar nickname={post.Retweet.User.nickname} />
                                                 }
                                             </a>
                                         </Link>
@@ -273,12 +285,8 @@ const PostCard = ({post}) => {
                                                 postData={post.Retweet.content}
                                                 retweet={1}
                                             />
-                                            <h5 style={{
-                                                position: 'absolute',
-                                                right: '15px',
-                                                bottom: '15px',
-                                                fontSize: '12px'
-                                            }}>댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개
+                                            <h5 style={retweetCardMetaWrapper}>
+                                                댓글 {post.Retweet.Comments ? post.Retweet.Comments.length : 0}개
                                                 좋아요 {post.Retweet.Likers ? post.Retweet.Likers.length : 0}개</h5>
                                         </>
                                     } // a tag x -> Link
@@ -289,14 +297,14 @@ const PostCard = ({post}) => {
                             <Card.Meta
                                 avatar={post.UserId
                                     ? (
-                                        <Link href={{pathname: '/user', query: {id: post.User.id}}}
-                                              as={`/user/${post.User.id}`}>
+                                        <Link href={{ pathname: '/user', query: { id: post.User.id } }}
+                                            as={`/user/${post.User.id}`}>
                                             <a>
                                                 {post.User.Image ?
                                                     <ProfileAvatar nickname={post.User.nickname}
-                                                                   imagePath={post.User.Image.src}/>
+                                                        imagePath={post.User.Image.src} />
                                                     :
-                                                    <ProfileAvatar nickname={post.User.nickname}/>
+                                                    <ProfileAvatar nickname={post.User.nickname} />
                                                 }
                                             </a>
                                         </Link>
@@ -320,7 +328,7 @@ const PostCard = ({post}) => {
                 <>
                     <List
                         itemLayout="horizontal"
-                        style={{background: 'white', border: '1px solid #e6e6e6', paddingBottom:'0px'}}
+                        style={listWrapper}
                         loadMore={loadMore}
                         dataSource={post.Comments || []}
                         renderItem={item => (
@@ -335,9 +343,9 @@ const PostCard = ({post}) => {
                     />
                 </>
             )}
-            <Modal footer={null} bodyStyle={{padding: '0px', zIndex: 1}} title='게시글 수정' visible={visible}
-                   onOk={handelOk} onCancel={handleCancel}>
-                <EditForm postId={post.id} postContent={post.content} postImages={post.Images} setVisible={setVisible} visible={visible}/>
+            <Modal footer={null} bodyStyle={modalWrapper} title='게시글 수정' visible={visible}
+                onOk={handelOk} onCancel={handleCancel}>
+                <EditForm postId={post.id} postContent={post.content} postImages={post.Images} setVisible={setVisible} visible={visible} />
             </Modal>
             <Modal
                 title="게시물 신고"
@@ -346,12 +354,12 @@ const PostCard = ({post}) => {
                 onCancel={reportCancel}
                 footer={null}
             >
-                <div style={{width:'80%', margin:'0 auto'}}>
-                    <br/>
+                <div style={blockDivWrapper}>
+                    <br />
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }}/>}
+                                prefix={<Icon type="message" style={prefixWrapper} />}
                                 placeholder='신고사유' value={report} required onChange={onChangeReport}
                             />
                         </Col>

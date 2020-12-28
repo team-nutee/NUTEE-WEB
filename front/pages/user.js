@@ -6,15 +6,13 @@ import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import PostCard from '../containers/PostCard';
 import LeftContents from "../components/LeftContents";
-import RightContents from "../components/RightContents";
-import LeftUser from "../components/LeftUser";
 
 const User = () => {
     const { mainPosts } = useSelector(state => state.post);
 
     return (
         <>
-        <LeftUser span={5} />
+        <LeftContents span={5} />
         <Col span={10}>
             <div>
                 {mainPosts.map(c => (
@@ -22,7 +20,6 @@ const User = () => {
                 ))}
             </div>
         </Col>
-        <RightContents />
         </>
     );
 };

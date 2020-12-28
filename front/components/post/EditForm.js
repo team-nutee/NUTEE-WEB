@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { Form, Input, Button, Icon } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,10 +7,10 @@ import {
     REMOVE_IMAGE,
     UPLOAD_EDIT_IMAGES_REQUEST,
     UPLOAD_IMAGES_REQUEST
-} from '../reducers/post';
+} from '../../reducers/post';
 import TextareaAutosize from "react-textarea-autosize";
 
-const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
+const EditForm = ({ postId, postContent, postImages, visible, setVisible }) => {
     const dispatch = useDispatch();
     const [text, setText] = useState(postContent);
     const { editImagePaths, isEditingPost, postEdited } = useSelector(state => state.post);
@@ -19,13 +19,13 @@ const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
     useEffect(() => {
         if (visible) {
             setText(postContent);
-            const images = postImages.map(v=>v.src);
+            const images = postImages.map(v => v.src);
             dispatch({
-                type:EDIT_POST_IMAGES,
-                data:images
+                type: EDIT_POST_IMAGES,
+                data: images
             });
         }
-    }, [postEdited,visible,postContent,dispatch,postImages]);
+    }, [postEdited, visible, postContent, dispatch, postImages]);
 
     const onEditForm = useCallback((e) => {
         e.preventDefault();
@@ -44,7 +44,7 @@ const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
             data: formData,
         });
         setVisible(false);
-    }, [text, editImagePaths,postId]);
+    }, [text, editImagePaths, postId]);
 
     const onChangeText = useCallback((e) => {
         setText(e.target.value);
@@ -73,36 +73,48 @@ const EditForm = ({postId,postContent,postImages,visible,setVisible}) => {
         });
     }, []);
 
+    const formWrapper = useMemo(() => ({ margin: '0px 0 10px' }), []);
+    const formDivWrapper = useMemo(() => ({ height: "auto", overflow: "hidden", background: 'white', paddingBottom: '5px', border: '1px solid #e6e6e6' }), []);
+    const formDivDivWrapper = useMemo(() => ({ overflow: 'hidden', height: 'auto' }), []);
+    const textareaAutosizeWrapper = useMemo(() => ({ margin: '5px', resize: 'none', outline: 'none', lineHeight: '30px', overflowY: 'hidden', border: 'none', width: '98.5%', minHeight: '65px', height: 'auto' }), []);
+    const formDivDivDiv1Wrapper = useMemo(() => ({ overflow: 'hidden', height: "auto" }), []);
+    const editImagePathsDivWrapper = useMemo(() => ({ margin: '5px', width: '47.6%', float: "left", height: '180px', background: '#F2F2F2', textAlign: 'center' }), []);
+    const editImagePathsDivDivWrapper = useMemo(() => ({ textAlign: 'right', marginRight: '15px' }), []);
+    const editImagePathsIconWrapper = useMemo(() => ({ color: 'black', position: 'absolute' }), []);
+    const formDivDivDiv2Wrapper = useMemo(() => ({ marginBottom: '5px', marginTop: '5px' }), []);
+    const button1Wrapper = useMemo(() => ({ marginLeft: '5px', borderRadius: '0' }), []);
+    const button2Wrapper = useMemo(() => ({ float: 'right', marginRight: '5px', borderRadius: '0' }), []);
+
     return (
-        <Form style={{ margin: '0px 0 10px' }} encType="multipart/form-data" onSubmit={onEditForm}>
-            <div style={{height: "auto", overflow:"hidden", background:'white', paddingBottom:'5px', border:'1px solid #e6e6e6'}}>
-                <div style={{overflow:'hidden', height:'auto'}}>
+        <Form style={formWrapper} encType="multipart/form-data" onSubmit={onEditForm}>
+            <div style={formDivWrapper}>
+                <div style={formDivDivWrapper}>
                     <TextareaAutosize
-                        style={{margin:'5px', resize:'none',outline:'none', lineHeight:'30px', overflowY:'hidden', border:'none', width:'98.5%', minHeight:'65px', height:'auto'}}
+                        style={textareaAutosizeWrapper}
                         placeholder="내용을 입력해주세요."
                         value={text}
                         onChange={onChangeText}
                         autoFocus={true} />
-                    <div style={{ overflow:'hidden', height:"auto"}}>
+                    <div style={formDivDivDiv1Wrapper}>
                         {editImagePaths.map((v, i) => (
-                            <div key={v} style={{margin:'5px', width:'47.6%', float:"left", height:'180px', background:'#F2F2F2', textAlign:'center'}}>
-                                <div style={{textAlign:'right', marginRight:'15px'}}>
-                                    <Icon style={{ color: 'black', position:'absolute'}}
-                                          type="close"
-                                          onClick={onRemoveImage(i)}
+                            <div key={v} style={editImagePathsDivWrapper}>
+                                <div style={editImagePathsDivDivWrapper}>
+                                    <Icon style={editImagePathsIconWrapper}
+                                        type="close"
+                                        onClick={onRemoveImage(i)}
                                     />
                                 </div>
                                 <img src={`http://localhost:9425/${v}`} style={{
                                     maxWidth: '100%',
                                     height: '100%'
-                                }} alt={v}/>
+                                }} alt={v} />
                             </div>
                         ))}
                     </div>
-                    <div style={{ marginBottom:'5px', marginTop:'5px'}}>
+                    <div style={formDivDivDiv2Wrapper}>
                         <input type="file" multiple hidden ref={imageInput} onChange={onChangeImages} />
-                        <Button onClick={onClickImageUpload} style={{marginLeft:'5px', borderRadius:'0'}}>이미지 업로드</Button>
-                        <Button type="primary" style={{ float: 'right', marginRight:'5px', borderRadius:'0'}} htmlType="submit" loading={isEditingPost}>작성</Button>
+                        <Button onClick={onClickImageUpload} style={ button1Wrapper }>이미지 업로드</Button>
+                        <Button type="primary" style={ button2Wrapper } htmlType="submit" loading={isEditingPost}>작성</Button>
                     </div>
                 </div>
             </div>

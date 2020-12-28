@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {Icon, Modal} from 'antd';
-import ImagesZoom from './ImagesZoom';
-import {TARGET_URL} from "../static";
+import { Icon } from 'antd';
+import ImagesZoom from '../ImagesZoom';
+import { TARGET_URL } from "../../static";
 
 const PostImages = ({ images }) => {
     const [showImagesZoom, setShowImagesZoom] = useState(false);
@@ -38,11 +38,14 @@ const PostImages = ({ images }) => {
             </>
         );
     }
+
+    const divWrapper = useMemo(() => ({ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }), []);
+
     return (
         <>
             <div>
                 <img src={`${TARGET_URL}/${images[0].src}`} width="50%" onClick={onZoom} />
-                <div style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }} onClick={onZoom}>
+                <div style={divWrapper} onClick={onZoom}>
                     <Icon type="plus" />
                     <br />
                     {images.length - 1}
