@@ -1,13 +1,15 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { Form, Input, Button, Row, Col, Icon, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOG_IN_REQUEST } from '../reducers/user';
-import useInput  from '../hooks/useInput';
+import Link from "next/link";
+import Router from 'next/router';
+import useInput from '../hooks/useInput';
 import Paper from "@material-ui/core/Paper";
 import FindId from "./find/FindId";
 import FindPw from "./find/FindPw";
 
-const LoginForm = () => {
+const CLoginForm = () => {
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('');
     const { isLoggingIn, loginError } = useSelector(state => state.user);
@@ -30,6 +32,12 @@ const LoginForm = () => {
         setPwVisible(false);
     };
 
+    useEffect(() => {
+        if (isLoggingIn) {
+            Router.push('/');
+        }
+    }, [isLoggingIn]);
+  
     const onSubmitForm = useCallback((e) => {
         e.preventDefault();
         dispatch({
@@ -41,17 +49,18 @@ const LoginForm = () => {
         });
     }, [id, password]);
 
-    const paperWrapper = useMemo(() => ({background: '#f0faf5', padding: '30vh 0' }), []);
+    const paperWrapper = useMemo(() => ({ background: '#f0faf5', padding: '30vh 0' }), []); //'#f0faf5'
     const h1Wrapper = useMemo(() => ({ textAlign: 'center', padding: '5vh auto' }), []);
     const h3Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
     const formWrapper = useMemo(() => ({ width: '35vw', minWidth: '310px', maxWidth: '450px', margin: '0 auto', }), []);
     const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
     const loginWrapper = useMemo(() => ({ width: '100px', margin: '0 auto', }), []);
     const loginButtonWrapper = useMemo(() => ({ background: '#13c276', borderColor: "white", width: '100px' }), []);
-    const idpwWrapper = useMemo(() => ({ fontSize: '12px', width: '35vw', minWidth: '150px', maxWidth: '200px', margin: '0 auto' }), []);
-    const leftWrapper = useMemo(() => ({float: 'left', margin: '0 auto', color: '#005000'}), []);
-    const rightWrapper = useMemo(() => ({float: 'right', margin: '0 auto', color: '#005000'}), []);
-   
+    const idpwWrapper = useMemo(() => ({ width: '320px', margin: '10px auto', }), []); 
+    const leftWrapper = useMemo(() => ({ fontSize: '15px', width: '30%', float: 'left', color: '#005000', }), []);
+    const signupButtonWrapper = useMemo(() => ({  fontSize: '15px', width: '40%',  float: 'left', textAlign: 'center', color: '#005000',}), []);
+    const rightWrapper = useMemo(() => ({ fontSize: '15px', width: '30%',  float: 'right', textAlign: 'right', color: '#005000',}), []);
+
     return (
         <Paper zDepth={1}>
             <div style={paperWrapper}>
@@ -85,9 +94,16 @@ const LoginForm = () => {
                             </div>
                         </Row>
                         <br />
-                        <Row gutter={8}>
-                            <div style={idpwWrapper}>
+                        <Row gutter={8} style={idpwWrapper}>
+                            <div>
                                 <a style={leftWrapper} onClick={setIdVisible} >아이디 찾기</a>
+                            </div>
+                            <div >
+                                <Link href="/signup">
+                                    <a style={signupButtonWrapper}><b>회원가입</b></a>
+                                </Link>
+                            </div>
+                            <div>
                                 <a style={rightWrapper} onClick={setPwVisible}>비밀번호 찾기</a>
                             </div>
                         </Row>
@@ -119,4 +135,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default CLoginForm;

@@ -82,15 +82,7 @@ const MenuBar = ({ me }) => {
                                 </Button>
                             </div>
                             :
-                            <div style={buttonDivWrapper}>
-                                <Link href="/signup">
-                                    <a>
-                                        <Button style={buttonWrapper} shape={"round"} >
-                                            <b>회원가입</b>
-                                        </Button>
-                                    </a>
-                                </Link>
-                            </div>
+                            <></>
                     }
                 </Col>
             </Row>
