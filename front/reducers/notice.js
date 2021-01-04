@@ -1,4 +1,4 @@
-import produce from 'immer';
+import produce from '../util/produce';
 
 export const initialState = {
     noticeContents: [], // 크롤링 데이터
@@ -9,8 +9,7 @@ export const LOAD_NOTICE_REQUEST = 'LOAD_NOTICE_REQUEST';
 export const LOAD_NOTICE_SUCCESS = 'LOAD_NOTICE_SUCCESS';
 export const LOAD_NOTICE_FAILURE = 'LOAD_NOTICE_FAILURE';
 
-export default (state = initialState, action) => {
-    return produce(state, (draft) => {
+const reducer = (state = initialState, action) => produce(state, (draft) => {
         switch (action.type) {
             case LOAD_NOTICE_REQUEST: {
                 break;
@@ -28,4 +27,5 @@ export default (state = initialState, action) => {
             }
         }
     });
-};
+
+export default reducer;
