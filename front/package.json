@@ -17,7 +17,7 @@
     "@types/styled-components": "^5.1.2",
     "@zeit/next-bundle-analyzer": "latest",
     "antd": "^3.26.18",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "compression-webpack-plugin": "^3.1.0",
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.2",
