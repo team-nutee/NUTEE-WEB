@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Button, Card, Icon, Input, List, Modal, Tag, Dropdown, Menu, Row, Col, Alert } from 'antd';
+import { Button, Card, Input, List, Modal, Tag, Dropdown, Menu, Row, Col, Alert } from 'antd';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
 import {
     ADD_COMMENT_REQUEST,
     LIKE_POST_REQUEST,
@@ -19,11 +18,6 @@ import EditForm from "./EditForm";
 import Comments from "../comments/Comments";
 import CommentForm from "../comments/CommentForm";
 import ProfileAvatar from "../profiles/ProfileAvatar";
-
-const CardWrapper = styled.div`
-    min-width : 550px; 
-  margin-bottom: 20px;
-`;
 
 const PostCard = ({ post }) => {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -55,16 +49,7 @@ const PostCard = ({ post }) => {
 
     const liked = me && post.Likers && post.Likers.find(v => v.id === me.id);
 
-    const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
-    const listWrapper = useMemo(() => ({ background: 'white', border: '1px solid #e6e6e6', paddingBottom: '0px' }), []);
-    const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
-    const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
-    const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
-    const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
-    const modalWrapper = useMemo(() => ({ padding: '0px', zIndex: 1 }), []);
-    const blockDivWrapper = useMemo(() => ({ width: '80%', margin: '0 auto' }), []);
-    const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
-
+    
     const onToggleComment = useCallback(() => {
         setCommentFormOpened(prev => !prev);
         if (!commentFormOpened) {
@@ -136,7 +121,7 @@ const PostCard = ({ post }) => {
                 message="로그인이 필요합니다."
                 type="success"
                 showIcon
-            />;
+                />;
         }
         if (liked) { // 좋아요 누른 상태
             dispatch({
@@ -157,18 +142,17 @@ const PostCard = ({ post }) => {
                 message="로그인이 필요합니다."
                 type="success"
                 showIcon
-            />
+                />
         }
         return dispatch({
             type: RETWEET_REQUEST,
             data: post.id,
         });
     }, [me && me.id, post && post.id]);
-
+    
     const onRemovePost = useCallback(userId => () => {
         const result = confirm('정말로 삭제하시겠습니까?');
-        if (!result) {
-
+        if (!result) {          
         } else {
             dispatch({
                 type: REMOVE_POST_REQUEST,
@@ -190,7 +174,7 @@ const PostCard = ({ post }) => {
         });
         setReportVisible(false);
     });
-
+    
     const menu1 = (
         <Menu>
             <Menu.Item>
@@ -208,36 +192,50 @@ const PostCard = ({ post }) => {
                 <a onClick={onReport}>신고</a>
             </Menu.Item>
             <Menu.Item>
-                채팅
+                <Link href="/chat">
+                <a>채팅</a>
+                </Link>
             </Menu.Item>
         </Menu>
     );
-
+    
+    const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', maxWidth: '700px', marginBottom: '15px' }), []);
+    const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
+    const listWrapper = useMemo(() => ({ background: 'white', border: '1px solid #e6e6e6', paddingBottom: '0px' }), []);
+    const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
+    const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
+    const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
+    const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
+    const modalWrapper = useMemo(() => ({ padding: '0px', zIndex: 1 }), []);
+    const blockDivWrapper = useMemo(() => ({ width: '80%', margin: '0 auto' }), []);
+    const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
+   const heartWrapper = useMemo(() => ({ color: "#eb2f96"}), []);
     return (
-        <CardWrapper>
+        <div style={postCardWrapper}>
             {post.isBlocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card> :
                 <Card
                     cover={post.Images && post.Images[0] && <PostImages images={post.Images} />}
                     actions={[
-                        <Icon type="retweet" key="retweet" onClick={onRetweet} />,
-                        <Icon
-                            type="heart"
-                            key="heart"
-                            theme={liked ? 'twoTone' : 'outlined'}
-                            twoToneColor="#eb2f96"
-                            onClick={onToggleLike}
-                        />,
-                        <Icon type="message" key="message" onClick={onToggleComment} />,
+                        <div onClick={onRetweet}>
+                            <RetweetOutlined />
+                            </div>,
+                        <div onClick={onToggleLike}>
+                            {liked ? <HeartTwoTone style={heartWrapper} /> : <HeartOutlined /> }
+                        </div>,
+                        <div onClick={onToggleComment}>
+                           <MessageOutlined />
+                        </div>,
+                      
                         <>
                             {me && post.UserId === me.id
                                 ? (
                                     <Dropdown overlay={menu1} placement="topRight">
-                                        <Icon type='ellipsis' />
+                                      <EllipsisOutlined />
                                     </Dropdown>
                                 )
                                 : (
                                     <Dropdown overlay={menu2} placement="topRight">
-                                        <Icon type='ellipsis' />
+                                       <EllipsisOutlined />
                                     </Dropdown>
                                 )}
                         </>,
@@ -359,7 +357,7 @@ const PostCard = ({ post }) => {
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="message" style={prefixWrapper} />}
+                                prefix={<MessageOutlined style={prefixWrapper} />}
                                 placeholder='신고사유' value={report} required onChange={onChangeReport}
                             />
                         </Col>
@@ -369,7 +367,7 @@ const PostCard = ({ post }) => {
                     </Row>
                 </div>
             </Modal>
-        </CardWrapper>
+        </div>
     );
 };
 

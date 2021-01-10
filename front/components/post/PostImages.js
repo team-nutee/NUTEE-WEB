@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import ImagesZoom from '../ImagesZoom';
 import { TARGET_URL } from "../../static";
 
@@ -46,7 +46,7 @@ const PostImages = ({ images }) => {
             <div>
                 <img src={`${TARGET_URL}/${images[0].src}`} width="50%" onClick={onZoom} />
                 <div style={divWrapper} onClick={onZoom}>
-                    <Icon type="plus" />
+                    <PlusOutlined />
                     <br />
                     {images.length - 1}
                     개의 사진 더보기

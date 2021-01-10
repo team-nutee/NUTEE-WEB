@@ -1,8 +1,9 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
-import {Modal, ModalContent, CloseBtn, SlickWrapper, ImgWrapper } from './style';
-import {TARGET_URL} from "../../static";
+import { CloseOutlined } from '@ant-design/icons';
+import { Modal, ModalContent, CloseBtn, SlickWrapper, ImgWrapper } from './style';
+import { TARGET_URL } from "../../static";
 
 const ImagesZoom = ({ images, onClose, onBackDrop }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,7 +12,11 @@ const ImagesZoom = ({ images, onClose, onBackDrop }) => {
         <Modal>
             <ModalContent>
                 <SlickWrapper>
-                    <CloseBtn type="close" onClick={onClose}/>
+                    <CloseBtn>
+                        <div>
+                            <CloseOutlined onClick={onClose} />
+                        </div>
+                    </ CloseBtn>
                     <div>
                         <Slider
                             dots
@@ -22,7 +27,7 @@ const ImagesZoom = ({ images, onClose, onBackDrop }) => {
                             {images.map((v) => {
                                 return (
                                     <ImgWrapper>
-                                        <img src={`${TARGET_URL}/${v.src}`}/>
+                                        <img src={`${TARGET_URL}/${v.src}`} />
                                     </ImgWrapper>
                                 );
                             })}

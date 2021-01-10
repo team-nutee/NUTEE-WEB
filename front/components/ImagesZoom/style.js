@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Icon } from 'antd';
+//import {  } from '@ant-design/icons';
 
 
 export const Modal = styled.div`
@@ -35,7 +35,7 @@ export const SlickWrapper = styled.div`
   }
 `;
 
-export const CloseBtn = styled(Icon)`
+export const CloseBtn = styled.div`
   position: absolute;
   right: 0;
   top: 0;

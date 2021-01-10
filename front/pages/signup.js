@@ -5,7 +5,8 @@ import Router from 'next/router';
 import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import { END } from 'redux-saga';
-import { Form, Input, Checkbox, Button, Row, Col, Icon, Modal, Select } from 'antd';
+import { Form, Input, Checkbox, Button, Row, Col, Modal, Select } from 'antd';
+import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined, BookOutlined } from '@ant-design/icons';
 
 import {
     LOAD_USER_REQUEST,
@@ -220,7 +221,7 @@ const Signup = () => {
                             <Row gutter={8}>
                                 <Col span={17}>
                                     <Input
-                                        prefix={<Icon type="idcard" style={prefixWrapper} />}
+                                        prefix={<IdcardOutlined style={prefixWrapper} />}
                                         name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                                     />
                                     {idError && <div style={signupErrorWrapper}>중복된 아이디입니다.</div>}
@@ -242,7 +243,7 @@ const Signup = () => {
 
                                 <Col span={15}>
                                     <Input
-                                        prefix={<Icon type="user" style={prefixWrapper} />}
+                                        prefix={<UserOutlined style={prefixWrapper} />}
                                         name="user-nick" value={nick} placeholder='닉네임' required onChange={onChangeNick}
                                     />
                                     {nicknameError && <div style={signupErrorWrapper}>중복된 닉네임입니다.</div>}
@@ -264,7 +265,7 @@ const Signup = () => {
                             <br />
                             <div>
                                 <Input
-                                    prefix={<Icon type="lock" style={prefixWrapper} />}
+                                    prefix={<LockOutlined style={prefixWrapper} />}
                                     name="user-password" type="password" placeholder='비밀번호'
                                     value={password} required onChange={onChangePassword}
                                 />
@@ -272,7 +273,7 @@ const Signup = () => {
                             <br />
                             <div>
                                 <Input
-                                    prefix={<Icon type="lock" style={prefixWrapper} />}
+                                    prefix={<LockOutlined style={prefixWrapper} />}
                                     name="user-password-check" type="password" placeholder='비밀번호 확인'
                                     value={passwordCheck} required onChange={onChangePasswordCheck}
                                 />
@@ -283,7 +284,7 @@ const Signup = () => {
                                 <Row gutter={8}>
                                     <Col span={15}>
                                         <Input
-                                            prefix={<Icon type="mail" style={prefixWrapper} />}
+                                            prefix={<MailOutlined style={prefixWrapper} />}
                                             name="user-email" placeholder='이메일(@office.skhu.ac.kr)' value={email} required onChange={onChangeEmailCheck}
                                         />
                                         {emailError && <div style={signupErrorWrapper}>올바른 이메일의 형태가 아닙니다.</div>}
@@ -305,6 +306,7 @@ const Signup = () => {
                                 <div>
                                     <Row>
                                         <Select
+                                            prefix={ <BookOutlined style={prefixWrapper} />}
                                             placeholder="전공1 or 학부를 선택해주세요." name="user-major1"
                                             value={major1} onChange={onChangeMajor1}
                                         >
@@ -318,6 +320,7 @@ const Signup = () => {
                                 <div>
                                     <Row>
                                         <Select
+                                            prefix={ <BookOutlined style={prefixWrapper} />}
                                             placeholder="전공2을 선택해주세요." name="user-major2"
                                             value={major2} onChange={onChangeMajor2}
                                         >
@@ -346,7 +349,7 @@ const Signup = () => {
                                 <Row gutter={8}>
                                     <Col span={17}>
                                         <Input
-                                            prefix={<Icon type="safety-certificate" style={prefixWrapper} />}
+                                            prefix={<SafetyOutlined style={prefixWrapper} />}
                                             name="user-otp" value={otp} placeholder='otp' required onChange={onChangeOtp}
                                         />
                                         {otpCheck

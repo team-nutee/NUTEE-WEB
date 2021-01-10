@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Form, Input, Button, message, Row, Col, Icon } from 'antd';
+import React, { useCallback, useEffect, useState, useMemo } from "react";
+import { Form, Input, Button, message,  } from 'antd';
+import { IdcardOutlined, MailOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { PW_FIND_REQUEST } from "../../reducers/user";
 
@@ -43,14 +44,14 @@ const FindPw = ({ setPwVisible }) => {
             <div style={ formDivWrapper }>
                 <br />
                 <Input
-                    prefix={<Icon type="idcard" style={prefixWrapper} />}
+                    prefix={<IdcardOutlined style={prefixWrapper} />}
                     name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                 />
             </div>
             <div style={ formDivWrapper }>
                 <br />
                 <Input
-                    prefix={<Icon type="mail" style={prefixWrapper} />}
+                    prefix={<MailOutlined style={prefixWrapper} />}
                     name="user-email" placeholder='학내 이메일 (@office.skhu.ac.kr)' value={email} required
                     onChange={onChangeEmailCheck}
                 />

@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from "../reducers/user";
+import { FOLLOW_USER_REQUEST, UNFOLLOW_USER_REQUEST } from "../../reducers/user";
 import Link from 'next/link';
-import ProfileAvatar from "./profiles/ProfileAvatar";
+import ProfileAvatar from "./ProfileAvatar";
 import { Button, Card } from 'antd';
 
 const UserProfile = () => {

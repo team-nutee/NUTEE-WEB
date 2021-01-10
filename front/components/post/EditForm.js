@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
-import { Form, Input, Button, Icon } from 'antd';
+import { Form, Input, Button } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     ADD_POST_REQUEST, EDIT_POST_IMAGES,
@@ -99,10 +100,9 @@ const EditForm = ({ postId, postContent, postImages, visible, setVisible }) => {
                         {editImagePaths.map((v, i) => (
                             <div key={v} style={editImagePathsDivWrapper}>
                                 <div style={editImagePathsDivDivWrapper}>
-                                    <Icon style={editImagePathsIconWrapper}
-                                        type="close"
-                                        onClick={onRemoveImage(i)}
-                                    />
+                                    <div onClick={onRemoveImage(i)}>
+                                <CloseOutlined style={editImagePathsIconWrapper} />
+                                      </div>
                                 </div>
                                 <img src={`http://localhost:9425/${v}`} style={{
                                     maxWidth: '100%',
