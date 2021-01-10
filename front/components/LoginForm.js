@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Form, Input, Button, Row, Col, Icon, Modal } from 'antd';
+import { Form, Input, Button, Row, Col, Modal } from 'antd';
+import { IdcardOutlined, LockOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOG_IN_REQUEST } from '../reducers/user';
 import Link from "next/link";
@@ -7,9 +8,10 @@ import Router from 'next/router';
 import useInput from '../hooks/useInput';
 import Paper from "@material-ui/core/Paper";
 import FindId from "./find/FindId";
+
 import FindPw from "./find/FindPw";
 
-const CLoginForm = () => {
+const LoginForm = () => {
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('');
     const { isLoggingIn, loginError } = useSelector(state => state.user);
@@ -18,7 +20,6 @@ const CLoginForm = () => {
     const [idVisible, setIdVisible] = useState(false);
     const [pwVisible, setPwVisible] = useState(false);
 
-    /*  id&password 찾기  */
     const idOk = () => {
         setIdVisible(false);
     };
@@ -31,12 +32,6 @@ const CLoginForm = () => {
     const pwCancel = () => {
         setPwVisible(false);
     };
-
-    useEffect(() => {
-        if (isLoggingIn) {
-            Router.push('/');
-        }
-    }, [isLoggingIn]);
   
     const onSubmitForm = useCallback((e) => {
         e.preventDefault();
@@ -71,7 +66,7 @@ const CLoginForm = () => {
                         <Row gutter={8}>
                             <div style={formWrapper}>
                                 <Input
-                                    prefix={<Icon type="idcard" style={prefixWrapper} />}
+                                    prefix={<IdcardOutlined style={prefixWrapper} />}
                                     name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                                 />
                             </div>
@@ -80,7 +75,7 @@ const CLoginForm = () => {
                         <Row gutter={8}>
                             <div style={formWrapper}>
                                 <Input
-                                    prefix={<Icon type="lock" style={prefixWrapper} />}
+                                    prefix={<LockOutlined style={prefixWrapper} />}
                                     name="user-password" type="password" placeholder='비밀번호'
                                     value={password} required onChange={onChangePassword}
                                 />
@@ -135,4 +130,4 @@ const CLoginForm = () => {
     );
 };
 
-export default CLoginForm;
+export default LoginForm;
