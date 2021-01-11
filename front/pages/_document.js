@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import Document, { Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
 class MyDocument extends Document {
@@ -18,16 +18,16 @@ class MyDocument extends Document {
         const bodyAttrs = bodyAttributes.toComponent();
 
         return (
-            <html {...htmlAttrs}>
-            <head>
-                {this.props.styleTags}
-                {Object.values(helmet).map(el => el.toComponent())}
-            </head>
-            <body {...bodyAttrs}>
-            <Main />
-            <NextScript />
-            </body>
-            </html>
+            <Html {...htmlAttrs}>
+                <Head>
+                    {this.props.styleTags}
+                    {Object.values(helmet).map(el => el.toComponent())}
+                </Head>
+                <body {...bodyAttrs}>
+                    <Main />
+                    <NextScript />
+                </body>
+            </Html>
         );
     }
 }
