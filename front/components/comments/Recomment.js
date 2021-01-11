@@ -5,8 +5,7 @@ import { List } from "antd";
 import Link from "next/link";
 import ProfileAvatar from "../profiles/ProfileAvatar";
 import EditCommentForm from "./EditCommentForm";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import DeleteFilled from "@ant-design/icons/lib/icons/DeleteFilled";
+import { EditOutlined, DeleteFilled } from "@ant-design/icons";
 
 const Recomment = ({ item, post }) => {
     const dispatch = useDispatch();

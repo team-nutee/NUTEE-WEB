@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Form, Input, Button, Icon, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
+import { MailOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { EMAIL_FIND_REQUEST } from "../../reducers/user";
 
@@ -42,7 +43,7 @@ const FindId = ({ setIdVisible }) => {
                 <Row gutter={8}>
                     <Col span={18}>
                         <Input
-                            prefix={<Icon type="mail" style={prefixWrapper} />}
+                            prefix={<MailOutlined style={prefixWrapper} />}
                             name="user-email" placeholder='학내 이메일 (@office.skhu.ac.kr)' value={email} required onChange={onChangeEmailCheck}
                         />
                         {emailError && <div style={emailErrorWrapper}>올바른 이메일의 형태가 아닙니다.</div>}

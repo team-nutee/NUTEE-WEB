@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState, useMeme } from 'react';
-import {Col, Form, Icon, Row} from "antd";
+import {Col, Form, Row} from "antd";
+import { CloseOutlined } from '@ant-design/icons';
+
 import TextareaAutosize from "react-textarea-autosize";
 import Send from "./Send";
 import { EDIT_COMMENT_REQUEST } from "../../reducers/post";
@@ -78,7 +80,7 @@ const EditCommentForm =({comment,edit,setEdit,postId})=>{
                     </Row>
                 </div>
                 <div style={ formDiv2Wrapper }>
-                    <a onClick={cancelEdit}><Icon type='close'/></a>
+                    <a onClick={cancelEdit}><CloseOutlined /></a>
                 </div>
             </div>
         </Form>

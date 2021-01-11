@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useMemo } from 'react';
-import { Col, Form, Icon, Row } from "antd";
+import { Col, Form, Row } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import TextareaAutosize from "react-textarea-autosize";
 import Send from "./Send";
 import { ADD_RECOMMENT_REQUEST } from "../../reducers/post";
@@ -62,7 +63,7 @@ const ReCommentForm = ({ post, commentId, cancelReply }) => {
                     </Row>
                 </div>
                 <div style={formDivDiv2Wrapper}>
-                    <a onClick={cancelReply}><Icon type='close' /></a>
+                    <a onClick={cancelReply}><CloseOutlined /></a>
                 </div>
             </div>
         </Form>
