@@ -1,20 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import {Avatar, Card, Col} from 'antd';
+import { Col } from 'antd';
 import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import PostCard from '../containers/PostCard';
 import LeftContents from "../components/LeftContents";
+import wrapper from '../../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 
 const User = () => {
     const { mainPosts } = useSelector(state => state.post);
 
+    const mainpostWrapper = useMemo(() => ({ minWidth: '500px' }), []);
+
     return (
         <>
-        <LeftContents span={5} />
-        <Col span={10}>
-            <div>
+        <LeftContents span={7} />
+        <Col span={17}>
+            <div >
                 {mainPosts.map(c => (
                     <PostCard key={+c.createdAt} post={c} />
                 ))}
@@ -24,22 +28,22 @@ const User = () => {
     );
 };
 
-User.propTypes = {
-    id: PropTypes.number.isRequired,
-};
-
-User.getInitialProps = async (context) => {
-    const id = parseInt(context.query.id,10);
-    console.log('user getInitialProps', id);
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
-        data: id,
+      type: LOAD_USER_POSTS_REQUEST,
+      data: context.params.id,
     });
     context.store.dispatch({
-        type: LOAD_USER_POSTS_REQUEST,
-        data: id,
+      type: LOAD_USER_REQUEST,
+      data: context.params.id,
     });
-    return { id };
-};
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  });
 
 export default User;
