@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { List, Tabs } from "antd";
 import { useSelector } from "react-redux";
 const { TabPane } = Tabs;
@@ -26,9 +26,9 @@ const list = [{
 const Notice = () => {
     const { noticeContents, noticeHrefs } = useSelector(state => state.notice);
 
-    const listWrapper = useMemo(() => ({ background: 'white', borderRadius: '0', borderColor: '#e6e6e6' }), []);
+    const tabWrapper = useMemo(() => ({ width: '255px', background: '#d7f7e7'}), []);
+    const listWrapper = useMemo(() => ({ background: 'white', borderRadius: '1', borderColor: '#e6e6e6' }), []);
     const listItemAWrapper = useMemo(() => ({ textDecoration: 'none', color: 'black', fontWeight: '10', marginLeft: '-40px' }), []);
-    const tabWrapper = useMemo(() => ({ maxWidth: '350px' }), []);
 
     return (
         <Tabs size='small' type="card" style={tabWrapper}>

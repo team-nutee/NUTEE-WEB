@@ -14,36 +14,45 @@ const MyProfile = ({ target }) => {
             data: userId,
         });
     }, []);
-    
+
     const onUnfollow = useCallback(userId => () => {
         dispatch({
             type: UNFOLLOW_USER_REQUEST,
             data: userId,
         });
     }, []);
-    
-    const cardWrapper = useMemo(() => ({ maxWidth: '350px', minWidth: '220px', minHeight: '140px', float: 'right', }), []);
-    
+
+    const cardWrapper = useMemo(() => ({  width: '255px',}), []);
+
     return (
         <>
             {target ?
-                <div style={cardWrapper}>
+                <div>
                     <Card
-                        //style={cardWrapper}
+                        style={cardWrapper}
                         actions={[
                             <Link href="/profile" key="twit">
                                 <a>
-                                    <div>게시물<br />{target.Posts.length}</div>
+                                    <div>게시물
+                                    <br />
+                                        {target.Posts.length}
+                                    </div>
                                 </a>
                             </Link>,
                             <Link href="/profile" key="following">
                                 <a>
-                                    <div>팔로잉<br />{target.Followings.length}</div>
+                                    <div>팔로잉
+                                    <br />
+                                        {target.Followings.length}
+                                    </div>
                                 </a>
                             </Link>,
                             <Link href="/profile" key="follower">
                                 <a>
-                                    <div>팔로워<br />{target.Followers.length}</div>
+                                    <div>팔로워
+                                    <br />
+                                        {target.Followers.length}
+                                    </div>
                                 </a>
                             </Link>,
                         ]}
