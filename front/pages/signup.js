@@ -369,7 +369,7 @@ const Signup = () => {
                             <div>
                                 <Checkbox style={checkboxWrapper} name="user-term" value={term} onChange={onChangeTerm} />
                                 <a style={termsWrapper} onClick={setTermsVisible}><b>NUTEE 회원 약관</b></a>에 동의합니다.
-                                {termError && <div style={signupWrapper}>약관에 동의하셔야 합니다.</div>}
+                                {termError && <div style={signupErrorWrapper}>약관에 동의하셔야 합니다.</div>}
                             </div>
                             <br />
                             <div style={divWrapper}>

@@ -1,12 +1,11 @@
-import { applyMiddleware, createStore, compose } from 'redux';
 import { createWrapper } from 'next-redux-wrapper';
-import createSagaMiddleware from 'redux-saga';
+import { applyMiddleware, createStore, compose } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import createSagaMiddleware from 'redux-saga';
 
 import reducer from '../reducers';
 import rootSaga from '../sagas';
 
-//3단 고차함수 
 const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
   console.log(action);
   return next(action);
