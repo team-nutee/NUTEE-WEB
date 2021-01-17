@@ -2,11 +2,11 @@ import React, { useEffect, useMemo } from 'react';
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { LOAD_NOTICE_REQUEST } from "../../reducers/notice";
-import { TARGET_URL } from "../../static";
 import { Col, Row } from "antd";
 import MyProfile from "../profiles/MyProfile";
 import Notice from "../Notice";
 import styled from 'styled-components';
+import poster from '../../images/poster.png';
 
 const Box = styled.div`
     position: sticky;
@@ -40,7 +40,7 @@ const LeftContents = ({ me, span }) => {
                         <Notice />
                     </Row>
                     <Row gutter={8}>
-                        <img style={imgWrapper} src={`${TARGET_URL}/settings/poster1.png`} />
+                        <img style={imgWrapper} src={poster} />
                         <Link href="https://github.com/team-nutee/NUTEE-WEB"><a target="_blank" rel='noreferrer'>Made by S.OWL</a></Link>
                     </Row>
                 </div>

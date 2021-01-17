@@ -4,7 +4,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { LOG_OUT_REQUEST } from "../reducers/user";
-import { TARGET_URL } from "../static";
+import logo from '../images/nutee_circle.png'
 
 const MenuBar = ({ me }) => {
     const onSearch = (text) => {
@@ -23,7 +23,7 @@ const MenuBar = ({ me }) => {
     const row2Wrapper = useMemo(() => ({ minWidth: '250px' }), []);
     const logoDivWrapper = useMemo(() => ({ float: "left", marginLeft: '7vw' }), []);
     const logoImgWrapper = useMemo(() => ({ height: '40px', width: '40px', marginLeft: '10px' }), []);
-    const nuteeDivWrapper = useMemo(() => ({ float: "left", margin: '10px 10px 0px 0px' }), []);
+    const nuteeDivWrapper = useMemo(() => ({ float: "left", margin: '9.5px 10px 0px 0px' }), []);
     const nuteeAWrapper = useMemo(() => ({ color: '#13c276', fontSize: '40px' }), []);
     const profileWrapper = useMemo(() => ({ float: "left", marginRight: '17px', marginTop: '11px' }), []);
     const profileAWrapper = useMemo(() => ({ color: '#13c276', fontSize: '25px' }), []);
@@ -40,7 +40,7 @@ const MenuBar = ({ me }) => {
                         <div style={logoDivWrapper}>
                             <Link href="/">
                                 <a >
-                                    <img style={logoImgWrapper} src={`${TARGET_URL}/settings/nutee_circle.png`} />
+                                    <img style={logoImgWrapper} src={logo} alt='nutee' />
                                 </a>
                             </Link>
                         </div>
