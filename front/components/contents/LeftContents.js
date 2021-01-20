@@ -26,20 +26,21 @@ const LeftContents = ({ me, span }) => {
         });
     }, []);
 
-    const wrapper = useMemo(() => ({ marginTop: '18px' }), [])
-    const imgWrapper = useMemo(() => ({ width: '100%', marginTop: '10px' }), []);
+    const wrapper = useMemo(() => ({ marginTop: '15px'}), [])
+    const imgWrapper = useMemo(() => ({ width: '210px' }), []);
 
     return (
-        <Col span={span} gutter={8} >
+        <Col span={span} gutter={10}>
             <Box>
                 <div style={wrapper}>
-                    <Row gutter={8} >
+                    <Row gutter={10}>
                         {me ? <MyProfile target={me} /> : <></>}
                     </Row>
-                    <Row gutter={8}>
+                    <Row gutter={10}>
                         <Notice />
                     </Row>
-                    <Row gutter={8}>
+                    <br />
+                    <Row gutter={10}>
                         <img style={imgWrapper} src={poster} />
                         <Link href="https://github.com/team-nutee/NUTEE-WEB"><a target="_blank" rel='noreferrer'>Made by S.OWL</a></Link>
                     </Row>

@@ -69,7 +69,7 @@ const PostForm = () => {
     const formWrapper = useMemo(() => ({ marginTop: '15px', marginBottom: '15px', minWidth: '500px', maxWidth: '700px', width: '50wv', background: 'yellowgreen' }), []);
     const formDivWrapper = useMemo(() => ({ height: "auto", overflow: "hidden", background: 'white', border: '1px solid #e6e6e6' }), []);
     const formDivDivWrapper = useMemo(() => ({ overflow: 'hidden', height: 'auto', background: 'blue' }), []);
-    const textareaAutosizeWrapper = useMemo(() => ({ margin: '5px', resize: 'none', outline: 'none', lineHeight: '30px', overflowY: 'hidden', border: 'none', width: '100%', minHeight: '65px', height: 'auto' }), []);
+    const textareaAutosizeWrapper = useMemo(() => ({ margin: '5px', resize: 'none', outline: 'none', lineHeight: '30px', overflowY: 'hidden', border: 'none', width: '100%', height: 'auto' }), []);
     const formDivDivDiv1Wrapper = useMemo(() => ({ overflow: 'hidden', height: "auto" }), []);
     const imagePathsDivWrapper = useMemo(() => ({ margin: '5px', width: '48.2%', float: "left", height: '180px', background: '#F2F2F2', textAlign: 'center' }), []);
     const imagePathsDivDivWrapper = useMemo(() => ({ textAlign: 'right', marginRight: '15px' }), []);

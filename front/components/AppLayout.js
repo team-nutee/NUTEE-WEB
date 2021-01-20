@@ -8,9 +8,8 @@ import LoginForm from './LoginForm';
 const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
 
-    const divWrapper = useMemo(() => ({ minHeight: '100vh', background: '#f0faf5' }), []);
-    const rowWrapper = useMemo(() => ({ paddingTop: '50px', width: '100%' }), []);
- 
+    const divWrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', }), []);
+
     return (
         <>
             <div className={'main'} style={divWrapper}>
@@ -18,7 +17,7 @@ const AppLayout = ({ children }) => {
                 <MenuBar me={me} />
                 {/*본문 내용*/}
                 {me ?
-                    <Row style={rowWrapper} type='flex' justify='center' gutter={8}>
+                    <Row gutter={8}>
                         {children}
                     </Row>
                     :
