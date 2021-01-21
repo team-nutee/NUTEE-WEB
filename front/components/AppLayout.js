@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux';
 import MenuBar from "./MenuBar";
 import LoginForm from './LoginForm';
 
+
 const AppLayout = ({ children }) => {
     const { me } = useSelector(state => state.user);
-
-    const divWrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', }), []);
+    const wrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', }), []);
 
     return (
         <>
-            <div className={'main'} style={divWrapper}>
+            <div className={'main'} style={wrapper}>
                 {/*메뉴바*/}
                 <MenuBar me={me} />
                 {/*본문 내용*/}
@@ -28,7 +28,7 @@ const AppLayout = ({ children }) => {
                 {
                     `
                     div {
-                        font-family:"Do Hyeon", sans-serif;
+                        font-family: "Nanum Barun Gothic", sans-serif, ;
                         font-weight: 200;
                     }
                    `
