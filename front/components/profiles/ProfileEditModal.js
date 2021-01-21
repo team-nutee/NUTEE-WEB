@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState, useMemo } from 'react';
-import { Avatar, Button, Col, Form, Icon, Input, Modal, Row } from 'antd';
+import { Button, Col, Input, Modal, Row } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
 import { TARGET_URL } from "../../static";
 import {
@@ -98,7 +99,7 @@ const ProfileEditModal = () => {
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="user" style={prefixWrapper} />}
+                                prefix={<UserOutlined style={prefixWrapper} />}
                                 name="user-name" placeholder='닉네임' value={editedName} required onChange={onChangeNickname}
                             />
                         </Col>
