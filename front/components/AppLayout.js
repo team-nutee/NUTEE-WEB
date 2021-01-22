@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
 import { useSelector } from 'react-redux';
-import MenuBar from "./MenuBar";
+import NavigationBar from "./NavigationBar";
 import LoginForm from './LoginForm';
 
 
@@ -14,7 +14,7 @@ const AppLayout = ({ children }) => {
         <>
             <div className={'main'} style={wrapper}>
                 {/*메뉴바*/}
-                <MenuBar me={me} />
+                <NavigationBar me={me} />
                 {/*본문 내용*/}
                 {me ?
                     <Row gutter={8}>

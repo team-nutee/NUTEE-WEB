@@ -4,11 +4,10 @@ import Link from "next/link";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { LOG_OUT_REQUEST } from "../reducers/user";
-import logo from "../images/nutee_circle.png";
 
 const { Search } = Input;
 
-const MenuBar = ({ me }) => {
+const NavigationBar = ({ me }) => {
   const onSearch = text => {
     Router.push(
       { pathname: "/search", query: { text: text } },
@@ -23,7 +22,7 @@ const MenuBar = ({ me }) => {
     });
   }, []);
 
-  const wrapper = useMemo(() => ({ background: '#f0faf5', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1', width: '100%', }), []);
+  const wrapper = useMemo(() => ({ height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1', width: '100%', }), []);
   const logoWrapper = useMemo(() => ({ float: "left", marginLeft: '7vw' }), []);
   const logoImgWrapper = useMemo(() => ({ height: '40px', width: '40px', marginLeft: '10px' }), []);
   const nuteeWrapper = useMemo(() => ({ float: "left", margin: '9.5px 10px 0px 0px' }), []);
@@ -39,7 +38,7 @@ const MenuBar = ({ me }) => {
         <div style={logoWrapper}>
           <Link href="/">
             <a>
-              <img style={logoImgWrapper} src={logo} alt="nutee" />
+              <img style={logoImgWrapper} src={'/nutee_circle.png'} alt="nutee" /> 
             </a>
           </Link>
         </div>
@@ -84,4 +83,4 @@ const MenuBar = ({ me }) => {
   );
 };
 
-export default MenuBar;
+export default NavigationBar;
