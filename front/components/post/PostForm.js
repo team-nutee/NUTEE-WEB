@@ -72,7 +72,7 @@ const PostForm = () => {
     []
   );
 
-  const formWrapper = useMemo(() => ({ height: "auto", overflow: "hidden", background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', marginBottom: '15px', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
+  const formWrapper = useMemo(() => ({ height: "auto", overflow: "hidden", background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', margin: '7px 0 15px 0', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
   const imageAndWriteWrapper = useMemo(() => ({ background: 'purple', marginBottom: '10px'}), []);
   const buttonWrapper = useMemo(() => ({ background: '#13c276', borderColor: "white", width: '100px', margin: '10px 0px 10px 10px', color: 'white' }), []);
   const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', width: '47vw', minWidth: '500px',  maxWidth: '672px', borderColor: '#c8e6d7', }), []);
