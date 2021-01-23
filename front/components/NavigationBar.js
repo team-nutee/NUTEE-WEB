@@ -22,7 +22,7 @@ const NavigationBar = ({ me }) => {
     });
   }, []);
 
-  const wrapper = useMemo(() => ({ height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1', width: '100%', }), []);
+  const wrapper = useMemo(() => ({ background: '#f0faf5', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '5', width: '100%', }), []);
   const logoWrapper = useMemo(() => ({ float: "left", marginLeft: '7vw' }), []);
   const logoImgWrapper = useMemo(() => ({ height: '40px', width: '40px', marginLeft: '10px' }), []);
   const nuteeWrapper = useMemo(() => ({ float: "left", margin: '9.5px 10px 0px 0px' }), []);

@@ -5,7 +5,6 @@ import { LOAD_NOTICE_REQUEST } from "../../reducers/notice";
 import { Col, Row } from "antd";
 import MyProfile from "../profiles/MyProfile";
 import Notice from "../Notice";
-import poster from "../../images/poster.png";
 
 const LeftContents = ({ me, span }) => {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const LeftContents = ({ me, span }) => {
       </Row>
       <br />
       <Row gutter={10}>
-        <img style={imgWrapper} src={poster} />
+       <img style={imgWrapper} src={'/poster.png'} />
         <br />
         <Link href="https://github.com/team-nutee/NUTEE-WEB">
           <a target="_blank" rel="noreferrer">Made by S.OWL</a>

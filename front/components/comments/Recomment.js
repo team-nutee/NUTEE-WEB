@@ -28,13 +28,13 @@ const Recomment = ({ item, post }) => {
         }
     };
 
-    const listItemWrapper = useMemo(() => ({ border: 'none', marginBottom: '-10px', paddingLeft: '10px' }), []);
-    const divWrapper = useMemo(() => ({ marginTop: '5px' }), []);
-    const preWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
+    const listWrapper = useMemo(() => ({ border: 'none', marginBottom: '-10px', paddingLeft: '10px' }), []);
+    const contentWrapper = useMemo(() => ({  marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', }), []);
+    const nicknameWrapper = useMemo(() => ({ marginRight: '10px' }), []);
 
     return (
         <List.Item
-            style={listItemWrapper}
+            style={listWrapper}
             actions={!edit ? [<a key="edit" onClick={onEdit}><EditOutlined /></a>,
             <a key="delete" onClick={onRemove(post, item)}><DeleteFilled /></a>] : <></>}
         >{item === null ?
@@ -65,22 +65,20 @@ const Recomment = ({ item, post }) => {
                             postId={post.id}
                         />
                         :
-                        <div style={divWrapper}>
-                            <pre style={preWrapper}>
-                                <Link href={{ pathname: '/user', query: { id: item.User.id } }}
-                                    as={`/user/${item.User.id}`}>
-                                    <a style={{ marginRight: '10px' }}>{item.User.nickname}</a>
+                            <pre style={contentWrapper}>
+                                <Link href={{ pathname: '/user', query: { id: item.User.id } }} as={`/user/${item.User.id}`}>
+                                    <a style={nicknameWrapper}>{item.User.nickname}</a>
                                 </Link>
-                                {item.content}</pre>
-                        </div>
+                                {item.content}
+                            </pre>
                 }
             />
             }
             <style jsx>
                 {
                     `
-                    pre {
-                        font-family:"Do Hyeon", sans-serif;
+                    div {
+                        font-family: "Nanum Barun Gothic", sans-serif, ;
                         font-weight: 200;
                     }
                    `

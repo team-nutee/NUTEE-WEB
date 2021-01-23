@@ -9,7 +9,7 @@ const RecommentBox = ({ reCom, post, onReply }) => {
         onReply();
     };
 
-    const aWrapper = useMemo(() => ({ marginLeft: '35px' }), []);
+    const reCommentWrapper = useMemo(() => ({ marginLeft: '35px' }), []);
 
     return (show ?
         reCom.map((v) => {
@@ -18,7 +18,7 @@ const RecommentBox = ({ reCom, post, onReply }) => {
             )
         })
         :
-        (reCom.length !== 0 ? <a style={aWrapper} onClick={onRecomment}>답글보기</a> : <></>)
+        (reCom.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글보기</a> : <></>)
     )
 };
 export default RecommentBox;

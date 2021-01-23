@@ -26,8 +26,8 @@ const PostCardContent = ({ postData, commentN, likers, retweet }) => {
         setShowMore(true);
     };
 
-    const postDataPreWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: "Do Hyeon", fontSize: '15px' }), []);
-    const retweetH51Wrapper = useMemo(() => ({ position: 'absolute', right: '-5px', bottom: '-25px', fontSize: '12px' }), []);
+    const postDataPreWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: "NanumBarunGothic", fontSize: '15px' }), []);
+    const retweetWrapper = useMemo(() => ({ position: 'absolute', right: '-5px', bottom: '-25px', fontSize: '12px' }), []);
     const h5Wrapper = useMemo(() => ({ position: 'absolute', right: '25px', bottom: '60px', fontSize: '12px' }), []);
     const preWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
 
@@ -51,7 +51,7 @@ const PostCardContent = ({ postData, commentN, likers, retweet }) => {
                         return v;
                     })}
                     {retweet && retweet === 1
-                        ? <h5 style={retweetH51Wrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
+                        ? <h5 style={retweetWrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
                         : <h5 style={h5Wrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
                     }
                 </pre>
