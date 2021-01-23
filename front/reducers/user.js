@@ -1,83 +1,181 @@
 import produce from '../util/produce';
 
 export const initialState = {
-    isLoggingOut: false, // 로그아웃 시도중
-    isLoggingIn: false, // 로그인 시도중
-    logInErrorReason: '', // 로그인 실패 사유
-    isSignedUp: false, // 회원가입 성공
-    isSigningUp: false, // 회원가입 시도중
-    signUpErrorReason: '', // 회원가입 실패 사유
-    emailCheck: false, //이메일 중복가입 확인 여부
-    idCheck: false, //아이디 중복 가입 확인 여부
-    nicknameCheck: false, //닉네임 중복 가입 확인 여부 
-    findEmailCheck: false,//아이디 찾기
-    findPwCheck: false,//비밀번호 찾기
-    otpCheck: false, //otp 인증 여부
-    isCheckedPw: false,//비밀번호 확인 여부
+    isLoadMyInfoLoading: false, // 나의 정보 가져오기 시도중
+    isLoadMyInfoDone: false,
+    isLoadMyInfoError: null,
+
+    isLoadUserLoading: false, // 유저 정보 가져오기 시도중
+    isLoadUserDone: false,
+    isLoadUserError: null,
+
+    followLoading: false, // 팔로우 시도중
+    followDone: false,
+    followError: null,
+
+    unfollowLoading: false, // 언팔로우 시도중
+    unfollowDone: false,
+    unfollowError: null,
+
+    isLogInLoading: false, // 로그인 시도중
+    isLogInDone: false,
+    isLogInError: null,
+
+    isLogOutLoading: false, // 로그아웃 시도중
+    isLogOutDone: false,
+    isLogOutError: null,
+
+    isSignUpLoading: false, // 회원가입 시도중
+    isSignUpDone: false,
+    isSignUpError: null,
+
+    changeNicknameLoading: false, // 닉네임 변경 시도중
+    changeNicknameDone: false,
+    changeNicknameError: null,
+
+    loadFollowingsLoading: false, // 팔로우정보 가져오기
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
+
+    loadFollowersLoading: false, // 팔로워 정보 가져오기
+    loadFollowersDone: false,
+    loadFollowersError: null,
+
+    removeFollowerLoading: false, //팔로워 제거 중
+    removeFollowerDone: false,
+    removeFollowerError: null,
+
+    me: null,
+    userInfo: null,
+
+    /* 추가된 것 들 */
+
+    checkEmail: false, //이메일 중복가입 확인 여부
+    checkId: false, //아이디 중복 가입 확인 여부
+    checkNickname: false, //닉네임 중복 가입 확인 여부 
+    checkedOpt: false, //otp 인증 여부
+
+
+    checkedFindEmailLoading: false, //이메일 찾기
+    checkedFindEmailDone: false,
+    checkedFindEmailError: null,
+
+    checkedFindPwLoading: false, //비밀번호 찾기
+    checkedFindPwDone: false,
+    checkedFindPwError: null,
+
+
+    isCheckedPwLoading: false, //비밀번호 확인 여부 (비번 변경 시)
+    isCheckedPwDone: false,
+    isCheckedPwError: null,
+
     profileImagePath: '',
-    me: null, // 내 정보
+
     followingList: [], // 팔로잉 리스트
-    followerList: [], // 팔로워 리스트
-    userInfo: null, // 남의 정보
-    isEditingNickname: false, // 이름 변경 중
-    editNicknameErrorReason: '', // 이름 변경 실패 사유
-    hasMoreFollower: false,
-    hasMoreFollowing: false,
+     followerList: [], // 팔로워 리스트
+     
+     hasMoreFollower: false,
+     hasMoreFollowing: false,
+
+    /* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ */
+    /*  isLoggingOut: false, // 로그아웃 시도중
+     isLoggingIn: false, // 로그인 시도중
+     logInErrorReason: '', // 로그인 실패 사유
+ 
+     isSignedUp: false, // 회원가입 성공
+     isSigningUp: false, // 회원가입 시도중
+     signUpErrorReason: '', // 회원가입 실패 사유
+ 
+     emailCheck: false, //이메일 중복가입 확인 여부
+     idCheck: false, //아이디 중복 가입 확인 여부
+     nicknameCheck: false, //닉네임 중복 가입 확인 여부 
+     findEmailCheck: false,//아이디 찾기
+     findPwCheck: false,//비밀번호 찾기
+     otpCheck: false, //otp 인증 여부
+     isCheckedPw: false,//비밀번호 확인 여부
+ 
+     profileImagePath: '',
+ 
+     
+     followingList: [], // 팔로잉 리스트
+     followerList: [], // 팔로워 리스트
+     
+     userInfo: null, // 남의 정보
+     
+     isEditingNickname: false, // 이름 변경 중
+     
+     editNicknameErrorReason: '', // 이름 변경 실패 사유
+     
+     hasMoreFollower: false,
+     hasMoreFollowing: false,
+     
+     me: null, // 내 정보 
+     */
 };
+
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST'; // 내 정보 
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST'; // 사용자 정보
+export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 
-export const ID_CHECK_REQUEST = 'ID_CHECK_REQUEST';
-export const ID_CHECK_SUCCESS = 'ID_CHECK_SUCCESS';
-export const ID_CHECK_FAILURE = 'ID_CHECK_FAILURE';
+export const SIGN_UP_RESET = 'SIGN_UP_RESET';
+ 
 
-export const NICKNAME_CHECK_REQUEST = 'NICKNAME_CHECK_REQUEST';
-export const NICKNAME_CHECK_SUCCESS = 'NICKNAME_CHECK_SUCCESS';
-export const NICKNAME_CHECK_FAILURE = 'NICKNAME_CHECK_FAILURE';
+export const LOG_IN_REQUEST = 'LOG_IN_REQUEST'; // 로그인 
+export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
+export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 
-export const EMAIL_CHECK_REQUEST = 'EMAIL_CHECK_REQUEST';
-export const EMAIL_CHECK_SUCCESS = 'EMAIL_CHECK_SUCCESS';
-export const EMAIL_CHECK_FAILURE = 'EMAIL_CHECK_FAILURE';
+export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST'; // 로그아웃
+export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
+export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
-export const OTP_CHECK_REQUEST = 'OTP_CHECK_REQUEST';
-export const OTP_CHECK_SUCCESS = 'OTP_CHECK_SUCCESS';
-export const OTP_CHECK_FAILURE = 'OTP_CHECK_FAILURE';
 
-export const EMAIL_FIND_REQUEST = 'EMAIL_FIND_REQUEST';
-export const EMAIL_FIND_SUCCESS = 'EMAIL_FIND_SUCCESS';
-export const EMAIL_FIND_FAILURE = 'EMAIL_FIND_FAILURE';
+export const CHECK_ID_REQUEST = 'CHECK_ID_REQUEST';
+export const CHECK_ID_SUCCESS = 'CHECK_ID_SUCCESS';
+export const CHECK_ID_FAILURE = 'CHECK_ID_FAILURE';
 
-export const PW_FIND_REQUEST = 'PW_FIND_REQUEST';
-export const PW_FIND_SUCCESS = 'PW_FIND_SUCCESS';
-export const PW_FIND_FAILURE = 'PW_FIND_FAILURE';
+export const CHECK_NICKNAME_REQUEST = 'CHECK_NICKNAME_REQUEST';
+export const CHECK_NICKNAME_SUCCESS = 'CHECK_NICKNAME_SUCCESS';
+export const CHECK_NICKNAME_FAILURE = 'CHECK_NICKNAME_FAILURE';
+
+export const CHECK_EMAIL_REQUEST = 'CHECK_EMAIL_REQUEST';
+export const CHECK_EMAIL_SUCCESS = 'CHECK_EMAIL_SUCCESS';
+export const CHECK_EMAIL_FAILURE = 'CHECK_EMAIL_FAILURE';
+
+export const CHECK_DUPLICATE_EMAIL_SUCCESS = 'CHECK_DUPLICATE_EMAIL_SUCCESS';
+export const CHECK_DUPLICATE_EMAIL_REQUEST = 'CHECK_DUPLICATE_EMAIL_REQUEST';
+export const CHECK_DUPLICATE_EMAIL_FAILURE = 'CHECK_DUPLICATE_EMAIL_FAILURE';
+
+export const CHECK_OTP_REQUEST = 'CHECK_OTP_REQUEST';
+export const CHECK_OTP_SUCCESS = 'CHECK_OTP_SUCCESS';
+export const CHECK_OTP_FAILURE = 'CHECK_OTP_FAILURE';
+
+export const FIND_EMAIL_REQUEST = 'FIND_EMAIL_REQUEST';
+export const FIND_EMAIL_SUCCESS = 'FIND_EMAIL_SUCCESS';
+export const FIND_EMAIL_FAILURE = 'FIND_EMAIL_FAILURE';
+
+export const FIND_PASSWORD_REQUEST = 'FIND_PASSWORD_REQUEST';
+export const FIND_PASSWORD_SUCCESS = 'FIND_PASSWORD_SUCCESS';
+export const FIND_PASSWORD_FAILURE = 'FIND_PASSWORD_FAILURE';
 
 export const EDIT_PWCK_REQUEST = 'EDIT_PWCK_REQUEST';
 export const EDIT_PWCK_SUCCESS = 'EDIT_PWCK_SUCCESS';
 export const EDIT_PWCK_FAILURE = 'EDIT_PWCK_FAILURE';
 
-export const EDIT_PW_REQUEST = 'EDIT_PW_REQUEST';
-export const EDIT_PW_SUCCESS = 'EDIT_PW_SUCCESS';
-export const EDIT_PW_FAILURE = 'EDIT_PW_FAILURE';
-
-export const SIGN_UP_RESET = 'SIGN_UP_RESET';
-
-export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
-export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
-export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
-
-export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST';
-export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS';
-export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
+export const EDIT_PASSWORD_REQUEST = 'EDIT_PASSWORD_REQUEST';
+export const EDIT_PASSWORD_SUCCESS = 'EDIT_PASSWORD_SUCCESS';
+export const EDIT_PASSWORD_FAILURE = 'EDIT_PASSWORD_FAILURE';
 
 export const UPLOAD_PROIMG_REQUEST = 'UPLOAD_PROIMG_REQUEST';
 export const UPLOAD_PROIMG_SUCCESS = 'UPLOAD_PROIMG_SUCCESS';
 export const UPLOAD_PROIMG_FAILURE = 'UPLOAD_PROIMG_FAILURE';
-
-export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
-export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
-export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
 export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
 export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
@@ -106,179 +204,239 @@ export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-export default (state = initialState, action) => produce(state, (draft) => {
+export const loginRequestAction = (data) => ({
+    type: LOG_IN_REQUEST,
+    data,
+});
+
+export const logoutRequestAction = () => ({
+    type: LOG_OUT_REQUEST,
+});
+
+const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch (action.type) {
         case LOG_IN_REQUEST: {
-            draft.isLoggingIn = true;
-            draft.logInErrorReason = '';
+            draft.isLogInLoading = true;
+            draft.isLogInError = null;
+            draft.isLogInDone = false;
             break;
         }
-        case LOG_IN_SUCCESS: {
-            draft.isLoggingIn = false;
-            draft.logInErrorReason = '';
+        case LOG_IN_SUCCESS:
+            draft.isLogInLoading = false;
             draft.me = action.data;
+            draft.isLogInDone = true;
             break;
-        }
-        case LOG_IN_FAILURE: {
-            draft.isLoggingIn = false;
-            draft.logInErrorReason = action.reason;
+        case LOG_IN_FAILURE:
+            draft.isLogInLoading = false;
+            draft.isLogInError = action.error;
+            break; //
+        case LOG_OUT_REQUEST:
+            draft.isLogOutLoading = true;
+            draft.isLogOutError = null;
+            draft.isLogOutDone = false;
+            break;
+        case LOG_OUT_SUCCESS:
+            draft.isLogOutLoading = false;
+            draft.isLogOutDone = true;
             draft.me = null;
             break;
-        }
-        case LOG_OUT_REQUEST: {
-            draft.isLoggingOut = true;
+        case LOG_OUT_FAILURE:
+            draft.isLogOutLoading = false;
+            draft.isLogOutError = action.error;
+            break;
+
+        case SIGN_UP_REQUEST:
+            draft.isSignUpLoading = true;
+            draft.isSignUpError = null;
+            draft.isSignUpDone = false;
+            break;
+        case SIGN_UP_SUCCESS:
+            draft.isSignUpLoading = false;
+            draft.isSignUpDone = true;
+            draft.checkedOpt = false;
+            draft.checkEmail = false;
+            draft.checkId = false;
+            draft.checkNickname = false;
+            break;
+        case SIGN_UP_FAILURE:
+            draft.isSignUpLoading = false;
+            draft.isSignUpError = action.error;
+            break;
+        case CHECK_ID_REQUEST: {
+            draft.checkId = false;
             break;
         }
-        case LOG_OUT_SUCCESS: {
-            draft.isLoggingOut = false;
-            draft.me = null;
+        case CHECK_ID_SUCCESS: {
+            draft.checkId = true;
             break;
         }
-        case SIGN_UP_REQUEST: {
-            draft.isSignedUp = false;
-            draft.isSigningUp = true;
-            draft.signUpErrorReason = '';
+        case CHECK_ID_FAILURE: {
+            draft.checkId = false;
             break;
         }
-        case SIGN_UP_SUCCESS: {
-            draft.isSigningUp = false;
-            draft.isSignedUp = true;
-            draft.otpCheck = false;
-            draft.emailCheck = false;
+        case CHECK_NICKNAME_REQUEST: {
+            draft.checkNickname = false;
             break;
         }
-        case SIGN_UP_FAILURE: {
-            draft.isSigningUp = false;
-            draft.signUpErrorReason = action.error;
+        case CHECK_NICKNAME_SUCCESS: {
+            draft.checkNickname = true;
             break;
         }
-        case UPLOAD_PROIMG_REQUEST: {
+        case CHECK_NICKNAME_FAILURE: {
+            draft.checkNickname = false;
             break;
         }
-        case UPLOAD_PROIMG_SUCCESS: {
-            draft.profileImagePath = action.data;
-            if (draft.me.Image) {
-                draft.me.Image.src = action.data;
-            } else {
-                draft.me.Image = {};
-                draft.me.Image.src = action.data;
-            }
+        case CHECK_OTP_REQUEST: {
+            draft.checkedOpt = false;
             break;
         }
-        case UPLOAD_PROIMG_FAILURE: {
+        case CHECK_OTP_SUCCESS: {
+            draft.checkedOpt = true;
             break;
         }
-        case ID_CHECK_REQUEST: {
-            draft.idCheck = false;
+        case CHECK_OTP_FAILURE: {
+            draft.checkedOpt = false;
             break;
         }
-        case ID_CHECK_SUCCESS: {
-            draft.idCheck = true;
+        case CHECK_EMAIL_REQUEST: {
+            draft.checkEmail = false;
             break;
         }
-        case ID_CHECK_FAILURE: {
-            draft.idCheck = false;
+        case CHECK_EMAIL_SUCCESS: {
+            draft.checkEmail = true;
             break;
         }
-        case NICKNAME_CHECK_REQUEST: {
-            draft.nicknameCheck = false;
+        case CHECK_EMAIL_FAILURE: {
+            draft.checkEmail = false;
             break;
         }
-        case NICKNAME_CHECK_SUCCESS: {
-            draft.nicknameCheck = true;
+        case CHECK_DUPLICATE_EMAIL_REQUEST: {
+            draft.checkDuplicateEmail = false;
             break;
         }
-        case NICKNAME_CHECK_FAILURE: {
-            draft.nicknameCheck = false;
+        case CHECK_DUPLICATE_EMAIL_SUCCESS: {
+            draft.checkDuplicateEmail = true;
             break;
         }
-        case OTP_CHECK_REQUEST: {
-            draft.otpCheck = false;
+        case CHECK_DUPLICATE_EMAIL_FAILURE: {
+            draft.checkDuplicateEmail = false;
             break;
         }
-        case OTP_CHECK_SUCCESS: {
-            draft.otpCheck = true;
+        case LOAD_MY_INFO_REQUEST:
+            draft.isLoadMyInfoLoading = true;
+            draft.isLoadMyInfoError = null;
+            draft.isLoadMyInfoDone = false;
+            break;
+        case LOAD_MY_INFO_SUCCESS:
+            draft.isLoadMyInfoLoading = false;
+            draft.me = action.data;
+            draft.isLoadMyInfoDone = true;
+            break;
+        case LOAD_MY_INFO_FAILURE:
+            draft.isLoadMyInfoLoading = false;
+            draft.isLoadMyInfoError = action.error;
+            break;
+        case LOAD_USER_REQUEST:
+            draft.isLoadUserLoading = true;
+            draft.isLoadUserError = null;
+            draft.isLoadUserDone = false;
+            break;
+        case LOAD_USER_SUCCESS:
+            draft.isLoadUserLoading = false;
+            draft.userInfo = action.data;
+            draft.isLoadUserDone = true;
+            break;
+        case LOAD_USER_FAILURE:
+            draft.isLoadUserLoading = false;
+            draft.isLoadUserError = action.error;
+            break;
+
+        case ADD_POST_TO_ME:
+            draft.me.Posts.unshift({ id: action.data });
+            break;
+        case REMOVE_POST_OF_ME:
+            draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+            break;
+        case EDIT_NICKNAME_REQUEST:
+            draft.changeNicknameLoading = true;
+            draft.changeNicknameError = null;
+            draft.changeNicknameDone = false;
+
+        case EDIT_NICKNAME_SUCCESS:
+            draft.me.nickname = action.data.nickname;
+            draft.changeNicknameLoading = false;
+            draft.changeNicknameDone = true;
+            break;
+        case EDIT_NICKNAME_FAILURE:
+            draft.changeNicknameLoading = false;
+            draft.changeNicknameError = action.error;
+            break;
+
+        case EDIT_PWCK_REQUEST:
+            draft.isCheckedPwLoading = true;
+            draft.isCheckedPwDone = false;
+            draft.isCheckedPwError = null;
+            break;
+        case EDIT_PWCK_SUCCESS:
+            draft.isCheckedPwLoading = false;
+            draft.isCheckedPwDone = true;
+            break;
+        case EDIT_PWCK_FAILURE:
+            draft.isCheckedPwLoading = false;
+            draft.isCheckedPwError = action.error;
+            break;
+
+        case FIND_EMAIL_REQUEST:
+            draft.checkedFindEmailLoading = true;
+            draft.checkedFindEmailDone = false;
+            draft.checkedFindEmailError = null;
+            break;
+        case FIND_EMAIL_SUCCESS:
+            draft.checkedFindEmailLoading = false;
+            draft.checkedFindEmailDone = true;
+            break;
+        case FIND_EMAIL_FAILURE:
+            draft.checkedFindEmailLoading = true;
+            draft.checkedFindEmailError = action.error;
+            break;
+
+
+        case FIND_PASSWORD_REQUEST: {
+            draft.checkedFindPwLoading = true;
+            draft.checkedFindPwDone = false;
+            draft.checkedFindPwError = null;
             break;
         }
-        case OTP_CHECK_FAILURE: {
-            draft.otpCheck = false;
+        case FIND_PASSWORD_SUCCESS: {
+            draft.checkedFindPwLoading = false;
+            draft.checkedFindPwDone = true;
             break;
         }
-        case EMAIL_CHECK_REQUEST: {
-            draft.emailCheck = false;
+        case FIND_PASSWORD_FAILURE: {
+            draft.checkedFindPwLoading = false;
+            draft.checkedFindPwError = action.error;
             break;
         }
-        case EMAIL_CHECK_SUCCESS: {
-            draft.emailCheck = true;
+
+
+        // --------------------절취선----------------------------
+        // --------------------절취선----------------------------
+        // --------------------절취선----------------------------
+        // --------------------절취선----------------------------
+
+        case EDIT_PASSWORD_REQUEST:
             break;
-        }
-        case EMAIL_CHECK_FAILURE: {
-            draft.emailCheck = false;
+        case EDIT_PASSWORD_SUCCESS:
             break;
-        }
-        case EDIT_PWCK_REQUEST: {
-            draft.isCheckedPw = false;
+        case EDIT_PASSWORD_FAILURE:
             break;
-        }
-        case EDIT_PWCK_SUCCESS: {
-            draft.isCheckedPw = true;
-            break;
-        }
-        case EDIT_PWCK_FAILURE: {
-            draft.isCheckedPw = false;
-            break;
-        }
-        case EDIT_PW_REQUEST: {
-            break;
-        }
-        case EDIT_PW_SUCCESS: {
-            break;
-        }
-        case EDIT_PW_FAILURE: {
-            break;
-        }
-        case EMAIL_FIND_REQUEST: {
-            draft.findEmailCheck = false;
-            break;
-        }
-        case EMAIL_FIND_SUCCESS: {
-            draft.findEmailCheck = true;
-            break;
-        }
-        case EMAIL_FIND_FAILURE: {
-            draft.findEmailCheck = false;
-            break;
-        }
-        case PW_FIND_REQUEST: {
-            draft.findPwCheck = false;
-            break;
-        }
-        case PW_FIND_SUCCESS: {
-            draft.findPwCheck = true;
-            break;
-        }
-        case PW_FIND_FAILURE: {
-            draft.findPwCheck = false;
-            break;
-        }
+
+
         case SIGN_UP_RESET: {
             draft.isSignedUp = false;
             break;
         }
-        case LOAD_USER_REQUEST: {
-            break;
-        }
-        case LOAD_USER_SUCCESS: {
-            if (action.me) {
-                draft.me = action.data;
-                break;
-            }
-            draft.userInfo = action.data;
-            break;
-        }
-        case LOAD_USER_FAILURE: {
-            break;
-        }
+
         case FOLLOW_USER_REQUEST: {
             break;
         }
@@ -305,15 +463,7 @@ export default (state = initialState, action) => produce(state, (draft) => {
         case UNFOLLOW_USER_FAILURE: {
             break;
         }
-        case ADD_POST_TO_ME: {
-            draft.me.Posts.unshift({ id: action.data });
-            break;
-        }
-        case REMOVE_POST_OF_ME: {
-            const index = draft.me.Posts.findIndex(v => v.id === action.data);
-            draft.me.Posts.splice(index, 1);
-            break;
-        }
+
         case LOAD_FOLLOWERS_REQUEST: {
             draft.followerList = !action.offset ? [] : draft.followerList;
             draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true; // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
@@ -357,23 +507,28 @@ export default (state = initialState, action) => produce(state, (draft) => {
         case REMOVE_FOLLOWER_FAILURE: {
             break;
         }
-        case EDIT_NICKNAME_REQUEST: {
-            draft.isEditingNickname = true;
-            draft.editNicknameErrorReason = '';
+
+        case UPLOAD_PROIMG_REQUEST: {
             break;
         }
-        case EDIT_NICKNAME_SUCCESS: {
-            draft.isEditingNickname = false;
-            draft.me.nickname = action.data;
+        case UPLOAD_PROIMG_SUCCESS: {
+            draft.profileImagePath = action.data;
+            if (draft.me.Image) {
+                draft.me.Image.src = action.data;
+            } else {
+                draft.me.Image = {};
+                draft.me.Image.src = action.data;
+            }
             break;
         }
-        case EDIT_NICKNAME_FAILURE: {
-            draft.isEditingNickname = false;
-            draft.editNicknameErrorReason = action.error;
+        case UPLOAD_PROIMG_FAILURE: {
             break;
         }
+
         default: {
             break;
         }
     }
 });
+
+export default reducer;

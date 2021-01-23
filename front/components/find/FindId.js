@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { Form, Input, Button, Row, Col, message } from 'antd';
 import { MailOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { EMAIL_FIND_REQUEST } from "../../reducers/user";
+import { FIND_EMAIL_REQUEST } from "../../reducers/user";
 
 const FindId = ({ setIdVisible }) => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
+
     const dispatch = useDispatch();
     const { findEmailCheck } = useSelector(state => state.user);
+
     const onChangeEmailCheck = useCallback((e) => {
         setEmailError(!e.target.value.includes('@office.skhu.ac.kr'));
         setEmail(e.target.value);
@@ -16,7 +18,7 @@ const FindId = ({ setIdVisible }) => {
 
     const onEmailFind = () => {
         dispatch({
-            type: EMAIL_FIND_REQUEST,
+            type: FIND_EMAIL_REQUEST,
             data: {
                 schoolEmail: email
             }

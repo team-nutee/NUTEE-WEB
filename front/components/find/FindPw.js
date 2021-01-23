@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Form, Input, Button, message,  } from 'antd';
+import { Form, Input, Button, message, } from 'antd';
 import { IdcardOutlined, MailOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { PW_FIND_REQUEST } from "../../reducers/user";
+import { FIND_PASSWORD_REQUEST } from "../../reducers/user";
 
 const FindPw = ({ setPwVisible }) => {
     const [id, setId] = useState('');
@@ -19,7 +19,7 @@ const FindPw = ({ setPwVisible }) => {
     }, [id]);
     const onEmailFind = () => {
         dispatch({
-            type: PW_FIND_REQUEST,
+            type: FIND_PASSWORD_REQUEST,
             data: {
                 schoolEmail: email,
                 userId: id,
@@ -41,27 +41,27 @@ const FindPw = ({ setPwVisible }) => {
 
     return (
         <Form>
-            <div style={ formDivWrapper }>
+            <div style={formDivWrapper}>
                 <br />
                 <Input
                     prefix={<IdcardOutlined style={prefixWrapper} />}
                     name="user-id" value={id} placeholder='아이디' required onChange={onChangeId}
                 />
             </div>
-            <div style={ formDivWrapper }>
+            <div style={formDivWrapper}>
                 <br />
                 <Input
                     prefix={<MailOutlined style={prefixWrapper} />}
                     name="user-email" placeholder='학내 이메일 (@office.skhu.ac.kr)' value={email} required
                     onChange={onChangeEmailCheck}
                 />
-                { emailError && <div style={ emailErrorWrapper }>올바른 이메일의 형태가 아닙니다.</div>}
+                {emailError && <div style={emailErrorWrapper}>올바른 이메일의 형태가 아닙니다.</div>}
                 <br />
             </div>
-            <div style={ formDiv2Wrapper }>
+            <div style={formDiv2Wrapper}>
                 <br />
                 <br />
-                <Button type={"primary"} style={ buttonWrapper } onClick={onEmailFind}>전송</Button>
+                <Button type={"primary"} style={buttonWrapper} onClick={onEmailFind}>전송</Button>
             </div>
         </Form>
     )

@@ -1,8 +1,8 @@
-import React, { useCallback, useState } from 'react';
-import { Avatar, Button, Col, Form, Icon, Input, Modal, Row } from 'antd';
-import { EDIT_NICKNAME_REQUEST, EDIT_PW_REQUEST, EDIT_PWCK_REQUEST } from "../../reducers/user";
+import React, { useCallback, useState, useMemo } from 'react';
+import { Avatar, Button, Col, Form, Input, Modal, Row } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
+import { EDIT_NICKNAME_REQUEST, EDIT_PASSWORD_REQUEST, EDIT_PWCK_REQUEST } from "../../reducers/user";
 import { useDispatch, useSelector } from "react-redux";
-import { TARGET_URL } from "../../static";
 import { LOAD_USER_POSTS_REQUEST } from "../../reducers/post";
 
 const PwEditModal = () => {
@@ -39,7 +39,7 @@ const PwEditModal = () => {
     const onEditPW = useCallback(async (e) => {
         e.preventDefault();
         await dispatch({
-            type: EDIT_PW_REQUEST,
+            type: EDIT_PASSWORD_REQUEST,
             data: editPW,
         });
     }, [editPW]);
@@ -65,7 +65,7 @@ const PwEditModal = () => {
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="lock" style={prefixWrapper} />}
+                                prefix={<LockOutlined style={prefixWrapper} />}
                                 type='password' placeholder='현재 비밀번호' name="user-password"
                                 value={editPWCK} required onChange={onChangePWCK}
                             />
@@ -80,7 +80,7 @@ const PwEditModal = () => {
                     <Row gutter={8}>
                         <Col span={18}>
                             <Input
-                                prefix={<Icon type="lock" style={prefixWrapper} />}
+                                prefix={<LockOutlined style={prefixWrapper} />}
                                 type='password' placeholder='변경할 비밀번호' name="user-password2"
                                 value={editPW} required onChange={onChangePW}
                             />
