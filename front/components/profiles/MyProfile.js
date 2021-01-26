@@ -1,19 +1,30 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import {
   FOLLOW_USER_REQUEST,
   UNFOLLOW_USER_REQUEST,
 } from "../../reducers/user";
-import { Button, Card } from "antd";
-import { ProfileOutlined } from "@ant-design/icons";
+import { Button, Card, Modal } from "antd";
+import { ProfileOutlined, SettingOutlined } from "@ant-design/icons";
 import ProfileAvatar from "./ProfileAvatar";
+import Setting from "../Setting";
 
 const MyProfile = ({ target }) => {
+  const [Visible, setVisible] = useState(false); //설정 modal
+
   const dispatch = useDispatch();
-  const { me, userInfo } = useSelector((state) => state.user);
+  const { me, userInfo } = useSelector(state => state.user);
+  
+  const setOk = () => {
+    setVisible(false);
+  };
+  const setCancel = () => {
+    setVisible(false);
+  };
+
   const onFollow = useCallback(
-    (userId) => () => {
+    userId => () => {
       dispatch({
         type: FOLLOW_USER_REQUEST,
         data: userId,
@@ -23,7 +34,7 @@ const MyProfile = ({ target }) => {
   );
 
   const onUnfollow = useCallback(
-    (userId) => () => {
+    userId => () => {
       dispatch({
         type: UNFOLLOW_USER_REQUEST,
         data: userId,
@@ -32,9 +43,17 @@ const MyProfile = ({ target }) => {
     []
   );
 
-  const cardWrapper = useMemo(() => ({ color: 'black' }), []);
-  const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, 0.7)', marginRight: '3px' }), []);
-  const profileWrapper = useMemo(() => ({ float: 'right', color: 'black', fontSize: '13px'}), []);
+  const cardWrapper = useMemo(() => ({ color: "black" }), []);
+  const linkWrapper = useMemo(() => ({ margin : '0' }), []);
+  const setWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", marginRight : '5px'}), []);
+  const prefixWrapper = useMemo(
+    () => ({ color: "rgba(0, 0, 0, 0.7)", marginRight: "3px" }),
+    []
+  );
+  const profileWrapper = useMemo(
+    () => ({ float: "right", color: "black", fontSize: "13px" }),
+    []
+  );
 
   return (
     <>
@@ -46,27 +65,27 @@ const MyProfile = ({ target }) => {
               <Link href="/profile" key="twit">
                 <a>
                   <div>
-                    <b>게시물</b>
+                    <b>게시글</b>
                     <br />
-                    {target.Posts.length}
+                    {target.postNum}
                   </div>
                 </a>
               </Link>,
               <Link href="/profile" key="following">
                 <a>
                   <div>
-                    <b>팔로잉</b>
+                    <b>댓글</b>
                     <br />
-                    {target.Followings.length}
+                    {target.commentNum}
                   </div>
                 </a>
               </Link>,
               <Link href="/profile" key="follower">
                 <a>
                   <div>
-                    <b>팔로워</b>
+                    <b>추천</b>
                     <br />
-                    {target.Followers.length}
+                    {target.likeNum}
                   </div>
                 </a>
               </Link>,
@@ -76,7 +95,7 @@ const MyProfile = ({ target }) => {
               avatar={
                 target.Image ? (
                   <ProfileAvatar
-                    nickname={target.nickname}
+                    nickname={target.nickname[0]}
                     imagePath={target.Image.src}
                   />
                 ) : (
@@ -88,16 +107,25 @@ const MyProfile = ({ target }) => {
                   <>
                     {target.nickname}
                     <br />
-                    <div>
+                    <br />
+                    <div style={linkWrapper}>
                       <Link href="/profile">
                         <a>
-                        <b style={profileWrapper}><ProfileOutlined style={prefixWrapper} />프로필</b>
+                          <b style={profileWrapper}>
+                            <ProfileOutlined style={prefixWrapper} />
+                            프로필
+                          </b>
                         </a>
                       </Link>
-                    </div>
+                     
+                        <a style={setWrapper} onClick={setVisible}>
+                        <b><SettingOutlined style={prefixWrapper} />
+                          설정</b>
+                        </a>
+                      </div>
                   </>
                 ) : target.Followers &&
-                  target.Followers.find((v) => v.id === me.id) ? (
+                  target.Followers.find(v => v.id === me.id) ? (
                   <>
                     {target.nickname}
                     <br />
@@ -121,6 +149,17 @@ const MyProfile = ({ target }) => {
       ) : (
         <></>
       )}
+
+      <Modal
+        visible={Visible}
+        onOk={setOk}
+        onCancel={setCancel}
+        footer={null}
+        closable={false}
+        width={700}
+      >
+        <Setting setVisible={setVisible} />
+      </Modal>
     </>
   );
 };
