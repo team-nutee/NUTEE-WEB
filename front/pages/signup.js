@@ -9,7 +9,6 @@ import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutline
 
 import {
     LOAD_USER_REQUEST,
-    LOAD_MY_INFO_REQUEST,
     CHECK_ID_REQUEST,
     CHECK_NICKNAME_REQUEST,
     CHECK_EMAIL_REQUEST,
@@ -402,7 +401,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
         axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
-        type: LOAD_MY_INFO_REQUEST,
+        type: LOAD_USER_REQUEST,
     });
     context.store.dispatch(END);
     console.log('getServerSideProps end');

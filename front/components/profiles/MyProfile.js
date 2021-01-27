@@ -5,23 +5,15 @@ import {
   FOLLOW_USER_REQUEST,
   UNFOLLOW_USER_REQUEST,
 } from "../../reducers/user";
-import { Button, Card, Modal } from "antd";
+import { Button, Card } from "antd";
 import { ProfileOutlined, SettingOutlined } from "@ant-design/icons";
 import ProfileAvatar from "./ProfileAvatar";
-import Setting from "../Setting";
+
+const { Meta } = Card;
 
 const MyProfile = ({ target }) => {
-  const [Visible, setVisible] = useState(false); //설정 modal
-
   const dispatch = useDispatch();
   const { me, userInfo } = useSelector(state => state.user);
-  
-  const setOk = () => {
-    setVisible(false);
-  };
-  const setCancel = () => {
-    setVisible(false);
-  };
 
   const onFollow = useCallback(
     userId => () => {
@@ -44,14 +36,26 @@ const MyProfile = ({ target }) => {
   );
 
   const cardWrapper = useMemo(() => ({ color: "black" }), []);
-  const linkWrapper = useMemo(() => ({ margin : '0' }), []);
-  const setWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", marginRight : '5px'}), []);
+  const linkWrapper = useMemo(() => ({ margin: "0" }), []);
+  const setWrapper = useMemo(
+    () => ({
+      float: "right",
+      color: "black",
+      fontSize: "13px",
+      marginLeft: "5px",
+    }),
+    []
+  );
   const prefixWrapper = useMemo(
     () => ({ color: "rgba(0, 0, 0, 0.7)", marginRight: "3px" }),
     []
   );
   const profileWrapper = useMemo(
-    () => ({ float: "right", color: "black", fontSize: "13px" }),
+    () => ({
+      float: "right",
+      color: "black",
+      fontSize: "13px",
+    }),
     []
   );
 
@@ -91,56 +95,48 @@ const MyProfile = ({ target }) => {
               </Link>,
             ]}
           >
-            <Card.Meta
+            <Meta
               avatar={
+                //프로필 이미지
                 target.Image ? (
                   <ProfileAvatar
-                    nickname={target.nickname[0]}
+                    nickname={target.nickname}
                     imagePath={target.Image.src}
                   />
                 ) : (
                   <ProfileAvatar nickname={target.nickname} />
                 )
               }
-              title={
+              title={"nickname_" + target.nickname}
+              description={
+                //프로필 설정 or 팔로우 언팔로우
                 !target || me.id === target.id ? (
-                  <>
-                    {target.nickname}
-                    <br />
-                    <br />
-                    <div style={linkWrapper}>
-                      <Link href="/profile">
-                        <a>
-                          <b style={profileWrapper}>
-                            <ProfileOutlined style={prefixWrapper} />
-                            프로필
-                          </b>
-                        </a>
-                      </Link>
-                     
-                        <a style={setWrapper} onClick={setVisible}>
-                        <b><SettingOutlined style={prefixWrapper} />
-                          설정</b>
-                        </a>
-                      </div>
-                  </>
+                  <div style={linkWrapper}>
+                     <Link href="/setting">
+                    <a style={setWrapper}>
+                      <b>
+                        <SettingOutlined style={prefixWrapper} />
+                        설정
+                      </b>
+                    </a>
+                     </Link>
+                    <Link href="/profile">
+                      <a>
+                        <b style={profileWrapper}>
+                          <ProfileOutlined style={prefixWrapper} />내 페이지
+                        </b>
+                      </a>
+                    </Link>
+                  </div>
                 ) : target.Followers &&
                   target.Followers.find(v => v.id === me.id) ? (
-                  <>
-                    {target.nickname}
-                    <br />
-                    <Button size="small" onClick={onUnfollow(target.id)}>
-                      언팔로우
-                    </Button>
-                  </>
+                  <Button size="small" onClick={onUnfollow(target.id)}>
+                    언팔로우
+                  </Button>
                 ) : (
-                  <>
-                    {target.nickname}
-                    <br />
-                    <Button size="small" onClick={onFollow(target.id)}>
-                      팔로우
-                    </Button>
-                  </>
+                  <Button size="small" onClick={onFollow(target.id)}>
+                    팔로우
+                  </Button>
                 )
               }
             />
@@ -149,17 +145,6 @@ const MyProfile = ({ target }) => {
       ) : (
         <></>
       )}
-
-      <Modal
-        visible={Visible}
-        onOk={setOk}
-        onCancel={setCancel}
-        footer={null}
-        closable={false}
-        width={700}
-      >
-        <Setting setVisible={setVisible} />
-      </Modal>
     </>
   );
 };

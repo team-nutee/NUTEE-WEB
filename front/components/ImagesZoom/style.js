@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-//import {  } from '@ant-design/icons';
-
 
 export const Modal = styled.div`
     position: fixed; /* Stay in place */

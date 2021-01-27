@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {Avatar} from "antd";
-import {TARGET_URL} from "../../static";
+import {AUTH_URL} from "../../static";
 
 const ProfileAvatar = ({imagePath}) => {
     const avatarWrapper = useMemo(() => ({ border:'1px solid #d8d8d8' }), []);
@@ -8,9 +8,9 @@ const ProfileAvatar = ({imagePath}) => {
     return(
         <>
             {imagePath?
-                <Avatar style={ avatarWrapper } src={`${TARGET_URL}/${imagePath}`}/>
+                <Avatar size={50} style={ avatarWrapper } src={`${AUTH_URL}/${imagePath}`}/>
                 :
-                <Avatar style={ avatarWrapper } src={`${TARGET_URL}/settings/nutee_profile.png`}/>
+                <Avatar size={50} style={ avatarWrapper } src={`/nutee_profile.png`}/>
             }
         </>
     )

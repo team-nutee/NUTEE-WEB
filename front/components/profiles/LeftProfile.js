@@ -12,7 +12,6 @@ import styled from "styled-components";
 import MyProfile from "./MyProfile";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileEditModal from "./ProfileEditModal";
-import PwEditModal from "./PwEditModal";
 
 const Box = styled.div`
     position: sticky;
@@ -73,7 +72,6 @@ const LeftProfile = ({ span }) => {
                     <>
                         <MyProfile target={me} />
                         <ProfileEditModal />
-                        <PwEditModal />
                         <List
                             style={listWrapper}
                             grid={{ gutter: 4 }}

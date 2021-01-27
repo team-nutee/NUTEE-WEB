@@ -4,7 +4,7 @@ import { END } from "redux-saga";
 import axios from "axios";
 import { Col, Row, Tabs } from "antd";
 import { LOAD_MAIN_POSTS_REQUEST } from "../reducers/post";
-import { LOAD_USER_REQUEST, LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { LOAD_USER_REQUEST } from "../reducers/user";
 import AppLayout from "../components/AppLayout";
 import LeftContents from "../components/contents/LeftContents";
 import wrapper from "../store/configureStore";
@@ -41,7 +41,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
-      type: LOAD_MY_INFO_REQUEST,
+      type: LOAD_USER_REQUEST,
     });
     context.store.dispatch({
       type: LOAD_MAIN_POSTS_REQUEST,

@@ -28,7 +28,7 @@ const NavigationBar = ({ me }) => {
   const nuteeWrapper = useMemo(() => ({ float: "left", margin: '9.5px 10px 0px 0px' }), []);
   const nuteeAWrapper = useMemo(() => ({ fontFamily: 'Do Hyeon', color: '#13c276', fontSize: '40px' }), []);
   const searchWrapper = useMemo(() => ({ float: "left", marginLeft: '20px' }), []);
-  const inputSearchWrapper = useMemo(() => ({ verticalAlign: 'middle', width : '250px', border: '3px solid #fff' }), []);
+  const inputSearchWrapper = useMemo(() => ({ verticalAlign: 'middle', width : '250px' }), []);
   const logoutWrapper = useMemo(() => ({ float: 'right', marginRight: '7vw', }), []);
   const logoutButtonWrapper = useMemo(() => ({ background: '#13c276', marginTop: '5px', marginRight: '10px', borderColor: '#fff', color: 'white' }), []);
 
