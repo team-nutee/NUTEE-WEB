@@ -20,9 +20,7 @@ const LeftContents = ({ me, span }) => {
   return (
     <Col span={span} gutter={10} style={wrapper}>
       <Row gutter={10}>{me ? <MyProfile target={me} /> : <></>}</Row>
-      <Row gutter={10}>
-        <Notice />
-      </Row>
+      <Row gutter={10}><Notice /></Row>
       <br />
       <Row gutter={10}>
        <img style={imgWrapper} src={'/poster.png'} />

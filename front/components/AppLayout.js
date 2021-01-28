@@ -12,7 +12,7 @@ const AppLayout = ({ children }) => {
 
     return (
         <>
-            <div className={'main'} style={wrapper}>
+            <div style={wrapper}>
                 {/*메뉴바*/}
                 <NavigationBar me={me} />
                 {/*본문 내용*/}

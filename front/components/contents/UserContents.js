@@ -1,7 +1,6 @@
 import React, { useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Tabs, Badge } from "antd";
-import { RetweetOutlined } from "@ant-design/icons";
 import { LOAD_MAIN_POSTS_REQUEST } from "../../reducers/post";
 import PostForm from "../post/PostForm";
 import PostCard from "../post/PostCard";
@@ -32,43 +31,29 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
     };
   }, [hasMorePost, mainPosts.length]);
 
-  const tabsWrapper = useMemo(
-    () => ({
-      color: "#005000",
-      marginTop: "10px",
-      fontWeight: "bold",
-      lineHeight: "15px",
-      paddingBotton: "10px",
-    }),
-    []
-  );
-  const tabPaneWrapper = useMemo(
-    () => ({ color: "black", fontWeight: "normal" }),
-    []
-  );
-  const badge1Wrapper = useMemo(
-    () => ({ background: "#f50", size: "small", zIndex: "0" }),
-    []
-  );
+  const tabsWrapper = useMemo(() => ({ color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "15px", paddingBotton: "10px", }), []);
+  const tabPaneWrapper = useMemo(() => ({ color: "black", fontWeight: "normal" }), []);
+  const badge1Wrapper = useMemo(() => ({ background: '#87d068', size: "small", zIndex: "0", marginLeft: '5px' }), []);
+  const badge2Wrapper = useMemo(() => ({ background: "purple", size: 'small', zIndex: '0', marginLeft: '5px' }), []);
+  const badge3Wrapper = useMemo(() => ({ background: '#005000', size: 'small', zIndex: '0', marginLeft: '5px' }), []);
 
   return (
     <>
       <Tabs defaultActiveKey="1" type="card" style={tabsWrapper}>
-        <TabPane tab={'내가 쓴 글'} key="1" style={tabPaneWrapper}>
-        <Badge count={250} />
+        <TabPane tab={<span>내가 쓴 글<Badge count={250} style={badge1Wrapper} /></span>} key="1" style={tabPaneWrapper}>
           {me && <PostForm />}
-          {mainPosts.map(c => (
-            <PostCard key={c.id} post={c} />
-          ))}
+          내가 쓴 글 리스트
+          {mainPosts.map(c => (<PostCard key={c.id} post={c} />))}
         </TabPane>
-        <TabPane tab="내가 쓴 댓글" key="2" style={tabPaneWrapper}>
+        <TabPane tab={<span>내가 쓴 댓글<Badge count={50} style={badge2Wrapper} /></span>} key="2" style={tabPaneWrapper}>
           {me && <PostForm />}
+          내가 쓴 댓글 리스트
         </TabPane>
-        <TabPane tab="내가 추천한 글" key="3" style={tabPaneWrapper}>
+        <TabPane tab={<span>내가 추천한 글<Badge count={30} style={badge3Wrapper} /></span>} key="3" style={tabPaneWrapper}>
           {me && <PostForm />}
+          내가 추천한 글 리스트
         </TabPane>
       </Tabs>
-      페이지
     </>
   );
 };

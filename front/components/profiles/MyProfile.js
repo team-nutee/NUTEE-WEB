@@ -20,44 +20,20 @@ const MyProfile = ({ target }) => {
       dispatch({
         type: FOLLOW_USER_REQUEST,
         data: userId,
-      });
-    },
-    []
-  );
+      }); }, []);
 
   const onUnfollow = useCallback(
     userId => () => {
       dispatch({
         type: UNFOLLOW_USER_REQUEST,
         data: userId,
-      });
-    },
-    []
-  );
+      }); }, []);
 
   const cardWrapper = useMemo(() => ({ color: "black" }), []);
   const linkWrapper = useMemo(() => ({ margin: "0" }), []);
-  const setWrapper = useMemo(
-    () => ({
-      float: "right",
-      color: "black",
-      fontSize: "13px",
-      marginLeft: "5px",
-    }),
-    []
-  );
-  const prefixWrapper = useMemo(
-    () => ({ color: "rgba(0, 0, 0, 0.7)", marginRight: "3px" }),
-    []
-  );
-  const profileWrapper = useMemo(
-    () => ({
-      float: "right",
-      color: "black",
-      fontSize: "13px",
-    }),
-    []
-  );
+  const setWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", marginLeft: "5px", }), []);
+  const prefixWrapper = useMemo(() => ({ color: "rgba(0, 0, 0, 0.7)", marginRight: "3px" }), []);
+  const profileWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", }), []);
 
   return (
     <>
