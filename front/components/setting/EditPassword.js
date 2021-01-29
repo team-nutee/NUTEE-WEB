@@ -6,18 +6,19 @@ import { useDispatch, } from "react-redux";
 import useInput from "../../hooks/useInput";
 
 const PwEditModal = () => {
-  const [editPWCK, onChangePWCK, setEditPWCK] = useInput("");
-  const [editPassword, onChangePassword, setEditPassword] = useInput("");
+  const [existingPassword, onChangeExistingPassword] = useInput("");
+  const [editPassword, onChangeEditPassword] = useInput("");
   const dispatch = useDispatch();
 
-  const onEditPWCK = useCallback(
+
+  const onExistingPassword = useCallback(
     async e => {
       e.preventDefault();
       await dispatch({
         type: EDIT_PWCK_REQUEST,
-        data: editPWCK,
+        data: existingPassword,
       });
-    }, [editPWCK]);
+    }, [existingPassword]);
 
   const onEditPassword = useCallback(
     async e => {
@@ -28,29 +29,30 @@ const PwEditModal = () => {
       });
     }, [editPassword]);
 
-  const pageWrapper = useMemo(() => ({ display: "flex", justifyContent: "center", margin: "20px 0", }), []);
+  const pageWrapper = useMemo(() => ({ marginTop: '70px' }), []);
+  const divWrapper = useMemo(() => ({ display: "flex", justifyContent: "center", marginBottom: '10px' }), []);
   const inputWrapper = useMemo(() => ({ width: "300px", marginRight: "8px" }), []);
   const prefixWrapper = useMemo(() => ({ color: "rgba(0,0,0,.25)" }), []);
   const buttonWrapper = useMemo(() => ({ background: "#13c276", color: "#fff", width: "100px" }), []);
 
   return (
-    <>
-      <div style={pageWrapper}>
+    <div style={pageWrapper}>
+      <div style={divWrapper}>
         <Input
           prefix={<LockOutlined style={prefixWrapper} />}
           type="password"
           placeholder="현재 비밀번호"
           name="user-password"
-          value={editPWCK}
+          value={existingPassword}
           style={inputWrapper}
-          onChange={onChangePWCK}
+          onChange={onChangeExistingPassword}
           required
         />
-        <Button onClick={onEditPWCK} style={buttonWrapper}>
+        <Button onClick={onExistingPassword} style={buttonWrapper}>
           확인
         </Button>
       </div>
-      <div style={pageWrapper}>
+      <div style={divWrapper}>
         <Input
           prefix={<LockOutlined style={prefixWrapper} />}
           type="password"
@@ -58,14 +60,14 @@ const PwEditModal = () => {
           name="user-password2"
           value={editPassword}
           style={inputWrapper}
-          onChange={onChangePassword}
+          onChange={onChangeEditPassword}
           required
         />
         <Button onClick={onEditPassword} style={buttonWrapper}>
           변경
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 export default PwEditModal;

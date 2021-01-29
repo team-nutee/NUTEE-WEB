@@ -6,19 +6,18 @@ import { Col, Row } from "antd";
 import MyProfile from "../profiles/MyProfile";
 import Notice from "../Notice";
 
-const LeftContents = ({ me, span }) => {
+const LeftContents = ({ me }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({
       type: LOAD_NOTICE_REQUEST,
-    });
-  }, []);
+    }); }, []);
 
   const wrapper = useMemo(() => ({ marginTop: '15px' }), [])
   const imgWrapper = useMemo(() => ({ width: '100%' }), []);
 
   return (
-    <Col span={span} gutter={10} style={wrapper}>
+    <Col gutter={10} style={wrapper}>
       <Row gutter={10}>{me ? <MyProfile target={me} /> : <></>}</Row>
       <Row gutter={10}><Notice /></Row>
       <br />

@@ -6,7 +6,7 @@ import { Col, Row, Tabs } from "antd";
 import { LOAD_MAIN_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 import AppLayout from "../components/AppLayout";
-import LeftContents from "../components/contents/LeftContents";
+import LeftContents from '../components/contents/LeftContents';
 import wrapper from "../store/configureStore";
 import MainContents from "../components/contents/MainContents";
 

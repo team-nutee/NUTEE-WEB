@@ -1,6 +1,6 @@
 import react, { useMemo } from "react";
 import { LOAD_USER_REQUEST } from "../reducers/user";
-import { Row, Tabs } from "antd";
+import { Row, Tabs, Divider } from "antd";
 import {
   SmileOutlined,
   SettingOutlined,
@@ -14,34 +14,39 @@ import axios from "axios";
 import wrapper from "../store/configureStore";
 import AppLayout from "../components/AppLayout";
 import EditPassword from '../components/setting/EditPassword';
+import EditProfileImage from '../components/setting/EditProfileImage';
+import EditNickname from '../components/setting/EditNickname';
+import EditMajor from '../components/setting/EditMajor';
+import EditCategory from '../components/setting/EditCategory';
 
 const { TabPane } = Tabs;
 
 const setting = () => {
-  const tabsWrapper = useMemo(() => ({ height: '100vh', color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "15px", paddingBotton: "10px", }), []);
+  const tabsWrapper = useMemo(() => ({ background: '#f0faf5', borderRadius: '5px', border: '5px solid #c8e6d7', height: '100vh', color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "15px", paddingBotton: "10px", }), []);
   const tabPaneWrapper = useMemo(() => ({ color: "black", fontWeight: "normal" }), []);
   const pageWrapper = useMemo(() => ({ outline: "none", width: "70vw", minWidth: "750px", maxWidth: "1000px", paddingTop: "70px", }), []);
   const setIconWrapper = useMemo(() => ({ marginRight: "5px" }), []);
+  const dividerWrapper = useMemo(() => ({ fontSize: '20px' }), []);
 
   return (
     <AppLayout>
       <Row style={pageWrapper}>
-        <h1><SettingOutlined style={setIconWrapper} />설정</h1>
+        <Divider orientation="left" style={dividerWrapper}><SettingOutlined style={setIconWrapper} />설정</Divider>
         <Tabs tabPosition="left" type="card" style={tabsWrapper}>
-          <TabPane tab={<span><SmileOutlined />프로필 이미지 변경</span>} key="1" style={tabPaneWrapper}>
-            Content of Tab 1
+          <TabPane tab={<span><SmileOutlined />프로필 사진 변경</span>} key="1" style={tabPaneWrapper}>
+            <EditProfileImage />
           </TabPane>
           <TabPane tab={<span><UserOutlined />닉네임 변경</span>} key="2" style={tabPaneWrapper}>
-            Content of Tab 2
+            <EditNickname />
           </TabPane>
           <TabPane tab={<span><UnlockOutlined />비밀번호 변경</span>} key="3" style={tabPaneWrapper}>
             <EditPassword />
           </TabPane>
           <TabPane tab={<span><TagsOutlined />카테고리 변경</span>} key="4" style={tabPaneWrapper}>
-            Content of Tab 3
+            <EditCategory />
           </TabPane>
           <TabPane tab={<span><BookOutlined />전공 변경</span>} key="5" style={tabPaneWrapper}>
-            Content of Tab 3
+            <EditMajor />
           </TabPane>
         </Tabs>
       </Row>
