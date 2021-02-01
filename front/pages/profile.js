@@ -47,7 +47,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   });
   context.store.dispatch({
     type: LOAD_USER_POSTS_REQUEST,
-    // data: state.user.me && state.user.me.id,
   });
   context.store.dispatch(END);
   console.log("getServerSideProps end");
