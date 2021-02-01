@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -6,14 +6,14 @@ import {
   UNFOLLOW_USER_REQUEST,
 } from "../../reducers/user";
 import { Button, Card } from "antd";
-import { ProfileOutlined, SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined } from "@ant-design/icons";
 import ProfileAvatar from "./ProfileAvatar";
 
 const { Meta } = Card;
 
-const MyProfile = ({ target }) => {
+const UserProfile = ({ target }) => {
   const dispatch = useDispatch();
-  const { me, userInfo } = useSelector(state => state.user);
+  const { me } = useSelector(state => state.user);
 
   const onFollow = useCallback(
     userId => () => {
@@ -35,55 +35,53 @@ const MyProfile = ({ target }) => {
     []
   );
 
-  const cardWrapper = useMemo(() => ({ color: "black",  }), []);
+  const cardWrapper = useMemo(() => ({ color: "black", }), []);
   const setWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", marginLeft: "5px", }), []);
   const prefixWrapper = useMemo(() => ({ color: "rgba(0, 0, 0, 0.7)", marginRight: "3px" }), []);
-  const profileWrapper = useMemo(() => ({ float: "right", color: "black", fontSize: "13px", }), []);
+  const button1Wrapper = useMemo(() => ({ float: "right", marginLeft: "5px", fontSize: "13px", width: '55px' }), []);
+  const button2Wrapper = useMemo(() => ({ float: "right", marginLeft: "5px", fontSize: "13px", width: '65px' }), []);
 
   return (
     <>
-      {target ? (
-        <div>
-          <Card
-            style={cardWrapper}
-          >
-            <Meta
-              avatar={
-                //프로필 이미지
-                target.Image ? (
-                  <ProfileAvatar
-                    nickname={target.nickname}
-                    imagePath={target.Image.src}
-                  /> ) : ( <ProfileAvatar nickname={target.nickname} /> )
-              }
-              title={"nickname_" + target.nickname}
-              description={
-                //프로필 설정 or 팔로우 언팔로우
-                !target || me.id === target.id ? (
-                  <div>
-                     <Link href="/setting">
+      {target ?
+        <Card
+          style={cardWrapper}
+        >
+          <Meta
+            avatar={
+              //프로필 이미지
+              target.Image ? (
+                <ProfileAvatar
+                  nickname={target.nickname}
+                  imagePath={target.Image.src}
+                />) : (<ProfileAvatar nickname={target.nickname} />)
+            }
+            title={"nickname_" + target.nickname}
+            description={
+              //프로필 설정 or 팔로우 언팔로우
+              !target || me.id === target.id ?
+                <div>
+                  <Link href="/setting">
                     <a style={setWrapper}><b><SettingOutlined style={prefixWrapper} />설정</b></a>
-                     </Link>
-                  </div>
-                ) : target.Followers &&
-                  target.Followers.find(v => v.id === me.id) ? (
-                  <Button size="small" onClick={onUnfollow(target.id)}>
+                  </Link>
+                </div>
+                :
+                target.Followers && target.Followers.find(v => v.id === me.id) ?
+                  <Button size="small" style={button2Wrapper} onClick={onUnfollow(target.id)}>
                     언팔로우
                   </Button>
-                ) : (
-                  <Button size="small" onClick={onFollow(target.id)}>
+                  :
+                  <Button size="small" style={button1Wrapper} onClick={onFollow(target.id)}>
                     팔로우
                   </Button>
-                )
-              }
-            />
-          </Card>
-        </div>
-      ) : (
+            }
+          />
+        </Card>
+        :
         <></>
-      )}
+      }
     </>
   );
 };
 
-export default MyProfile;
+export default UserProfile;
