@@ -39,7 +39,7 @@ const NavigationBar = ({ me }) => {
   const showSearchWrapper = useMemo(() => ({ fontSize: '30px', color: '#005000' }), []);
   const closeIconWrapper = useMemo(() => ({ padding: '10px' }), []);
 
-  /* 로드아웃 */
+  /* 로그아웃 */
   const logoutWrapper = useMemo(() => ({ float: 'right', marginRight: '7vw', }), []);
   const logoutButtonWrapper = useMemo(() => ({ background: '#13c276', marginTop: '5px', marginRight: '10px', borderColor: '#fff', color: 'white' }), []);
 
