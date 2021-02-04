@@ -22,7 +22,7 @@ const Profile = () => {
         <Row gutter={10} style={pageWrapper}>
           {/* 프로필, 공지, 포스터 */}
           <Col span={7}>
-            <UserLeftContents />
+            <UserLeftContents target={me} />
           </Col>
           {/* 게시글 */}
           <Col span={17}>

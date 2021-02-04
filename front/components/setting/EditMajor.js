@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Button } from "antd";
 import { EDIT_MAJOR_REQUEST } from "../../reducers/user";
 import { useDispatch, } from "react-redux";
-import { interestsData } from '../../components/dummy'; //dummy
+import { majorsData } from '../../components/dummy'; //dummy
 import Select from 'react-select';
 
 const EditCategory = () => {
@@ -30,7 +30,7 @@ const EditCategory = () => {
           styles={customStyles}
           name="user-interests"
           onChange={setMajor}
-          options={interestsData}
+          options={majorsData}
         />
         <Button style={buttonWrapper} onClick={onEditMajor}>확인</Button>
       </div>

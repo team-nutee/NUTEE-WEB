@@ -7,7 +7,6 @@ import { END } from 'redux-saga';
 import axios from 'axios';
 import wrapper from '../../store/configureStore';
 
-
 const Post = ({ id }) => {
     const { singlePost } = useSelector(state => state.post);
     return (

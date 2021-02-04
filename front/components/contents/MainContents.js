@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Tabs } from "antd";
 import {
   LOAD_MAIN_POSTS_REQUEST,
