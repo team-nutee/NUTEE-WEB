@@ -170,6 +170,10 @@ const Signup = () => {
         });
     };
     const onCheckNickname = () => {
+        if (nickname.length > 12) {
+            alert('닉네임은 최대 12자까지 가능합니다.');
+            return false;
+        }
         dispatch({
             type: CHECK_NICKNAME_REQUEST,
             data: {
