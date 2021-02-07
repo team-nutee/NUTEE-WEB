@@ -1,4 +1,4 @@
-import react, { useMemo } from "react";
+import React, { useMemo } from "react";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 import { Row, Tabs, Divider } from "antd";
 import {
@@ -22,9 +22,9 @@ import EditCategory from '../components/setting/EditCategory';
 const { TabPane } = Tabs;
 
 const setting = () => {
-  const tabsWrapper = useMemo(() => ({ background: '#f0faf5', borderRadius: '5px', border: '5px solid #c8e6d7', height: '100vh', color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "15px", paddingBotton: "10px", }), []);
+  const pageWrapper = useMemo(() => ({ outline: "none", minWidth: "750px", maxWidth: "1000px", paddingTop: "70px", }), []);
+  const tabsWrapper = useMemo(() => ({ background: '#f0faf5', borderRadius: '5px', border: '5px solid #c8e6d7', height: '100vh', color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "20px" }), []);
   const tabPaneWrapper = useMemo(() => ({ color: "black", fontWeight: "normal" }), []);
-  const pageWrapper = useMemo(() => ({ outline: "none", width: "70vw", minWidth: "750px", maxWidth: "1000px", paddingTop: "70px", }), []);
   const setIconWrapper = useMemo(() => ({ marginRight: "5px" }), []);
   const dividerWrapper = useMemo(() => ({ fontSize: '20px' }), []);
 

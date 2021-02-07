@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { END } from "redux-saga";
 import axios from "axios";
-import { Col, Row, Tabs } from "antd";
+import { Col, Row } from "antd";
 import { LOAD_MAIN_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 import AppLayout from "../components/AppLayout";
@@ -13,7 +13,6 @@ import MainContents from "../components/contents/MainContents";
 const Home = () => {
   const { me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
-
   const pageWrapper = useMemo(() => ({ outline: 'none', width: "70vw", minWidth: "750px", maxWidth: "1000px", paddingTop: "55px" }), []);
 
   return (
