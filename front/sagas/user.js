@@ -1,6 +1,6 @@
-import { all, call, put, takeEvery, takeLatest, fork } from "redux-saga/effects";
+import { all, call, put, takeLatest, fork } from "redux-saga/effects";
 import axios from "axios";
-import { message } from "antd";
+import { AUTH_URL } from "../static";
 import {
   FOLLOW_USER_FAILURE,
   FOLLOW_USER_REQUEST,
@@ -69,57 +69,41 @@ import {
   UPLOAD_PROFILE_IMAGE_SUCCESS,
   UPLOAD_PROFILE_IMAGE_FAILURE,
 } from "../reducers/user";
-import { AUTH_URL } from "../static";
 
 function loadUserAPI(userId) {
-  return axios.get(userId ? `/user/${userId}` : "/user/", {
-    withCredentials: true,
-    // 클라이언트에서 요청 보낼 때는 브라우저가 쿠키를 같이 동봉해줘요
-  }); // 서버사이드렌더링일 때는, 브라우저가 없어요.
+  return axios.get(userId ? `/user/${userId}` : "/user/");
 }
 
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: LOAD_USER_SUCCESS,
       data: result.data,
       me: !action.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchLoadUser() {
-  yield takeEvery(LOAD_USER_REQUEST, loadUser);
-}
-
 function logInAPI(loginData) {
-  // 서버에 요청을 보내는 부분
-  //return axios.post('/user/login', loginData, {
-  return axios.post(`${AUTH_URL}/auth/login`, loginData, {
-    withCredentials: true,
-  });
+  return axios.post(`${AUTH_URL}/auth/login`, loginData);
 }
 
 function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: LOG_IN_SUCCESS,
       data: result.data,
     });
   } catch (err) {
     console.error(err);
-    alert("잘못된 로그인 정보입니다." + err);
     yield put({
       type: LOG_IN_FAILURE,
       error: err.response.data,
@@ -127,24 +111,17 @@ function* logIn(action) {
   }
 }
 
-function* watchLogIn() {
-  yield takeEvery(LOG_IN_REQUEST, logIn);
-}
-
 function signUpAPI(signUpData) {
-  // 서버에 요청을 보내는 부분
-  return axios.post("/user/", signUpData);
+  return axios.post(`${AUTH_URL}/auth/signup`, signUpData);
 }
 
 function* signUp(action) {
   try {
     yield call(signUpAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: SIGN_UP_SUCCESS,
     });
   } catch (err) {
-    // 회원가입 실패
     console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
@@ -153,13 +130,7 @@ function* signUp(action) {
   }
 }
 
-function* watchSignUp() {
-  yield takeEvery(SIGN_UP_REQUEST, signUp);
-}
-
-function checkOtpAPI(otp) {
-  //otp 확인
-  // 서버에 요청을 보내는 부분
+function checkOtpAPI(otp) { //otp 확인
   return axios.post("/user/otpcheck", otp);
 }
 
@@ -179,13 +150,8 @@ function* checkOtp(action) {
   }
 }
 
-function* watchOtpCheck() {
-  yield takeEvery(CHECK_OTP_REQUEST, checkOtp);
-}
-
-function checkEmailAPI(schoolEmail) {
-  //이메일 인증 후 otp를 메일로 전송
-  return axios.post("/user/otpsend", schoolEmail);
+function checkEmailAPI(schoolEmail) { //이메일 인증 후 otp를 메일로 전송
+  return axios.post(`${AUTH_URL}/auth/sendotp`, schoolEmail);
 }
 
 function* checkEmail(action) {
@@ -194,9 +160,7 @@ function* checkEmail(action) {
     yield put({
       type: CHECK_EMAIL_SUCCESS,
     });
-  } catch (err) {
-    // 이메일 인증 실패
-    alert("이메일 인증에 실패하셨습니다.");
+  } catch (err) { // 이메일 인증 실패
     yield put({
       type: CHECK_EMAIL_FAILURE,
       error: err.response.data,
@@ -204,13 +168,8 @@ function* checkEmail(action) {
   }
 }
 
-function* watchCheckEmail() {
-  yield takeEvery(CHECK_EMAIL_REQUEST, checkEmail);
-}
-
 function checkDuplicateEmailAPI(schoolEmail) {
-  //이메일 인증 후 otp를 메일로 전송
-  return axios.post("/auth/checkemail", schoolEmail);
+  return axios.post(`${AUTH_URL}/auth/checkemail`, schoolEmail);
 }
 
 function* checkDuplicateEmail(action) {
@@ -220,7 +179,6 @@ function* checkDuplicateEmail(action) {
       type: CHECK_DUPLICATE_EMAIL_SUCCESS,
     });
   } catch (err) {
-    // 중복된 이메일
     alert("중복된 이메일입니다.");
     yield put({
       type: CHECK_DUPLICATE_EMAIL_FAILURE,
@@ -229,14 +187,8 @@ function* checkDuplicateEmail(action) {
   }
 }
 
-function* watchCheckDuplicateEmail() {
-  yield takeEvery(CHECK_DUPLICATE_EMAIL_REQUEST, checkDuplicateEmail);
-}
-
 function checkIdAPI(id) {
-  return axios.post("/auth/checkid", id, {
-    withCredentials: true,
-  });
+  return axios.post(`${AUTH_URL}/auth/checkid`, id);
 }
 
 function* checkId(action) {
@@ -245,9 +197,7 @@ function* checkId(action) {
     yield put({
       type: CHECK_ID_SUCCESS,
     });
-  } catch (err) {
-    // ID 인증 실패(중복된 ID)
-    alert("사용할 수 없는 ID입니다.");
+  } catch (err) { // ID 인증 실패
     yield put({
       type: CHECK_ID_FAILURE,
       error: err.response.data,
@@ -255,13 +205,8 @@ function* checkId(action) {
   }
 }
 
-function* watchcheckId() {
-  yield takeEvery(CHECK_ID_REQUEST, checkId);
-}
-
 function checkNicknameAPI(nickname) {
-  // 서버에 요청을 보내는 부분
-  return axios.post("/auth/checknickname", nickname);
+  return axios.post(`${AUTH_URL}/auth/checknickname`, nickname);
 }
 
 function* checkNickname(action) {
@@ -271,7 +216,6 @@ function* checkNickname(action) {
       type: CHECK_NICKNAME_SUCCESS,
     });
   } catch (err) {
-    // otp 인증 실패
     alert("사용할 수 없는 닉네임입니다.");
     yield put({
       type: CHECK_NICKNAME_FAILURE,
@@ -280,18 +224,8 @@ function* checkNickname(action) {
   }
 }
 
-function* watchCheckNickname() {
-  yield takeEvery(CHECK_NICKNAME_REQUEST, checkNickname);
-}
-
 function checkPasswordAPI(password) {
-  return axios.post(
-    "/user/passwordcheck",
-    { password },
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post("/user/passwordcheck", password);
 }
 
 function* checkPassword(action) {
@@ -301,9 +235,7 @@ function* checkPassword(action) {
       type: EDIT_PWCK_SUCCESS,
       data: result.data,
     });
-    message.success("비밀번호 확인 성공");
   } catch (err) {
-    message.error("현재 비밀번호를 다시 확인해주세요.");
     yield put({
       type: EDIT_PWCK_FAILURE,
       error: err.response.data,
@@ -311,48 +243,29 @@ function* checkPassword(action) {
   }
 }
 
-function* watchCheckPassword() {
-  yield takeEvery(EDIT_PWCK_REQUEST, checkPassword);
-}
-
 function editPasswordAPI(newpassword) {
-  return axios.post(
-    "/user/passwordchange",
-    { newpassword },
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post("/user/passwordchange", newpassword);
 }
 
 function* editPassword(action) {
   try {
     const result = yield call(editPasswordAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: EDIT_PASSWORD_SUCCESS,
       data: result.data,
     });
-    message.success("비밀번호 변경 성공");
-  } catch (e) {
-    // 비밀번호 인증 실패
-    console.error(e);
+  } catch (err) { // 비밀번호 인증 실패
+    console.error(err);
     alert("비밀번호 변경에 실패하셨습니다.");
     yield put({
       type: EDIT_PASSWORD_FAILURE,
-      error: e.response.data,
+      error: err.response.data,
     });
   }
 }
 
-function* watchEditPassword() {
-  yield takeEvery(EDIT_PASSWORD_REQUEST, editPassword);
-}
-
 function uploadProfileImgAPI(formData) {
-  return axios.post(`/user/profile`, formData, {
-    withCredentials: true,
-  });
+  return axios.post(`/user/profile`, formData);
 }
 
 function* uploadProfileImg(action) {
@@ -371,10 +284,6 @@ function* uploadProfileImg(action) {
   }
 }
 
-function* watchUploadProfileImg() {
-  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImg);
-}
-
 function findEmailAPI(schoolEmail) {
   return axios.post("/user/findid", schoolEmail);
 }
@@ -383,20 +292,14 @@ function* findEmail(action) {
   try {
     yield call(findEmailAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: FIND_EMAIL_SUCCESS,
     });
   } catch (err) {
-    // 이메일 인증 실패
-    alert("이메일 찾기에 실패하셨습니다.");
     yield put({
       type: FIND_EMAIL_FAILURE,
       error: err.response.data,
     });
   }
-}
-function* watchFindEmail() {
-  yield takeEvery(FIND_EMAIL_REQUEST, findEmail);
 }
 
 function findPasswordAPI(data) {
@@ -407,11 +310,9 @@ function* findPassword(action) {
   try {
     yield call(findPasswordAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: FIND_PASSWORD_SUCCESS,
     });
   } catch (err) {
-    // 이메일 인증 실패
     alert("비밀번호 찾기에 실패하셨습니다.");
     yield put({
       type: FIND_PASSWORD_FAILURE,
@@ -420,27 +321,14 @@ function* findPassword(action) {
   }
 }
 
-function* watchFindPassword() {
-  yield takeEvery(FIND_PASSWORD_REQUEST, findPassword);
-}
-
 function logOutAPI() {
-  // 서버에 요청을 보내는 부분
-  return axios.post(
-    "/user/logout",
-    {},
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post(`${AUTH_URL}/auth/logout`);
 }
 
-function* logOut() {
+function* logOut(action) {
   try {
-    // yield call(logOutAPI);
-    yield call(logOutAPI);
+    yield call(logOutAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: LOG_OUT_SUCCESS,
     });
   } catch (err) {
@@ -452,128 +340,80 @@ function* logOut() {
   }
 }
 
-function* watchLogOut() {
-  yield takeEvery(LOG_OUT_REQUEST, logOut);
-}
-
 function followAPI(userId) {
-  // 서버에 요청을 보내는 부분
-  return axios.post(
-    `/user/${userId}/follow`,
-    {},
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post(`/user/${userId}/follow`);
 }
 
 function* follow(action) {
   try {
-    // yield call(followAPI);
     const result = yield call(followAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: FOLLOW_USER_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: FOLLOW_USER_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchFollow() {
-  yield takeEvery(FOLLOW_USER_REQUEST, follow);
-}
 
 function unfollowAPI(userId) {
-  // 서버에 요청을 보내는 부분
-  return axios.delete(`/user/${userId}/follow`, {
-    withCredentials: true,
-  });
+  return axios.delete(`/user/${userId}/follow`);
 }
 
 function* unfollow(action) {
   try {
-    // yield call(unfollowAPI);
     const result = yield call(unfollowAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: UNFOLLOW_USER_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: UNFOLLOW_USER_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchUnfollow() {
-  yield takeEvery(UNFOLLOW_USER_REQUEST, unfollow);
-}
 
 function loadFollowersAPI(userId, offset = 0, limit = 3) {
-  // 서버에 요청을 보내는 부분
-  return axios.get(
-    `/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`,
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`);
 }
 
 function* loadFollowers(action) {
   try {
-    // yield call(loadFollowersAPI);
     const result = yield call(loadFollowersAPI, action.data, action.offset);
     yield put({
-      // put은 dispatch 동일
       type: LOAD_FOLLOWERS_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: LOAD_FOLLOWERS_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchLoadFollowers() {
-  yield takeEvery(LOAD_FOLLOWERS_REQUEST, loadFollowers);
-}
-
 function loadFollowingsAPI(userId, offset = 0, limit = 3) {
-  // 서버에 요청을 보내는 부분
-  return axios.get(
-    `/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`,
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`);
 }
 
 function* loadFollowings(action) {
   try {
-    // yield call(loadFollowersAPI);
     const result = yield call(loadFollowingsAPI, action.data, action.offset);
     yield put({
-      // put은 dispatch 동일
       type: LOAD_FOLLOWINGS_SUCCESS,
       data: result.data,
     });
   } catch (err) {
-    // loginAPI 실패
     console.error(err);
     yield put({
       type: LOAD_FOLLOWINGS_FAILURE,
@@ -582,80 +422,48 @@ function* loadFollowings(action) {
   }
 }
 
-function* watchLoadFollowings() {
-  yield takeEvery(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
-}
-
 function removeFollowerAPI(userId) {
-  // 서버에 요청을 보내는 부분
-  return axios.delete(`/user/${userId}/follower`, {
-    withCredentials: true,
-  });
+  return axios.delete(`/user/${userId}/follower`);
 }
 
 function* removeFollower(action) {
   try {
-    // yield call(loadFollowersAPI);
     const result = yield call(removeFollowerAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: REMOVE_FOLLOWER_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: REMOVE_FOLLOWER_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchRemoveFollower() {
-  yield takeEvery(REMOVE_FOLLOWER_REQUEST, removeFollower);
-}
-
 function editNicknameAPI(nickname) {
-  // 서버에 요청을 보내는 부분
-  return axios.patch(
-    "/user/nickname",
-    { nickname },
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.patch("/user/nickname", nickname);
 }
 
 function* editNickname(action) {
   try {
     const result = yield call(editNicknameAPI, action.data);
     yield put({
-      // put은 dispatch 동일
       type: EDIT_NICKNAME_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    // loginAPI 실패
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: EDIT_NICKNAME_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function* watchEditNickname() {
-  yield takeEvery(EDIT_NICKNAME_REQUEST, editNickname);
-}
-
 function editCategoryAPI(category) {
-  // 서버에 요청을 보내는 부분
-  return axios.patch(
-    "/user/nickname", { category }, {
-      withCredentials: true,
-    }
-  );
+  return axios.patch("/user/nickname", category);
 }
 
 function* editCategory(action) {
@@ -674,16 +482,8 @@ function* editCategory(action) {
   }
 }
 
-function* watchEditCategory() {
-  yield takeEvery(EDIT_CATEGORY_REQUEST, editCategory);
-}
-
 function editMajorAPI(major) {
-  return axios.patch(
-    "/user/nickname", { major }, {
-      withCredentials: true,
-    }
-  );
+  return axios.patch("/user/nickname", major);
 }
 
 function* editMajor(action) {
@@ -702,8 +502,92 @@ function* editMajor(action) {
   }
 }
 
+function* watchLoadUser() {
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
+
+function* watchLogIn() {
+  yield takeLatest(LOG_IN_REQUEST, logIn);
+}
+
+function* watchSignUp() {
+  yield takeLatest(SIGN_UP_REQUEST, signUp);
+}
+
+function* watchOtpCheck() {
+  yield takeLatest(CHECK_OTP_REQUEST, checkOtp);
+}
+
+function* watchCheckEmail() {
+  yield takeLatest(CHECK_EMAIL_REQUEST, checkEmail);
+}
+
+function* watchCheckDuplicateEmail() {
+  yield takeLatest(CHECK_DUPLICATE_EMAIL_REQUEST, checkDuplicateEmail);
+}
+
+function* watchcheckId() {
+  yield takeLatest(CHECK_ID_REQUEST, checkId);
+}
+
+function* watchCheckNickname() {
+  yield takeLatest(CHECK_NICKNAME_REQUEST, checkNickname);
+}
+
+function* watchCheckPassword() {
+  yield takeLatest(EDIT_PWCK_REQUEST, checkPassword);
+}
+
+function* watchEditPassword() {
+  yield takeLatest(EDIT_PASSWORD_REQUEST, editPassword);
+}
+
+function* watchUploadProfileImg() {
+  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImg);
+}
+
+function* watchFindEmail() {
+  yield takeLatest(FIND_EMAIL_REQUEST, findEmail);
+}
+
+function* watchFindPassword() {
+  yield takeLatest(FIND_PASSWORD_REQUEST, findPassword);
+}
+
+function* watchLogOut() {
+  yield takeLatest(LOG_OUT_REQUEST, logOut);
+}
+
+function* watchFollow() {
+  yield takeLatest(FOLLOW_USER_REQUEST, follow);
+}
+
+function* watchUnfollow() {
+  yield takeLatest(UNFOLLOW_USER_REQUEST, unfollow);
+}
+
+function* watchLoadFollowers() {
+  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+function* watchLoadFollowings() {
+  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
+function* watchRemoveFollower() {
+  yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
+function* watchEditNickname() {
+  yield takeLatest(EDIT_NICKNAME_REQUEST, editNickname);
+}
+
+function* watchEditCategory() {
+  yield takeLatest(EDIT_CATEGORY_REQUEST, editCategory);
+}
+
 function* watchEditMajor() {
-  yield takeEvery(EDIT_MAJOR_REQUEST, editMajor);
+  yield takeLatest(EDIT_MAJOR_REQUEST, editMajor);
 }
 
 export default function* userSaga() {
