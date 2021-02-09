@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { LOAD_USER_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { Row, Tabs, Divider } from "antd";
 import {
   SmileOutlined,
@@ -62,7 +62,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
     axios.defaults.headers.Cookie = cookie;
   }
   context.store.dispatch({
-    type: LOAD_USER_REQUEST,
+    type: LOAD_MY_INFO_REQUEST,
   });
   context.store.dispatch(END);
   console.log("getServerSideProps start_setting");

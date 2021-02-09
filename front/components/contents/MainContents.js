@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Tabs } from "antd";
 import {
-  LOAD_MAIN_POSTS_REQUEST,
+  LOAD_POSTS_REQUEST,
   LOAD_FAVORITE_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_REQUEST,
 } from "../../reducers/post";
@@ -11,7 +11,7 @@ import PostCard from "../post/PostCard";
 
 const { TabPane } = Tabs;
 
-const MainContents = ({ target, mainPosts, hasMorePost }) => {
+const MainContents = ({ target, mainPosts, hasMorePost, favoritPosts, categoryPosts }) => {
   const { me } = useSelector(state => state.user);
 
   const dispatch = useDispatch();
@@ -25,7 +25,15 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
         if (hasMorePost) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
-            type: LOAD_MAIN_POSTS_REQUEST,
+            type: LOAD_POSTS_REQUEST,
+            lastId,
+          });
+          dispatch({
+            type: LOAD_FAVORITE_POSTS_REQUEST,
+            lastId,
+          });
+          dispatch({
+            type: LOAD_CATEGORY_POSTS_REQUEST,
             lastId,
           });
         }
@@ -53,10 +61,16 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
         <TabPane tab="전공" key="2" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
         전공 게시글
+        {categoryPosts.map(c => (
+            <PostCard key={c.id} post={c} />
+          ))}
         </TabPane>
         <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
           즐겨찾기 게시글
+          {favoritPosts.map(c => (
+            <PostCard key={c.id} post={c} />
+          ))}
         </TabPane>
       </Tabs>
     </>

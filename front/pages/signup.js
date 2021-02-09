@@ -8,10 +8,10 @@ import { END } from 'redux-saga';
 import Select from 'react-select';
 import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined, BookOutlined } from '@ant-design/icons';
 import {
-    LOAD_USER_REQUEST,
+    LOAD_MY_INFO_REQUEST,
     CHECK_ID_REQUEST,
     CHECK_NICKNAME_REQUEST,
-    CHECK_EMAIL_REQUEST,
+    SEND_OPT_REQUEST,
     CHECK_DUPLICATE_EMAIL_REQUEST,
     CHECK_OTP_REQUEST,
     SIGN_UP_REQUEST,
@@ -29,38 +29,29 @@ TextInput.propTypes = { value: PropTypes.string };
 const Signup = () => {
     const [id, onChangeId, setId] = useInput('');
     const [idError, setIdError] = useState(false);
-
     const [nickname, onChangeNickname, setNickname] = useInput('');
     const [nicknameError, setNicknameError] = useState(false);
-
     const [otp, onChangeOtp, setOtp] = useInput('');
-
     const [term, setTerm] = useState(false);
     const [termError, setTermError] = useState(false);
-
     const [password, onChangePassword, setPassword] = useInput('');
     const [checkPassword, setCheckPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
-
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
-
     const [interests, setInterests] = useState([]);
     const [major, setMajor] = useState([]);
     const [majorError, setMajorError] = useState(false);
-
     const [termsVisible, setTermsVisible] = useState(false);
-
     const dispatch = useDispatch();
-    const { isSignUpLoading, isSignUpDone, me, checkEmail, checkOtp, checkId, checkNickname } = useSelector(state => state.user);
+    const { isSignUpLoading, isSignUpDone, isSignUpError, me, checkEmail, checkOtp, checkId, checkNickname } = useSelector(state => state.user);
 
     const termsOk = () => setTermsVisible(false);
     const termsCancel = () => setTermsVisible(false);
 
     useEffect(() => {
-        if (me && me.id) {
+        if (me && me.id) 
             Router.replace('/');
-        }
     }, [me && me.id]);
 
     useEffect(() => {
@@ -69,8 +60,14 @@ const Signup = () => {
             dispatch({
                 type: SIGN_UP_RESET
             });
+            Router.replace('/');
         }
-    }, [isSignUpLoading]);
+    }, [isSignUpDone]);
+
+    useEffect(() => {
+        if (isSignUpError)
+          alert(isSignUpError);
+      }, [isSignUpError]);
 
     const onSubmit = useCallback(() => {
         if (!id)
@@ -108,8 +105,8 @@ const Signup = () => {
             setPassword('');
             setCheckPassword('');
             setEmail('');
-            setInterests(undefined);
-            setMajor(undefined);
+            setInterests([]);
+            setMajor([]);
             setOtp('');
             setTerm(false);
         }
@@ -121,7 +118,7 @@ const Signup = () => {
             return;
         }
         dispatch({
-            type: CHECK_EMAIL_REQUEST, //이메일 인증 -> OTP 전송
+            type: SEND_OPT_REQUEST, //이메일 인증 -> OTP 전송
             data: {
                 schoolEmail: email,
             }
@@ -345,8 +342,7 @@ const Signup = () => {
                 closable={false}
                 title='NUTEE 회원 약관'
                 width={470}
-            >
-                <Terms setTermsVisible={setTermsVisible} />
+            ><Terms setTermsVisible={setTermsVisible} />
             </Modal>
         </AppLayout>
     )
@@ -361,7 +357,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
         axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
     });
     context.store.dispatch(END);
     console.log('getServerSideProps end');

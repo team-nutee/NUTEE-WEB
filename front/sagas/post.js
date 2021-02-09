@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, throttle, call } from "redux-saga/effects";
+import { all, fork, takeLatest, put, call } from "redux-saga/effects";
 import axios from "axios";
 import {
   ADD_POST_FAILURE,
@@ -22,9 +22,9 @@ import {
   LOAD_HASHTAG_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_REQUEST,
   LOAD_HASHTAG_POSTS_SUCCESS,
-  LOAD_MAIN_POSTS_FAILURE,
-  LOAD_MAIN_POSTS_REQUEST,
-  LOAD_MAIN_POSTS_SUCCESS,
+  LOAD_POSTS_FAILURE,
+  LOAD_POSTS_REQUEST,
+  LOAD_POSTS_SUCCESS,
   LOAD_USER_POSTS_FAILURE,
   LOAD_USER_POSTS_REQUEST,
   LOAD_USER_POSTS_SUCCESS,
@@ -66,24 +66,20 @@ import {
   LOAD_SEARCH_POSTS_REQUEST,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
-import { INDEX_URL } from "../static";
+import { AUTH_URL, INDEX_URL } from "../static";
 
 function addPostAPI(postData) {
-  return axios.post("/post", postData, {
-    withCredentials: true,
-  });
+  return axios.post(`${INDEX_URL}/sns/post`, postData);
 }
 
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    yield put({
-      // post reducer의 데이터를 수정
+    yield put({ // post reducer의 데이터를 수정
       type: ADD_POST_SUCCESS,
       data: result.data,
     });
-    yield put({
-      // user reducer의 데이터를 수정
+    yield put({ // user reducer의 데이터를 수정
       type: ADD_POST_TO_ME,
       data: result.data.id,
     });
@@ -95,21 +91,14 @@ function* addPost(action) {
   }
 }
 
-function* watchAddPost() {
-  yield takeLatest(ADD_POST_REQUEST, addPost);
-}
-
-function editPostAPI(postData) {
-  return axios.patch("/post", postData, {
-    withCredentials: true,
-  });
+function editPostAPI(postData, postId = 1) {
+  return axios.patch(`${INDEX_URL}/sns/post/${postId}`, postData);
 }
 
 function* editPost(action) {
   try {
     const result = yield call(editPostAPI, action.data);
     yield put({
-      // post reducer의 데이터를 수정
       type: EDIT_POST_SUCCESS,
       data: result.data,
     });
@@ -121,49 +110,28 @@ function* editPost(action) {
   }
 }
 
-function* watchEditPost() {
-  yield takeLatest(EDIT_POST_REQUEST, editPost);
-}
-
-
-
-const config = {
-  headers: {
-    'content-type': 'application/json;charset=UTF-8',
-    'Accept': 'application/json',
-  },
-  data: {}
-};
-
-function loadMainPostsAPI(lastId = 0, limit = 10) {
-  return axios.get(
-    `${INDEX_URL}/sns/post/favorite?lastId=${lastId}&limit=${limit}`,  {config}  );
+function loadMainPostsAPI(lastId = 0, limit = 10, inter = 'IT2') {
+  return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadMainPosts(action) {
   try {
     const result = yield call(loadMainPostsAPI, action.lastId);
     yield put({
-      type: LOAD_MAIN_POSTS_SUCCESS,
+      type: LOAD_POSTS_SUCCESS,
       data: result.data,
     });
   } catch (err) {
-    console.log('data' + err.response.data)
+    console.log(err);
     yield put({
-      type: LOAD_MAIN_POSTS_FAILURE,
-      error: err.response.data,
+      type: LOAD_POSTS_FAILURE,
+      error: err
     });
   }
 }
 
-function* watchLoadMainPosts() {
-  yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
-}
-
 function loadFavoritePostsAPI(lastId = 0, limit = 10) {
-  return axios.get(
-    `${INDEX_URL}/sns/post/favorite?lastId=${lastId}&limit=${limit}`
-  );
+  return axios.get(`${INDEX_URL}/sns/post/favorite?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadFavoritePosts(action) {
@@ -181,14 +149,8 @@ function* loadFavoritePosts(action) {
   }
 }
 
-function* watchLoadFavoritePosts() {
-  yield throttle(2000, LOAD_FAVORITE_POSTS_REQUEST, loadFavoritePosts);
-}
-
-function loadCategoryPostsAPI(lastId = 0, limit = 10) {
-  return axios.get(
-    `${INDEX_URL}/sns/post/Category/INTER2?lastId=${lastId}&limit=${limit}`
-  );
+function loadCategoryPostsAPI(lastId = 0, limit = 10, inter = 'IT2') {
+  return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadCategoryPosts(action) {
@@ -201,13 +163,9 @@ function* loadCategoryPosts(action) {
   } catch (err) {
     yield put({
       type: LOAD_CATEGORY_POSTS_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
-}
-
-function* watchLoadCategoryPosts() {
-  yield throttle(2000, LOAD_CATEGORY_POSTS_REQUEST, loadCategoryPosts);
 }
 
 function loadHashtagPostsAPI(tag, lastId) {
@@ -226,13 +184,9 @@ function* loadHashtagPosts(action) {
   } catch (err) {
     yield put({
       type: LOAD_HASHTAG_POSTS_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
-}
-
-function* watchLoadHashtagPosts() {
-  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 
 function loadSearchPostsAPI(text, lastId) {
@@ -248,16 +202,12 @@ function* loadSearchPosts(action) {
       type: LOAD_SEARCH_POSTS_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
+  } catch (err) {
     yield put({
       type: LOAD_SEARCH_POSTS_FAILURE,
-      error: e,
+      error: err,
     });
   }
-}
-
-function* watchLoadSearchPosts() {
-  yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadSearchPosts);
 }
 
 function loadUserPostsAPI(id) {
@@ -277,10 +227,6 @@ function* loadUserPosts(action) {
       error: e,
     });
   }
-}
-
-function* watchLoadUserPosts() {
-  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
 function addCommentAPI(data) {
@@ -310,10 +256,6 @@ function* addComment(action) {
       error: e,
     });
   }
-}
-
-function* watchAddComment() {
-  yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
 function addReCommentAPI(data) {
@@ -346,10 +288,6 @@ function* addReComment(action) {
   }
 }
 
-function* watchAddReComment() {
-  yield takeLatest(ADD_RECOMMENT_REQUEST, addReComment);
-}
-
 function editCommentAPI(data) {
   return axios.patch(
     `/post/${data.postId}/comment/${data.commentId}`,
@@ -370,7 +308,6 @@ function* editComment(action) {
         comment: result.data,
       },
     });
-    console.log("hey???");
   } catch (e) {
     console.error(e);
     console.log(e);
@@ -381,17 +318,9 @@ function* editComment(action) {
   }
 }
 
-function* watchEditComment() {
-  yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
-}
-
 function removeCommentAPI(data) {
   return axios.delete(
-    `/post/${data.postId}/comment/${data.commentId}`,
-    {
-      withCredentials: true,
-    }
-  );
+    `/post/${data.postId}/comment/${data.commentId}`);
 }
 
 function* removeComment(action) {
@@ -412,10 +341,6 @@ function* removeComment(action) {
       error: e,
     });
   }
-}
-
-function* watchRemoveComment() {
-  yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
 function loadCommentsAPI(data, limit = 5) {
@@ -447,10 +372,6 @@ function* loadComments(action) {
   }
 }
 
-function* watchLoadComments() {
-  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
-}
-
 function uploadImagesAPI(formData) {
   return axios.post("/post/images", formData, {
     withCredentials: true,
@@ -473,10 +394,6 @@ function* uploadImages(action) {
   }
 }
 
-function* watchUploadImages() {
-  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
-}
-
 function editImagesAPI(formData) {
   return axios.post("/post/images", formData, {
     withCredentials: true,
@@ -497,10 +414,6 @@ function* editImages(action) {
       error: e,
     });
   }
-}
-
-function* watchEditImages() {
-  yield takeLatest(UPLOAD_EDIT_IMAGES_REQUEST, editImages);
 }
 
 function likePostAPI(postId) {
@@ -531,10 +444,6 @@ function* likePost(action) {
   }
 }
 
-function* watchLikePost() {
-  yield takeLatest(LIKE_POST_REQUEST, likePost);
-}
-
 function unlikePostAPI(postId) {
   return axios.delete(
     `/post/${postId}/like`,
@@ -563,10 +472,6 @@ function* unlikePost(action) {
   }
 }
 
-function* watchUnlikePost() {
-  yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
-}
-
 function retweetAPI(postId) {
   return axios.post(
     `/post/${postId}/retweet`,
@@ -593,17 +498,8 @@ function* retweet(action) {
   }
 }
 
-function* watchRetweet() {
-  yield takeLatest(RETWEET_REQUEST, retweet);
-}
-
 function removePostAPI(postId) {
-  return axios.delete(
-    `/post/${postId}`,
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.delete(`${INDEX_URL}/sns/post/${postId}`);
 }
 
 function* removePost(action) {
@@ -626,10 +522,6 @@ function* removePost(action) {
   }
 }
 
-function* watchRemovePost() {
-  yield takeLatest(REMOVE_POST_REQUEST, removePost);
-}
-
 function loadPostAPI(postId) {
   return axios.get(`/post/${postId}`);
 }
@@ -650,18 +542,8 @@ function* loadPost(action) {
   }
 }
 
-function* watchLoadPost() {
-  yield takeLatest(LOAD_POST_REQUEST, loadPost);
-}
-
 function reportAPI(data) {
-  return axios.post(
-    `/post/${data.postId}/report`,
-    data,
-    {
-      withCredentials: true,
-    }
-  );
+  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/report`, data);
 }
 
 function* report(action) {
@@ -678,6 +560,86 @@ function* report(action) {
       error: e,
     });
   }
+}
+
+function* watchAddPost() {
+  yield takeLatest(ADD_POST_REQUEST, addPost);
+}
+
+function* watchEditPost() {
+  yield takeLatest(EDIT_POST_REQUEST, editPost);
+}
+
+function* watchLoadMainPosts() {
+  yield takeLatest(LOAD_POSTS_REQUEST, loadMainPosts);
+}
+
+function* watchLoadFavoritePosts() {
+  yield takeLatest(LOAD_FAVORITE_POSTS_REQUEST, loadFavoritePosts);
+}
+
+function* watchLoadCategoryPosts() {
+  yield takeLatest(LOAD_CATEGORY_POSTS_REQUEST, loadCategoryPosts);
+}
+
+function* watchLoadHashtagPosts() {
+  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
+
+function* watchLoadSearchPosts() {
+  yield takeLatest(LOAD_SEARCH_POSTS_REQUEST, loadSearchPosts);
+}
+
+function* watchLoadUserPosts() {
+  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+
+function* watchAddComment() {
+  yield takeLatest(ADD_COMMENT_REQUEST, addComment);
+}
+
+function* watchAddReComment() {
+  yield takeLatest(ADD_RECOMMENT_REQUEST, addReComment);
+}
+
+function* watchEditComment() {
+  yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
+}
+
+function* watchRemoveComment() {
+  yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
+}
+
+function* watchLoadComments() {
+  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
+}
+
+function* watchUploadImages() {
+  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
+
+function* watchEditImages() {
+  yield takeLatest(UPLOAD_EDIT_IMAGES_REQUEST, editImages);
+}
+
+function* watchLikePost() {
+  yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function* watchUnlikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
+}
+
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
+}
+
+function* watchRemovePost() {
+  yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+
+function* watchLoadPost() {
+  yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
 
 function* watchReport() {

@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { LOAD_HASHTAG_POSTS_REQUEST } from '../reducers/post';
 import PostCard from '../components/post/PostCard';
 import LeftContents from "../components/LeftContents";
@@ -16,6 +15,7 @@ const Hashtag = ({tag}) => {
 
     const {mainPosts, hasMorePost} = useSelector(state => state.post);
     const {me} = useSelector(state => state.user);
+
     useEffect(() => {
         const onScroll = () => {
           if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
@@ -59,7 +59,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
       axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
-      type: LOAD_USER_REQUEST,
+      type: LOAD_MY_INFO_REQUEST,
     });
     context.store.dispatch({
       type: LOAD_HASHTAG_POSTS_REQUEST,

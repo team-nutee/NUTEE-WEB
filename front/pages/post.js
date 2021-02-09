@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { LOAD_POST_REQUEST } from '../reducers/post';
 import { TARGET_URL } from "../static";
 import { END } from 'redux-saga';
@@ -20,7 +20,6 @@ const Post = ({ id }) => {
                     <meta property="og:title" content={`${singlePost.User.nickname}님의 게시글`} />
                     <meta property="og:description" content={singlePost.content} />
                     <meta property="og:image" content={singlePost.Images[0] && `${TARGET_URL}/${singlePost.Images[0].src}`} />
-                    {/* 참고 <meta property="og:image" content={singlePost.Images[0] ? singlePost.Images[0].src : 'https://nodebird.com/favicon.ico'} /> */}
                     <meta property="og:url" content={`http://localhost:3000/post/${id}`} />
                 </Head>
                 <div itemScope='title'>{singlePost.title}</div>
@@ -42,7 +41,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
         axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
     });
     context.store.dispatch({
         type: LOAD_POST_REQUEST,

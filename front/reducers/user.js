@@ -32,11 +32,11 @@ export const initialState = {
   editNicknameLoading: false, // 닉네임 변경 시도 중
   editNicknameDone: false,
   editNicknameError: null,
-  
+
   editCategoryLoading: false, // 카테고리 변경 시도 중
   editCategoryDone: false,
   editCategoryError: null,
- 
+
   editMajorLoading: false, // 전공 변경 시도 중
   editMajorDone: false,
   editMajorError: null,
@@ -56,10 +56,10 @@ export const initialState = {
   me: null,
   userInfo: null, // 남의 정보
 
-  checkEmail: false, //이메일 중복가입 확인 여부
   checkId: false, //아이디 중복 가입 확인 여부
-
   checkNickname: false, //닉네임 중복 가입 확인 여부
+  checkDuplicateEmail: false, //이메일 중복가입 확인 여부
+  sendOtp: false, // otp 전송
   checkedOpt: false, //otp 인증 여부
 
   checkedFindEmailLoading: false, //이메일 찾기
@@ -82,6 +82,10 @@ export const initialState = {
   hasMoreFollower: false,
   hasMoreFollowing: false,
 };
+
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
 
 export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
 export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
@@ -109,9 +113,9 @@ export const CHECK_NICKNAME_REQUEST = "CHECK_NICKNAME_REQUEST";
 export const CHECK_NICKNAME_SUCCESS = "CHECK_NICKNAME_SUCCESS";
 export const CHECK_NICKNAME_FAILURE = "CHECK_NICKNAME_FAILURE";
 
-export const CHECK_EMAIL_REQUEST = "CHECK_EMAIL_REQUEST";
-export const CHECK_EMAIL_SUCCESS = "CHECK_EMAIL_SUCCESS";
-export const CHECK_EMAIL_FAILURE = "CHECK_EMAIL_FAILURE";
+export const SEND_OPT_REQUEST = "SEND_OPT_REQUEST";
+export const SEND_OPT_SUCCESS = "SEND_OPT_SUCCESS";
+export const SEND_OPT_FAILURE = "SEND_OPT_FAILURE";
 
 export const CHECK_DUPLICATE_EMAIL_SUCCESS = "CHECK_DUPLICATE_EMAIL_SUCCESS";
 export const CHECK_DUPLICATE_EMAIL_REQUEST = "CHECK_DUPLICATE_EMAIL_REQUEST";
@@ -190,7 +194,7 @@ export const logoutRequestAction = () => ({
 const reducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case LOG_IN_REQUEST: 
+      case LOG_IN_REQUEST:
         draft.isLogInLoading = true;
         draft.isLogInError = null;
         draft.isLogInDone = false;
@@ -227,7 +231,7 @@ const reducer = (state = initialState, action) =>
         draft.isSignUpLoading = false;
         draft.isSignUpDone = true;
         draft.checkedOpt = false;
-        draft.checkEmail = false;
+        draft.checkDuplicateEmail = false;
         draft.checkId = false;
         draft.checkNickname = false;
         break;
@@ -235,49 +239,49 @@ const reducer = (state = initialState, action) =>
         draft.isSignUpLoading = false;
         draft.isSignUpError = action.error;
         break;
-      case CHECK_ID_REQUEST: 
+      case CHECK_ID_REQUEST:
         draft.checkId = false;
         break;
-      case CHECK_ID_SUCCESS: 
+      case CHECK_ID_SUCCESS:
         draft.checkId = true;
         break;
-      case CHECK_ID_FAILURE: 
+      case CHECK_ID_FAILURE:
         draft.checkId = false;
         break;
-      case CHECK_NICKNAME_REQUEST: 
+      case CHECK_NICKNAME_REQUEST:
         draft.checkNickname = false;
         break;
-      case CHECK_NICKNAME_SUCCESS: 
+      case CHECK_NICKNAME_SUCCESS:
         draft.checkNickname = true;
         break;
-      case CHECK_NICKNAME_FAILURE: 
+      case CHECK_NICKNAME_FAILURE:
         draft.checkNickname = false;
         break;
-      case CHECK_OTP_REQUEST: 
+      case CHECK_OTP_REQUEST:
         draft.checkedOpt = false;
         break;
-      case CHECK_OTP_SUCCESS: 
+      case CHECK_OTP_SUCCESS:
         draft.checkedOpt = true;
         break;
-      case CHECK_OTP_FAILURE: 
+      case CHECK_OTP_FAILURE:
         draft.checkedOpt = false;
         break;
-      case CHECK_EMAIL_REQUEST: 
-        draft.checkEmail = false;
+      case SEND_OPT_REQUEST:
+        draft.sendOtp = false;
         break;
-      case CHECK_EMAIL_SUCCESS: 
-        draft.checkEmail = true;
+      case SEND_OPT_SUCCESS:
+        draft.sendOtp = true;
         break;
-      case CHECK_EMAIL_FAILURE: 
-        draft.checkEmail = false;
+      case SEND_OPT_FAILURE:
+        draft.sendOtp = false;
         break;
-      case CHECK_DUPLICATE_EMAIL_REQUEST: 
+      case CHECK_DUPLICATE_EMAIL_REQUEST:
         draft.checkDuplicateEmail = false;
         break;
-      case CHECK_DUPLICATE_EMAIL_SUCCESS: 
+      case CHECK_DUPLICATE_EMAIL_SUCCESS:
         draft.checkDuplicateEmail = true;
         break;
-      case CHECK_DUPLICATE_EMAIL_FAILURE: 
+      case CHECK_DUPLICATE_EMAIL_FAILURE:
         draft.checkDuplicateEmail = false;
         break;
       case LOAD_USER_REQUEST:
@@ -287,16 +291,31 @@ const reducer = (state = initialState, action) =>
         break;
       case LOAD_USER_SUCCESS:
         draft.isLoadUserLoading = false;
-        if (action.me) { //사용자 정보
-          draft.me = action.data;
-          break;
-        }
-        draft.userInfo = action.data; //다른 사용자 정보
+        draft.userInfo = action.data;
         draft.isLoadUserDone = true;
         break;
       case LOAD_USER_FAILURE:
         draft.isLoadUserLoading = false;
         draft.isLoadUserError = action.error;
+        break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.isLoadUserLoading = true;
+        draft.isLoadUserError = null;
+        draft.isLoadUserDone = false;
+        break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.isLoadMyInfoLoading = true;
+        draft.isLoadMyInfoError = null;
+        draft.isLoadMyInfoDone = false;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.isLoadMyInfoLoading = false;
+        draft.me = action.data;
+        draft.isLoadMyInfoDone = true;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.isLoadMyInfoLoading = false;
+        draft.isLoadMyInfoError = action.error;
         break;
       case ADD_POST_TO_ME:
         draft.me.Posts.unshift({ id: action.data });
@@ -317,7 +336,7 @@ const reducer = (state = initialState, action) =>
         draft.editNicknameLoading = false;
         draft.editNicknameError = action.error;
         break;
-        case EDIT_CATEGORY_REQUEST:
+      case EDIT_CATEGORY_REQUEST:
         draft.editCategoryLoading = true;
         draft.editCategoryError = null;
         draft.editCategoryDone = false;
@@ -330,7 +349,7 @@ const reducer = (state = initialState, action) =>
         draft.editCategoryLoading = false;
         draft.editCategoryError = action.error;
         break;
-        case EDIT_MAJOR_REQUEST:
+      case EDIT_MAJOR_REQUEST:
         draft.editMajorLoading = true;
         draft.editMajorError = null;
         draft.editMajorDone = false;
@@ -369,16 +388,16 @@ const reducer = (state = initialState, action) =>
         draft.checkedFindEmailLoading = true;
         draft.checkedFindEmailError = action.error;
         break;
-      case FIND_PASSWORD_REQUEST: 
+      case FIND_PASSWORD_REQUEST:
         draft.checkedFindPwLoading = true;
         draft.checkedFindPwDone = false;
         draft.checkedFindPwError = null;
         break;
-      case FIND_PASSWORD_SUCCESS: 
+      case FIND_PASSWORD_SUCCESS:
         draft.checkedFindPwLoading = false;
         draft.checkedFindPwDone = true;
         break;
-      case FIND_PASSWORD_FAILURE: 
+      case FIND_PASSWORD_FAILURE:
         draft.checkedFindPwLoading = false;
         draft.checkedFindPwError = action.error;
         break;
@@ -388,19 +407,19 @@ const reducer = (state = initialState, action) =>
         break;
       case EDIT_PASSWORD_FAILURE:
         break;
-      case SIGN_UP_RESET: 
+      case SIGN_UP_RESET:
         draft.isSignedUp = false;
         break;
-      case FOLLOW_USER_REQUEST: 
+      case FOLLOW_USER_REQUEST:
         break;
-      case FOLLOW_USER_SUCCESS: 
+      case FOLLOW_USER_SUCCESS:
         draft.me.Followings.unshift({ id: action.data });
         draft.userInfo.Followers.unshift({ id: action.data });
         break;
-      
-      case FOLLOW_USER_FAILURE: 
+
+      case FOLLOW_USER_FAILURE:
         break;
-      case UNFOLLOW_USER_REQUEST: 
+      case UNFOLLOW_USER_REQUEST:
         break;
       case UNFOLLOW_USER_SUCCESS: {
         const index = draft.me.Followings.findIndex(v => v.id === action.data);
@@ -413,33 +432,33 @@ const reducer = (state = initialState, action) =>
         draft.userInfo.Followers.splice(index3, 1);
         break;
       }
-      case UNFOLLOW_USER_FAILURE: 
+      case UNFOLLOW_USER_FAILURE:
         break;
-      case LOAD_FOLLOWERS_REQUEST: 
+      case LOAD_FOLLOWERS_REQUEST:
         draft.followerList = !action.offset ? [] : draft.followerList;
         draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true; // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
         break;
-      case LOAD_FOLLOWERS_SUCCESS: 
+      case LOAD_FOLLOWERS_SUCCESS:
         action.data.forEach(d => {
           draft.followerList.push(d);
         });
         draft.hasMoreFollower = action.data.length === 3;
         break;
-      case LOAD_FOLLOWERS_FAILURE: 
+      case LOAD_FOLLOWERS_FAILURE:
         break;
-      case LOAD_FOLLOWINGS_REQUEST: 
+      case LOAD_FOLLOWINGS_REQUEST:
         draft.followingList = !action.offset ? [] : draft.followingList;
         draft.hasMoreFollowing = action.offset ? draft.hasMoreFollowing : true; // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
         break;
-      case LOAD_FOLLOWINGS_SUCCESS: 
+      case LOAD_FOLLOWINGS_SUCCESS:
         action.data.forEach(d => {
           draft.followingList.push(d);
         });
         draft.hasMoreFollowing = action.data.length === 3;
         break;
-      case LOAD_FOLLOWINGS_FAILURE: 
+      case LOAD_FOLLOWINGS_FAILURE:
         break;
-      case REMOVE_FOLLOWER_REQUEST: 
+      case REMOVE_FOLLOWER_REQUEST:
         break;
       case REMOVE_FOLLOWER_SUCCESS: {
         const index = draft.me.Followers.findIndex(v => v.id === action.data);
@@ -448,11 +467,11 @@ const reducer = (state = initialState, action) =>
         draft.followerList.splice(index2, 1);
         break;
       }
-      case REMOVE_FOLLOWER_FAILURE: 
+      case REMOVE_FOLLOWER_FAILURE:
         break;
-      case UPLOAD_PROFILE_IMAGE_REQUEST: 
+      case UPLOAD_PROFILE_IMAGE_REQUEST:
         break;
-      case UPLOAD_PROFILE_IMAGE_SUCCESS: 
+      case UPLOAD_PROFILE_IMAGE_SUCCESS:
         draft.profileImagePath = action.data;
         if (draft.me.Image) {
           draft.me.Image.src = action.data;
@@ -461,7 +480,7 @@ const reducer = (state = initialState, action) =>
           draft.me.Image.src = action.data;
         }
         break;
-      case UPLOAD_PROFILE_IMAGE_FAILURE: 
+      case UPLOAD_PROFILE_IMAGE_FAILURE:
         break;
       default:
         break;

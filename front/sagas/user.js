@@ -2,33 +2,36 @@ import { all, call, put, takeLatest, fork } from "redux-saga/effects";
 import axios from "axios";
 import { AUTH_URL } from "../static";
 import {
-  FOLLOW_USER_FAILURE,
   FOLLOW_USER_REQUEST,
   FOLLOW_USER_SUCCESS,
-  LOAD_FOLLOWERS_FAILURE,
+  FOLLOW_USER_FAILURE,
   LOAD_FOLLOWERS_REQUEST,
   LOAD_FOLLOWERS_SUCCESS,
-  LOAD_FOLLOWINGS_FAILURE,
+  LOAD_FOLLOWERS_FAILURE,
   LOAD_FOLLOWINGS_REQUEST,
   LOAD_FOLLOWINGS_SUCCESS,
-  LOAD_USER_FAILURE,
+  LOAD_FOLLOWINGS_FAILURE,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
-  LOG_IN_FAILURE,
+  LOAD_USER_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
-  LOG_OUT_FAILURE,
+  LOG_IN_FAILURE,
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
-  REMOVE_FOLLOWER_FAILURE,
+  LOG_OUT_FAILURE,
   REMOVE_FOLLOWER_REQUEST,
   REMOVE_FOLLOWER_SUCCESS,
-  SIGN_UP_FAILURE,
+  REMOVE_FOLLOWER_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
-  UNFOLLOW_USER_FAILURE,
+  SIGN_UP_FAILURE,
   UNFOLLOW_USER_REQUEST,
   UNFOLLOW_USER_SUCCESS,
+  UNFOLLOW_USER_FAILURE,
   CHECK_OTP_REQUEST,
   CHECK_OTP_SUCCESS,
   CHECK_OTP_FAILURE,
@@ -38,40 +41,60 @@ import {
   CHECK_NICKNAME_REQUEST,
   CHECK_NICKNAME_SUCCESS,
   CHECK_NICKNAME_FAILURE,
-  CHECK_EMAIL_REQUEST,
-  CHECK_EMAIL_SUCCESS,
-  CHECK_EMAIL_FAILURE,
+  SEND_OPT_REQUEST,
+  SEND_OPT_SUCCESS,
+  SEND_OPT_FAILURE,
   CHECK_DUPLICATE_EMAIL_REQUEST,
   CHECK_DUPLICATE_EMAIL_SUCCESS,
   CHECK_DUPLICATE_EMAIL_FAILURE,
+  FIND_EMAIL_REQUEST,
   FIND_EMAIL_SUCCESS,
   FIND_EMAIL_FAILURE,
-  FIND_EMAIL_REQUEST,
+  FIND_PASSWORD_REQUEST,
   FIND_PASSWORD_SUCCESS,
   FIND_PASSWORD_FAILURE,
-  FIND_PASSWORD_REQUEST,
   EDIT_PWCK_REQUEST,
   EDIT_PWCK_FAILURE,
   EDIT_PWCK_SUCCESS,
-  EDIT_NICKNAME_FAILURE,
   EDIT_NICKNAME_REQUEST,
   EDIT_NICKNAME_SUCCESS,
+  EDIT_NICKNAME_FAILURE,
   EDIT_MAJOR_REQUEST,
   EDIT_MAJOR_SUCCESS,
   EDIT_MAJOR_FAILURE,
   EDIT_CATEGORY_REQUEST,
   EDIT_CATEGORY_SUCCESS,
   EDIT_CATEGORY_FAILURE,
+  EDIT_PASSWORD_REQUEST,
   EDIT_PASSWORD_SUCCESS,
   EDIT_PASSWORD_FAILURE,
-  EDIT_PASSWORD_REQUEST,
   UPLOAD_PROFILE_IMAGE_REQUEST,
   UPLOAD_PROFILE_IMAGE_SUCCESS,
   UPLOAD_PROFILE_IMAGE_FAILURE,
 } from "../reducers/user";
 
+function loadMyInfoAPI() {
+  return axios.get(`${AUTH_URL}/auth/user/me`);
+}
+
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function loadUserAPI(userId) {
-  return axios.get(userId ? `/user/${userId}` : "/user/");
+  return axios.get(`${AUTH_URL}/auth/user/${userId}`);
 }
 
 function* loadUser(action) {
@@ -112,7 +135,7 @@ function* logIn(action) {
 }
 
 function signUpAPI(signUpData) {
-  return axios.post(`${AUTH_URL}/auth/signup`, signUpData);
+  return axios.post(`${AUTH_URL}/auth/user`, signUpData);
 }
 
 function* signUp(action) {
@@ -131,7 +154,7 @@ function* signUp(action) {
 }
 
 function checkOtpAPI(otp) { //otp 확인
-  return axios.post("/user/otpcheck", otp);
+  return axios.post(`${AUTH_URL}/auth/check/otp`, otp);
 }
 
 function* checkOtp(action) {
@@ -140,8 +163,7 @@ function* checkOtp(action) {
     yield put({
       type: CHECK_OTP_SUCCESS,
     });
-  } catch (err) {
-    // otp 인증 실패
+  } catch (err) { // otp 인증 실패
     alert("otp 인증에 실패하셨습니다.");
     yield put({
       type: CHECK_OTP_FAILURE,
@@ -150,26 +172,26 @@ function* checkOtp(action) {
   }
 }
 
-function checkEmailAPI(schoolEmail) { //이메일 인증 후 otp를 메일로 전송
-  return axios.post(`${AUTH_URL}/auth/sendotp`, schoolEmail);
+function sendOtpAPI(schoolEmail) { //이메일 인증 후 otp를 메일로 전송
+  return axios.post(`${AUTH_URL}/auth/otp`, schoolEmail);
 }
 
-function* checkEmail(action) {
+function* sendOtp(action) {
   try {
-    yield call(checkEmailAPI, action.data);
+    yield call(sendOtpAPI, action.data);
     yield put({
-      type: CHECK_EMAIL_SUCCESS,
+      type: SEND_OPT_SUCCESS,
     });
   } catch (err) { // 이메일 인증 실패
     yield put({
-      type: CHECK_EMAIL_FAILURE,
+      type: SEND_OPT_FAILURE,
       error: err.response.data,
     });
   }
 }
 
 function checkDuplicateEmailAPI(schoolEmail) {
-  return axios.post(`${AUTH_URL}/auth/checkemail`, schoolEmail);
+  return axios.post(`${AUTH_URL}/auth/check/email`, schoolEmail);
 }
 
 function* checkDuplicateEmail(action) {
@@ -188,7 +210,7 @@ function* checkDuplicateEmail(action) {
 }
 
 function checkIdAPI(id) {
-  return axios.post(`${AUTH_URL}/auth/checkid`, id);
+  return axios.post(`${AUTH_URL}/auth/check/user-id`, id);
 }
 
 function* checkId(action) {
@@ -206,7 +228,7 @@ function* checkId(action) {
 }
 
 function checkNicknameAPI(nickname) {
-  return axios.post(`${AUTH_URL}/auth/checknickname`, nickname);
+  return axios.post(`${AUTH_URL}/auth/check/nickname`, nickname);
 }
 
 function* checkNickname(action) {
@@ -243,29 +265,8 @@ function* checkPassword(action) {
   }
 }
 
-function editPasswordAPI(newpassword) {
-  return axios.post("/user/passwordchange", newpassword);
-}
-
-function* editPassword(action) {
-  try {
-    const result = yield call(editPasswordAPI, action.data);
-    yield put({
-      type: EDIT_PASSWORD_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) { // 비밀번호 인증 실패
-    console.error(err);
-    alert("비밀번호 변경에 실패하셨습니다.");
-    yield put({
-      type: EDIT_PASSWORD_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
 function uploadProfileImgAPI(formData) {
-  return axios.post(`/user/profile`, formData);
+  return axios.post(`${AUTH_URL/auth/profile}`, formData);
 }
 
 function* uploadProfileImg(action) {
@@ -443,7 +444,7 @@ function* removeFollower(action) {
 }
 
 function editNicknameAPI(nickname) {
-  return axios.patch("/user/nickname", nickname);
+  return axios.patch(`${AUTH_URL}/auth/user/nickname`, nickname);
 }
 
 function* editNickname(action) {
@@ -462,8 +463,29 @@ function* editNickname(action) {
   }
 }
 
+function editPasswordAPI(newpassword) {
+  return axios.post(`${AUTH_URL}/auth/user/password`, newpassword);
+}
+
+function* editPassword(action) {
+  try {
+    const result = yield call(editPasswordAPI, action.data);
+    yield put({
+      type: EDIT_PASSWORD_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) { // 비밀번호 인증 실패
+    console.error(err);
+    alert("비밀번호 변경에 실패하셨습니다.");
+    yield put({
+      type: EDIT_PASSWORD_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function editCategoryAPI(category) {
-  return axios.patch("/user/nickname", category);
+  return axios.patch(`${AUTH_URL}/auth/user/interests`, category);
 }
 
 function* editCategory(action) {
@@ -483,7 +505,7 @@ function* editCategory(action) {
 }
 
 function editMajorAPI(major) {
-  return axios.patch("/user/nickname", major);
+  return axios.patch(`${AUTH_URL}/auth/user/majors`, major);
 }
 
 function* editMajor(action) {
@@ -506,6 +528,10 @@ function* watchLoadUser() {
   yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchLogIn() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
 }
@@ -518,8 +544,8 @@ function* watchOtpCheck() {
   yield takeLatest(CHECK_OTP_REQUEST, checkOtp);
 }
 
-function* watchCheckEmail() {
-  yield takeLatest(CHECK_EMAIL_REQUEST, checkEmail);
+function* watchSendOtp() {
+  yield takeLatest(SEND_OPT_REQUEST, sendOtp);
 }
 
 function* watchCheckDuplicateEmail() {
@@ -595,6 +621,7 @@ export default function* userSaga() {
     fork(watchLogIn),
     fork(watchLogOut),
     fork(watchLoadUser),
+    fork(watchLoadMyInfo),
     fork(watchSignUp),
     fork(watchFollow),
     fork(watchUnfollow),
@@ -607,7 +634,7 @@ export default function* userSaga() {
     fork(watchcheckId),
     fork(watchCheckNickname),
     fork(watchOtpCheck),
-    fork(watchCheckEmail),
+    fork(watchSendOtp),
     fork(watchCheckDuplicateEmail),
     fork(watchFindEmail),
     fork(watchFindPassword),
