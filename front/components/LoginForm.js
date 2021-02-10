@@ -99,23 +99,17 @@ const LoginForm = () => {
                   type="primary"
                   htmlType="submit"
                   loading={isLogInLoading}
-                >
-                  로그인
-                </Button>
+                >로그인</Button>
               </div>
             </Row>
             <br />
             <Row gutter={8} style={idpwWrapper}>
               <div>
-                <a style={leftWrapper} onClick={setIdVisible}>
-                  아이디 찾기
-                </a>
+                <a style={leftWrapper} onClick={setIdVisible}>아이디 찾기</a>
               </div>
               <div>
                 <Link href="/signup">
-                  <a style={signupButtonWrapper}>
-                    회원가입
-                  </a>
+                  <a style={signupButtonWrapper}>회원가입</a>
                 </Link>
               </div>
               <div>

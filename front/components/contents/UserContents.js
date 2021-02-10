@@ -7,7 +7,7 @@ import PostCard from "../post/PostCard";
 
 const { TabPane } = Tabs;
 
-const UserContents = ({ me, mainPosts, hasMorePost }) => {
+const UserContents = ({ me, posts, hasMorePost }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost) {
-          const lastId = mainPosts[mainPosts.length - 1]?.id;
+          const lastId = posts[posts.length - 1]?.id;
           dispatch({
             type: LOAD_MAIN_POSTS_REQUEST,
             lastId,
@@ -29,7 +29,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [hasMorePost, mainPosts.length]);
+  }, [hasMorePost, posts.length]);
 
   const tabsWrapper = useMemo(() => ({ color: "#005000", marginTop: "10px", fontWeight: "bold", lineHeight: "15px", paddingBotton: "10px", }), []);
   const tabPaneWrapper = useMemo(() => ({ color: "black", fontWeight: "normal" }), []);
@@ -43,7 +43,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
         <TabPane tab={<span>내가 쓴 글<Badge count={250} style={badge1Wrapper} /></span>} key="1" style={tabPaneWrapper}>
           {me && <PostForm />}
           내가 쓴 글 리스트
-          {mainPosts.map(c => (<PostCard key={c.id} post={c} />))}
+          {posts.map(c => (<PostCard key={c.id} post={c} />))}
         </TabPane>
         <TabPane tab={<span>내가 쓴 댓글<Badge count={50} style={badge2Wrapper} /></span>} key="2" style={tabPaneWrapper}>
           {me && <PostForm />}

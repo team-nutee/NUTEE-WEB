@@ -8,7 +8,7 @@ import {
   LOAD_FAVORITE_POSTS_REQUEST, 
   LOAD_CATEGORY_POSTS_REQUEST,
 } from "../reducers/post";
-import { LOAD_USER_REQUEST, LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import AppLayout from "../components/AppLayout";
 import LeftContents from '../components/contents/LeftContents';
 import wrapper from "../store/configureStore";
@@ -49,9 +49,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     if (context.req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
-    context.store.dispatch({
-      type: LOAD_USER_REQUEST,
-    });
     context.store.dispatch({
       type: LOAD_POSTS_REQUEST,
     });

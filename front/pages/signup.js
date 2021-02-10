@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
-import { Form, Input, Checkbox, Button, Row, Col, Modal } from 'antd';
 import axios from 'axios';
-import { END } from 'redux-saga';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import wrapper from '../store/configureStore';
+import Router from 'next/router';
 import Select from 'react-select';
-import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined, BookOutlined } from '@ant-design/icons';
+import { END } from 'redux-saga';
+import { Form, Input, Checkbox, Button, Row, Col, Modal } from 'antd';
+import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined } from '@ant-design/icons';
 import {
     LOAD_MY_INFO_REQUEST,
     CHECK_ID_REQUEST,
@@ -14,13 +15,11 @@ import {
     SEND_OPT_REQUEST,
     CHECK_DUPLICATE_EMAIL_REQUEST,
     CHECK_OTP_REQUEST,
-    SIGN_UP_REQUEST,
-    SIGN_UP_RESET
+    SIGN_UP_REQUEST
 } from "../reducers/user";
 import useInput from '../hooks/useInput';
 import Terms from '../components/Terms';
-import wrapper from '../store/configureStore';
-import AppLayout from '../components/AppLayout';
+import NavigationBar from '../components/NavigationBar';
 import { interestsData, majorsData } from '../components/dummy'; //dummy 
 
 const TextInput = ({ value }) => { return (<div>{value}</div>) };
@@ -50,24 +49,21 @@ const Signup = () => {
     const termsCancel = () => setTermsVisible(false);
 
     useEffect(() => {
-        if (me && me.id) 
+        if (me && me.id)
             Router.replace('/');
     }, [me && me.id]);
 
     useEffect(() => {
         if (isSignUpDone) {
             alert('회원가입 성공');
-            dispatch({
-                type: SIGN_UP_RESET
-            });
             Router.replace('/');
         }
     }, [isSignUpDone]);
 
     useEffect(() => {
         if (isSignUpError)
-          alert(isSignUpError);
-      }, [isSignUpError]);
+            alert(isSignUpError);
+    }, [isSignUpError]);
 
     const onSubmit = useCallback(() => {
         if (!id)
@@ -183,20 +179,25 @@ const Signup = () => {
         setTerm(e.target.checked);
     }, [term]);
 
-    const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '85px 0 auto 0' }), []);
+    const wrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', }), []);
+    const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '80px 0 auto 0' }), []);
     const h1Wrapper = useMemo(() => ({ textAlign: "center" }), []);
     const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
+
     const failureWrapper = useMemo(() => ({ color: 'red' }), []);
     const successWrapper = useMemo(() => ({ color: 'green' }), []);
-    const buttonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white' }), []);
+
     const majorButtonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white', height: '39px' }), []);
-    const signupWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+
     const checkboxWrapper = useMemo(() => ({ margin: '0px 5px 5px 0px' }), []);
     const termsWrapper = useMemo(() => ({ color: '#005000' }), []);
     const selectStyles = useMemo(() => ({ menu: (css) => ({ ...css, zIndex: 999 }) }), []);
+    const buttonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white' }), []);
+    const signupButtonWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
 
     return (
-        <AppLayout>
+        <div style={wrapper}>
+            <NavigationBar />
             <div style={paperWrapper}>
                 <h1 style={h1Wrapper}>회원가입</h1>
                 <h3 style={h1Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
@@ -291,7 +292,6 @@ const Signup = () => {
                         <Col span={18}>
                             <Select
                                 isMulti
-                                autoFocus
                                 placeholder="학부 또는 전공을 선택해주세요."
                                 name="user-majors"
                                 menuPlacement="top"
@@ -311,7 +311,6 @@ const Signup = () => {
                     <Row>
                         <Select
                             isMulti
-                            autoFocus
                             placeholder="선호하는 카테고리를 선택해주세요."
                             styles={selectStyles}
                             name="user-interests"
@@ -328,7 +327,7 @@ const Signup = () => {
                     <br />
                     <br />
                     {/* 회원가입 버튼 */}
-                    <div style={signupWrapper}>
+                    <div style={signupButtonWrapper}>
                         <Button style={buttonWrapper} type="primary" htmlType="submit" loading={isSignUpLoading}>회원가입</Button>
                     </div>
                     <br />
@@ -344,7 +343,7 @@ const Signup = () => {
                 width={470}
             ><Terms setTermsVisible={setTermsVisible} />
             </Modal>
-        </AppLayout>
+        </div>
     )
 };
 

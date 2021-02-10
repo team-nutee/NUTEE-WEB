@@ -11,7 +11,7 @@ import PostCard from "../post/PostCard";
 
 const { TabPane } = Tabs;
 
-const MainContents = ({ target, mainPosts, hasMorePost, favoritPosts, categoryPosts }) => {
+const MainContents = ({ target, posts, hasMorePost, favoritPosts, categoryPosts }) => {
   const { me } = useSelector(state => state.user);
 
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritPosts, categoryPo
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost) {
-          const lastId = mainPosts[mainPosts.length - 1]?.id;
+          const lastId = posts[posts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
             lastId,
@@ -43,7 +43,7 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritPosts, categoryPo
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [hasMorePost, mainPosts.length]);
+  }, [hasMorePost, posts.length]);
 
   const tabsWrapper = useMemo(() => ({ color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '15px', paddingBotton: '10px' }), []);
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
@@ -54,23 +54,23 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritPosts, categoryPo
         <TabPane tab="전체 게시글" key="1" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
          전체게시글
-          {mainPosts.map(c => (
+       {/*  {posts.map(c => (
             <PostCard key={c.id} post={c} />
-          ))}
+          ))}  */}
         </TabPane>
         <TabPane tab="전공" key="2" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
         전공 게시글
-        {categoryPosts.map(c => (
+            {categoryPosts.map(c => (
             <PostCard key={c.id} post={c} />
           ))}
         </TabPane>
         <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
           즐겨찾기 게시글
-          {favoritPosts.map(c => (
+       {/*    {favoritPosts.map(c => (
             <PostCard key={c.id} post={c} />
-          ))}
+          ))} */}
         </TabPane>
       </Tabs>
     </>

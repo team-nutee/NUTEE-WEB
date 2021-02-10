@@ -1,7 +1,7 @@
 import produce from "../util/produce";
 
 export const initialState = {
-  posts: [], // 화면에 보일 포스트들
+  posts: [], // 전체 포스트들
   categoryPosts: [], // 화면에 보일 카테고리 포스트들
   majorPosts: [], // 화면에 보일 전공 포스트들
   favoritePosts: [],
