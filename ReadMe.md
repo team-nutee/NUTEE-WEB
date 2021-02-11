@@ -11,11 +11,11 @@ NUTEE
 ex) COOKIE_SECRET=cookiesecret 
 !!) .env 파일은 절대로 깃에 공유되면 안 된다.
 
-6. cmd or terminal로 npm 실행하여 의존성 설치
+3. cmd or terminal로 npm 실행하여 의존성 설치
 
-7. npm run dev 실행
+4. npm run dev 실행
 
-8. 웹브라우저를 실행하고 localhost:80 으로 접속
+5. 웹브라우저를 실행하고 localhost:80 으로 접속
 </pre> 
 
 깃 브랜치가 변경 되었습니다. (develop)
