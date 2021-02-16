@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import Link from "next/link";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
-import { LOG_OUT_REQUEST } from "../reducers/user";
+import { logoutRequestAction } from '../reducers/user';
 import useInput from '../hooks/useInput';
 
 const NavigationBar = ({ me }) => {
@@ -18,24 +18,21 @@ const NavigationBar = ({ me }) => {
     }
   }, [searchInput]);
 
-  const onLogout = useCallback(() => {
-    dispatch({
-      type: LOG_OUT_REQUEST,
-    });
+  const onLogOut = useCallback(() => {
+    dispatch(logoutRequestAction());
   }, []);
 
-  useEffect(
-    function onSearchWidth() {
-      if ((window.innerWidth || document.body.clientWidth) > 700) {
-        setShowSearch(true);
-      } else {
-        setShowSearch(false);
-      }
-      window.addEventListener("resize", onSearchWidth);
-      return () => {
-        window.removeEventListener("resize", onSearchWidth);
-      };
-    });
+  useEffect(function onSearchWidth() {
+    if ((window.innerWidth || document.body.clientWidth) > 700) {
+      setShowSearch(true);
+    } else {
+      setShowSearch(false);
+    } 
+    window.addEventListener("resize", onSearchWidth);
+    return () => {
+      window.removeEventListener("resize", onSearchWidth);
+    };
+  });
 
   const wrapper = useMemo(() => ({ background: '#f0faf5', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '5', width: '100%', }), []);
   /* 로고 */
@@ -101,12 +98,13 @@ const NavigationBar = ({ me }) => {
             <Button
               style={logoutButtonWrapper}
               shape={"round"}
-              onClick={onLogout}
+              onClick={onLogOut}
             ><b>로그아웃</b>
             </Button>
           </div>
         </>
-        : <></>}
+        : <></>
+      }
     </Row>
   );
 };

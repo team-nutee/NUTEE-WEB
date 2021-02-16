@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col } from 'antd';
 import { MailOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { FIND_EMAIL_REQUEST } from "../../reducers/user";
@@ -28,7 +28,7 @@ const FindId = ({ setIdVisible }) => {
     useEffect(() => {
         if (findEmailCheck) {
             setIdVisible(false);
-            message.success('작성하신 이메일로 아이디를 전송하였습니다.');
+            alert('작성하신 이메일로 아이디를 전송하였습니다.');
         }
     }, [findEmailCheck]);
 

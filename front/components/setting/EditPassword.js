@@ -25,7 +25,7 @@ const PwEditModal = () => {
       e.preventDefault();
       await dispatch({
         type: EDIT_PASSWORD_REQUEST,
-        data: editPassword,
+        data: { password: editPassword }
       });
     }, [editPassword]);
 

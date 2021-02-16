@@ -76,14 +76,13 @@ const MyProfile = ({ target }) => {
                 //프로필 이미지
                 target.Image ? (
                   <ProfileAvatar
-                    nickname={target.nickname}
-                    imagePath={target.Image.src}
+                    imagePath={target.profileUrl}
                   />
                 ) : (
                   <ProfileAvatar nickname={target.nickname} />
                 )
               }
-              title={"nickname_" + target.nickname}
+              title={target.nickname ? target.nickname : 'undefined'} //<></>이걸로 바꿀 것
               description={
                 //프로필 설정 or 팔로우 언팔로우
                 !target || me.id === target.id ? (
@@ -118,9 +117,8 @@ const MyProfile = ({ target }) => {
             />
           </Card>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : <></>
+      }
     </>
   );
 };
