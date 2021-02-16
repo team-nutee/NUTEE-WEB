@@ -1,65 +1,46 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import styled from "styled-components";
+import { Divider } from 'antd';
 
-const ShowBox = styled.pre`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    word-wrap:break-word; 
-    line-height: 1.2em;
-    height: 12em; 
-    whiteSpace: 'pre-wrap',
-    font-family:"Do Hyeon", sans-serif;
-`;
-
-const PostCardContent = ({ postData, commentN, likers, retweet }) => {
+const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => {
     const stringLength = (function (s, b, i, c) {
         for (b = i = 0; c = s.charCodeAt(i++); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
         return b
-    })(postData);
+    })(postData, postTitle);
 
     const [showMore, setShowMore] = useState(false);
+    const cssChange = () => { setShowMore(true); };
 
-    const cssChange = () => {
-        setShowMore(true);
-    };
-
+    const pageWrapper = useMemo(() => ({ margin: '0 30px 15px 0', background: 'red' }), []);
     const postDataPreWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: "NanumBarunGothic", fontSize: '15px' }), []);
     const retweetWrapper = useMemo(() => ({ position: 'absolute', right: '-5px', bottom: '-25px', fontSize: '12px' }), []);
     const h5Wrapper = useMemo(() => ({ position: 'absolute', right: '25px', bottom: '60px', fontSize: '12px' }), []);
     const preWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
 
     return (
-        <div>
+        <div style={pageWrapper}>
+            <Divider orientation="left">{postTitle}</Divider>
             {(postData.split('\n').length <= 7 && stringLength < 1000)
                 ?
-                <pre style={postDataPreWrapper}>
-                    {postData.split(/(#[^\s]+)/g).map((v) => {
-                        if (v.match(/#[^\s]+/)) {
-                            return (
-                                <Link
-                                    href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
-                                    as={`/hashtag/${v.slice(1)}`}
-                                    key={v}
-                                >
-                                    <a>{v}</a>
-                                </Link>
-                            );
+                <div style={postDataPreWrapper}>
+                    {postData.split(/(#[^\s]+)/g).map((v, i) => {
+                        if (v.match(/(#[^\s#]+)/)) {
+                            return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={i}><a>{v}</a></Link>;
                         }
                         return v;
                     })}
+                    <br />
                     {retweet && retweet === 1
                         ? <h5 style={retweetWrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
                         : <h5 style={h5Wrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
                     }
-                </pre>
+                </div>
                 :
                 <div>
                     {!showMore
                         ?
-                        <ShowBox>
+                        <>
                             {postData.split(/(#[^\s]+)/g).map((v) => {
                                 if (v.match(/#[^\s]+/)) {
                                     return (
@@ -67,17 +48,16 @@ const PostCardContent = ({ postData, commentN, likers, retweet }) => {
                                             href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
                                             as={`/hashtag/${v.slice(1)}`}
                                             key={v}
-                                        >
-                                            <a>{v}</a>
+                                        ><a>{v}</a>
                                         </Link>
                                     );
                                 }
                                 return v;
                             })}
                             <h5 style={h5Wrapper}>댓글 {commentN}개  좋아요 {likers}개</h5>
-                        </ShowBox>
+                        </>
                         :
-                        <pre style={ preWrapper }>
+                        <pre style={preWrapper}>
                             {postData.split(/(#[^\s]+)/g).map((v) => {
                                 if (v.match(/#[^\s]+/)) {
                                     return (
@@ -85,8 +65,7 @@ const PostCardContent = ({ postData, commentN, likers, retweet }) => {
                                             href={{ pathname: '/hashtag', query: { tag: v.slice(1) } }}
                                             as={`/hashtag/${v.slice(1)}`}
                                             key={v}
-                                        >
-                                            <a>{v}</a>
+                                        ><a>{v}</a>
                                         </Link>
                                     );
                                 }
@@ -107,7 +86,11 @@ const PostCardContent = ({ postData, commentN, likers, retweet }) => {
 };
 
 PostCardContent.propTypes = {
+    postTitle: PropTypes.string.isRequired,
     postData: PropTypes.string.isRequired,
+    commentN: PropTypes.number.isRequired,
+    likers: PropTypes.number,
+    retweet: PropTypes.array
 };
 
 export default PostCardContent;

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, List, Badge, Modal, Tag, Dropdown, Menu } from "antd";
-import { RetweetOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { AlertOutlined, RetweetOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import moment from 'moment';
 import {
@@ -34,7 +34,7 @@ const PostCard = ({ post }) => {
   const [editVisible, setEditVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
 
-  const [offset, setOffset] = useState(0);
+  const [lastId, setlastId] = useState(0);
   const { mainPosts } = useSelector(state => state.post);
 
   const liked = me && post.likers && post.likers.find(v => v.id === me.id);
@@ -54,10 +54,10 @@ const PostCard = ({ post }) => {
         type: LOAD_COMMENTS_REQUEST,
         data: {
           postId: post.id,
-          offset: offset,
+          lastId: lastId,
         },
       });
-      setOffset(offset + 5);
+      setlastId(lastId + 5);
     }
   }, []);
 
@@ -66,25 +66,20 @@ const PostCard = ({ post }) => {
       type: LOAD_COMMENTS_REQUEST,
       data: {
         postId: post.id,
-        offset: offset,
+        lastId: lastId,
       },
     });
-    setOffset(offset + 5);
+    setlastId(lastId + 5);
   };
 
-  const loadMore =
-    mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments &&
-      mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length !==
-      0 &&
-      mainPosts[mainPosts.findIndex(v => v.id === post.id)].Comments.length %
-      5 ===
-      0 ? (
-        <div style={loadMoreDivWrapper}>
-          <Tag color="cyan" onClick={onLoadMoreComments}>
-            더보기
-        </Tag>
-        </div>
-      ) : null;
+  const loadMore = (
+    mainPosts[mainPosts.findIndex(v => v.id === post.id)].comments &&
+      mainPosts[mainPosts.findIndex(v => v.id === post.id)].comments.length !== 0 &&
+      mainPosts[mainPosts.findIndex(v => v.id === post.id)].comments.length % 5 === 0 ?
+      <div style={loadMoreDivWrapper}>
+        <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
+      </div> : null
+  );
 
   const onSubmitComment = useCallback(e => {
     e.preventDefault();
@@ -176,120 +171,100 @@ const PostCard = ({ post }) => {
   const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
-  const modalWrapper = useMemo(() => ({ padding: '0px', zIndex: 1 }), []);
-  const heartWrapper = useMemo(() => ({ color: "#eb2f96" }), []);
+  const modalWrapper = useMemo(() => ({ padding: '50px', zIndex: 1 }), []);
+  const heartWrapper = useMemo(() => ({ color: "#eb2f96", fontSize: '20px' }), []);
   const badge1Wrapper = useMemo(() => ({ background: '#f50', size: 'small', zIndex: '0', }), []);
   const badge2Wrapper = useMemo(() => ({ background: '#87d068', size: 'small', zIndex: '0', }), []);
   const badge3Wrapper = useMemo(() => ({ background: '#005000', size: 'small', zIndex: '0', }), []);
   const listWrapper = useMemo(() => ({ background: '#f0faf5', paddingBottom: '0px', height: 'auto' }), []);
   const commentWrapper = useMemo(() => ({ background: '#f0faf5', border: '2px solid #fff', height: 'auto', justiceContent: 'center', }), []);
   const commentFormWrapper = useMemo(() => ({ background: '#f0faf5', height: 'auto', margin: '10px 15px', }), []);
-  const momentWrapper = useMemo(() => ({ float: 'right' }), []);
+  const momentWrapper = useMemo(() => ({ fontSize: '14px' }), []);
+  const nicknameWrapper = useMemo(() => ({ fontSize: '18px', margin: '0' }), []);
+  const iconWrapper = useMemo(() => ({ fontSize: '20px' }), []);
+  const tagWrapper = useMemo(() => ({ marginBottom: '15px' }), []);
+  const postWrapperTest = useMemo(() => ({ margin: '0', padding: '0' }), []);
+  const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
 
   return (
     <div style={postCardWrapper}>
       {post.blocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card>
         : (
           <Card
-            cover={post.images && post.images[0] && <PostImages images={post.images} />}
+            cover={post.images && post.images[0] ? <PostImages images={post.images} /> : <></>}
             actions={[
-              <Badge
-                count={5} onClick={onRetweet} size="small" style={badge1Wrapper}
-              ><RetweetOutlined />
+              <Badge count={0} onClick={onRetweet} size="small" style={badge1Wrapper}>
+                <RetweetOutlined style={iconWrapper} />
               </Badge>,
-              <Badge
-                count={post.likers.length} onClick={onToggleLike} size="small" style={badge2Wrapper}
-              >{liked ? <HeartTwoTone style={heartWrapper} /> : <HeartOutlined />}
+              <Badge count={post.likers ? post.likers.length : 0} onClick={onToggleLike} size="small" style={badge2Wrapper}>
+                {liked ? <HeartTwoTone style={heartWrapper} /> : <HeartOutlined style={iconWrapper} />}
               </Badge>,
-              <Badge
-                count={post.commentNum} onClick={onToggleComment} size="small" style={badge3Wrapper}
-              ><MessageOutlined />
+              <Badge count={post.commentNum || 0} onClick={onToggleComment} size="small" style={badge3Wrapper}>
+                <MessageOutlined style={iconWrapper} />
               </Badge>,
-              <>
-                {me && post.user.id === me.id ?
-                  <Dropdown overlay={userMenu} placement="topCenter">
-                    <EllipsisOutlined />
-                  </Dropdown>
-                  :
-                  <Dropdown overlay={otherUserMenu} placement="topCenter">
-                    <EllipsisOutlined />
-                  </Dropdown>
-                }
-              </>,
+              <>{me && post.user.id === me.id ?
+                <Dropdown overlay={userMenu} placement="topCenter">
+                  <EllipsisOutlined style={iconWrapper} />
+                </Dropdown>
+                :
+                <Dropdown overlay={otherUserMenu} placement="topCenter">
+                  <EllipsisOutlined style={iconWrapper} />
+                </Dropdown>
+              }</>,
             ]}
-            title={post.retweet.id ?
+            title={post.retweet ?
               <>
                 {post.user.image ? <ProfileAvatar imagePath={post.user.image} /> : <ProfileAvatar />}
                 <a style={aWrapper}>{post.user.nickname}</a>님이 글을 공유하였습니다.
               </> : <></>}
           >
-            {post.retweet.id && post.retweet ?
-              <Card
-                style={retweetCardWrapper}
-                cover={post.retweet.images[0] && <PostImages images={post.retweet.images} />}
-              >
-                <div style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
+            {post.retweet ?
+              <Card style={retweetCardWrapper} cover={post.retweet.images[0] && <PostImages images={post.retweet.images} />}>
                 <Card.Meta
                   avatar={
                     <Link href={`/user/${post.retweet.user.id}`} prefetch={false}>
-                      <a>
-                        {post.retweet.user.image ?
-                          <ProfileAvatar
-                            nickname={post.retweet.user.nickname}
-                            imagePath={post.retweet.user.image}
-                          />
-                          : <ProfileAvatar nickname={post.retweet.user.nickname} />}
-                      </a>
+                      <a>{post.retweet.user.image ? <ProfileAvatar imagePath={post.retweet.user.image} /> : <ProfileAvatar />}</a>
                     </Link>
                   }
-                  title={post.retweet.user.nickname}
+                  title={<><p style={nicknameWrapper}>{post.retweet.user.nickname}</p><p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p></>}
                   description={
                     <>
                       <PostCardContent
                         likers={post.likers ? post.likers.length : 0}
-                        commentN={commentNum} 
-                        postTitle={post.retweet.title} 
+                        commentN={commentNum}
+                        postTitle={post.retweet.title}
                         postData={post.retweet.content}
                         retweet={1}
                       />
                       <h5 style={retweetCardMetaWrapper}>
-                        댓글{" "}{post.retweet.commentNum}개 
-                      좋아요{" "}{post.retweet.likers ? post.retweet.likers.length : 0}개 
+                        댓글{" "}{post.retweet.commentNum}개 좋아요{" "}{post.retweet.likers ? post.retweet.likers.length : 0}개
                       </h5>
                     </>
                   }
                 />
               </Card>
               :
-              <>
-                <div style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
+              <div style={postWrapperTest}>
+                <div style={tagWrapper} ><Tag color="purple">{post.category}</Tag></div>
                 <Card.Meta
                   avatar={
                     post.user.id ?
                       <Link href={`/user/${post.user.id}`} prefetch={false}>
-                        <a>
-                          {post.user.image ?
-                            <ProfileAvatar
-                              nickname={post.user.nickname}
-                              imagePath={post.user.image}
-                            />
-                            : <ProfileAvatar nickname={post.user.nickname} />}
-                        </a>
-                      </Link>
-                      : <></>
+                        <a>{post.user.image ? <ProfileAvatar imagePath={post.user.image} /> : <ProfileAvatar />}</a>
+                      </Link> : <></>
                   }
-                  title={post.user.nickname}
+                  title={<><p style={nicknameWrapper}>{post.user.nickname}</p><p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p></>}
                   description={
                     <PostCardContent
                       likers={post.likers ? post.likers.length : 0}
-                      commentN={commentNum}
+                      commentN={post.commentNum}
                       postTitle={post.title}
                       postData={post.content}
                     />
                   }
                   loading={true}
                 />
-              </>}
+              </div>}
           </Card>
         )}
       {commentFormOpened && (
@@ -333,14 +308,13 @@ const PostCard = ({ post }) => {
         />
       </Modal>
       <Modal
-        title="게시물 신고"
+        title={<span><AlertOutlined style={prefixWrapper} />게시글 신고</span>}
         visible={reportVisible}
         onOk={reportOk}
         onCancel={reportCancel}
-        bodyStyle={modalWrapper}
         footer={null}
       >
-        <Report setReportVisible={setReportVisible} />
+        <Report setReportVisible={setReportVisible} postId={post.id} />
       </Modal>
     </div>
   );

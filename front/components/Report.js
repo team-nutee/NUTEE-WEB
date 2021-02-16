@@ -1,46 +1,49 @@
-import React, { useCallback } from 'react';
-import { Button, Input, Row, Col } from "antd";
-import { MessageOutlined } from "@ant-design/icons";
+import React, { useCallback, useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { Button, Input, Row } from "antd";
 
-const Report = ( setReportVisible ) => {
-    const [report, setReport] = useState('');
+const { TextArea } = Input;
 
-    const onChangeReport = useCallback(e => {
-        setReport(e.target.value);
-      }, []);
+const Report = ( postId, setReportVisible ) => {
+  const [report, setReport] = useState('');
 
-      const onSubmitReport = useCallback(() => {
-        dispatch({
-          type: REPORT_REQUEST,
-          data: {
-            postId: post.id,
-            content: report,
-          },
-        });
-        setReportVisible(false);
-      });
+  const onChangeReport = useCallback(e => {
+    setReport(e.target.value);
+  }, []);
 
-    const blockWrapper = useMemo(() => ({ width: '80%', margin: '0 auto' }), []);
-    const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
-    return(
-        <div style={blockWrapper}>
-          <br />
-          <Row gutter={8}>
-            <Col span={18}>
-              <Input
-                prefix={<MessageOutlined style={prefixWrapper} />}
-                placeholder="신고사유"
-                value={report}
-                required
-                onChange={onChangeReport}
-              />
-            </Col>
-            <Col span={6}>
-              <Button onClick={onSubmitReport}>신고</Button>
-            </Col>
-          </Row>
-        </div>
-    );
+  const onSubmitReport = useCallback(() => {
+    dispatch({
+      type: REPORT_REQUEST,
+      data: {
+        postId: postId,
+        content: report,
+      },
+    });
+    setReportVisible(false);
+    setReport('');
+  });
+  const blockWrapper = useMemo(() => ({ display: "flex", justifyContent: "center" }), []);
+  const buttonWrapper = useMemo(() => ({ background: "#13c276", color: "#fff", width: '80px', marginLeft: '10px' }), []);
+  const textWrapper = useMemo(() => ({ width: '300px' }), []);
+
+  return (
+    <Row gutter={8} style={blockWrapper}>
+      <TextArea
+        placeholder="신고 사유를 적어주세요."
+        style={textWrapper}
+        onChange={onChangeReport}
+        value={report}
+        autoSize={{ minRows: 1, maxRows: 3 }}
+        required
+      /> 
+      <Button style={buttonWrapper} onClick={onSubmitReport}>신고</Button>
+    </Row>
+  );
+};
+
+Report.propTypes = {
+  postId : PropTypes.number.isRequired, 
+  setReportVisible : PropTypes.func.isRequired,
 };
 
 export default Report;
