@@ -23,6 +23,9 @@ import {
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
   LOG_OUT_FAILURE,
+  REFRESH_REQUEST,
+  REFRESH_SUCCESS,
+  REFRESH_FAILURE,
   REMOVE_FOLLOWER_REQUEST,
   REMOVE_FOLLOWER_SUCCESS,
   REMOVE_FOLLOWER_FAILURE,
@@ -80,15 +83,16 @@ function loadMyInfoAPI() {
 function* loadMyInfo() {
   try {
     const result = yield call(loadMyInfoAPI);
+    console.log(result.data.body);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
     });
   } catch (err) {
-    console.error(err);
+    console.log('LOAD_MY_INFO_FAILURE', err);
     yield put({
       type: LOAD_MY_INFO_FAILURE,
-      error: err.response.data,
+      error: err.name
     });
   }
 }
@@ -100,6 +104,7 @@ function loadUserAPI(userId) {
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
+    console.log('loadUserData', result.data);
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data,
@@ -109,7 +114,39 @@ function* loadUser(action) {
     console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
-      error: err.response.data,
+      error: err
+    });
+  }
+}
+
+/* const onLoginSuccess = accessToken => {
+   // accessToken 설정
+  if(accessToken) { 
+    console.log('saga-user login token ok');
+    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+  } else{
+    console.log('saga-user login token null');
+  }
+  setTimeout(watchRefresh(), (1 * 3600 * 1000) - 60000);
+}
+*/
+
+function refreshAPI(data) {
+  return axios.post(`${AUTH_URL}/auth/refresh`, data);
+}
+
+function* refresh(action) {
+  try {
+    const result = yield call(refreshAPI, action.data);
+    yield put({
+      type: REFRESH_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: REFRESH_FAILURE,
+      error: err
     });
   }
 }
@@ -121,15 +158,43 @@ function logInAPI(loginData) {
 function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);
+    const { accessToken } = result.data.body;
+    if (accessToken) { //token 확인용 if문 제거예정
+      console.log('saga-user login token ok');
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    } else {
+      console.log('saga-user login token null');
+    }
     yield put({
       type: LOG_IN_SUCCESS,
-      data: result.data,
+      data: result.data
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
-      error: err.response.data,
+      error: err
+    });
+  }
+}
+
+function logOutAPI(data) {
+  return axios.post(`${AUTH_URL}/auth/logout`, data);
+}
+
+function* logOut(action) {
+  try {
+    yield call(logOutAPI, action.data);
+    localStorage.removeItem('accessToken');
+    yield put({
+      type: LOG_OUT_SUCCESS,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOG_OUT_FAILURE,
+      error: err
     });
   }
 }
@@ -148,7 +213,7 @@ function* signUp(action) {
     console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -164,10 +229,9 @@ function* checkOtp(action) {
       type: CHECK_OTP_SUCCESS,
     });
   } catch (err) { // otp 인증 실패
-    alert("otp 인증에 실패하셨습니다.");
     yield put({
       type: CHECK_OTP_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -185,7 +249,7 @@ function* sendOtp(action) {
   } catch (err) { // 이메일 인증 실패
     yield put({
       type: SEND_OPT_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -201,10 +265,9 @@ function* checkDuplicateEmail(action) {
       type: CHECK_DUPLICATE_EMAIL_SUCCESS,
     });
   } catch (err) {
-    alert("중복된 이메일입니다.");
     yield put({
       type: CHECK_DUPLICATE_EMAIL_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -220,9 +283,10 @@ function* checkId(action) {
       type: CHECK_ID_SUCCESS,
     });
   } catch (err) { // ID 인증 실패
+    console.error(err);
     yield put({
       type: CHECK_ID_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -238,35 +302,15 @@ function* checkNickname(action) {
       type: CHECK_NICKNAME_SUCCESS,
     });
   } catch (err) {
-    alert("사용할 수 없는 닉네임입니다.");
     yield put({
       type: CHECK_NICKNAME_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
-function checkPasswordAPI(password) {
-  return axios.post("/user/passwordcheck", password);
-}
-
-function* checkPassword(action) {
-  try {
-    const result = yield call(checkPasswordAPI, action.data);
-    yield put({
-      type: EDIT_PWCK_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    yield put({
-      type: EDIT_PWCK_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
 
 function uploadProfileImgAPI(formData) {
-  return axios.post(`${AUTH_URL/auth/profile}`, formData);
+  return axios.post(`${AUTH_URL / auth / profile}`, formData);
 }
 
 function* uploadProfileImg(action) {
@@ -276,11 +320,11 @@ function* uploadProfileImg(action) {
       type: UPLOAD_PROFILE_IMAGE_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     yield put({
       type: UPLOAD_PROFILE_IMAGE_FAILURE,
-      error: e,
+      error: err,
     });
   }
 }
@@ -298,7 +342,7 @@ function* findEmail(action) {
   } catch (err) {
     yield put({
       type: FIND_EMAIL_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -314,29 +358,9 @@ function* findPassword(action) {
       type: FIND_PASSWORD_SUCCESS,
     });
   } catch (err) {
-    alert("비밀번호 찾기에 실패하셨습니다.");
     yield put({
       type: FIND_PASSWORD_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
-function logOutAPI() {
-  return axios.post(`${AUTH_URL}/auth/logout`);
-}
-
-function* logOut(action) {
-  try {
-    yield call(logOutAPI, action.data);
-    yield put({
-      type: LOG_OUT_SUCCESS,
-    });
-  } catch (err) {
-    console.error(err);
-    yield put({
-      type: LOG_OUT_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -356,7 +380,7 @@ function* follow(action) {
     console.error(err);
     yield put({
       type: FOLLOW_USER_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -377,7 +401,7 @@ function* unfollow(action) {
     console.error(err);
     yield put({
       type: UNFOLLOW_USER_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -398,7 +422,7 @@ function* loadFollowers(action) {
     console.error(err);
     yield put({
       type: LOAD_FOLLOWERS_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -418,7 +442,7 @@ function* loadFollowings(action) {
     console.error(err);
     yield put({
       type: LOAD_FOLLOWINGS_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -438,7 +462,7 @@ function* removeFollower(action) {
     console.error(err);
     yield put({
       type: REMOVE_FOLLOWER_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -458,7 +482,26 @@ function* editNickname(action) {
     console.error(err);
     yield put({
       type: EDIT_NICKNAME_FAILURE,
-      error: err.response.data,
+      error: err
+    });
+  }
+}
+
+function checkPasswordAPI(password) {
+  return axios.post("/user/passwordcheck", password);
+}
+
+function* checkPassword(action) {
+  try {
+    const result = yield call(checkPasswordAPI, action.data);
+    yield put({
+      type: EDIT_PWCK_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: EDIT_PWCK_FAILURE,
+      error: err
     });
   }
 }
@@ -479,7 +522,7 @@ function* editPassword(action) {
     alert("비밀번호 변경에 실패하셨습니다.");
     yield put({
       type: EDIT_PASSWORD_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -499,7 +542,7 @@ function* editCategory(action) {
     console.error(err);
     yield put({
       type: EDIT_CATEGORY_FAILURE,
-      error: err.response.data,
+      error: err
     });
   }
 }
@@ -534,6 +577,10 @@ function* watchLoadMyInfo() {
 
 function* watchLogIn() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
+}
+
+function* watchRefresh() {
+  yield takeLatest(REFRESH_REQUEST, refresh);
 }
 
 function* watchSignUp() {
@@ -620,6 +667,7 @@ export default function* userSaga() {
   yield all([
     fork(watchLogIn),
     fork(watchLogOut),
+    fork(watchRefresh),
     fork(watchLoadUser),
     fork(watchLoadMyInfo),
     fork(watchSignUp),

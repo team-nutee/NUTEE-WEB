@@ -17,7 +17,7 @@ const EditNickname = () => {
     }
     await dispatch({
       type: EDIT_NICKNAME_REQUEST,
-      data: editNickname,
+      data: { password : editNickname }
     });
   }, [editNickname]);
 
@@ -28,7 +28,6 @@ const EditNickname = () => {
   const textWrapper = useMemo(() => ({ marginTop: '10px', fontSize: '13px', color: '#005000' }), []);
 
   return (
-    <>
       <div style={pageWrapper}>
         <Row>
           <Input
@@ -44,10 +43,6 @@ const EditNickname = () => {
           <p style={textWrapper}>닉네임은 <b>최대 12자</b>까지 가능합니다.</p>
         </Row>
       </div>
-      <div >
-
-      </div>
-    </>
   );
 };
 export default EditNickname;

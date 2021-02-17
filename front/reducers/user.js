@@ -81,6 +81,10 @@ export const initialState = {
 
   hasMoreFollower: false,
   hasMoreFollowing: false,
+
+  refreshLoading: false, //토큰 재발급
+  refreshDone: false,
+  refreshError: null,
 };
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
@@ -104,6 +108,10 @@ export const LOG_IN_FAILURE = "LOG_IN_FAILURE";
 export const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
 export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
 export const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
+
+export const REFRESH_REQUEST = "REFRESH_REQUEST";
+export const REFRESH_SUCCESS = "REFRESH_SUCCESS";
+export const REFRESH_FAILURE = "REFRESH_FAILURE";
 
 export const CHECK_ID_REQUEST = "CHECK_ID_REQUEST";
 export const CHECK_ID_SUCCESS = "CHECK_ID_SUCCESS";
@@ -207,7 +215,7 @@ const reducer = (state = initialState, action) =>
       case LOG_IN_FAILURE:
         draft.isLogInLoading = false;
         draft.isLogInError = action.error;
-        break; //
+        break;
       case LOG_OUT_REQUEST:
         draft.isLogOutLoading = true;
         draft.isLogOutError = null;
@@ -221,6 +229,20 @@ const reducer = (state = initialState, action) =>
       case LOG_OUT_FAILURE:
         draft.isLogOutLoading = false;
         draft.isLogOutError = action.error;
+        break;
+      case REFRESH_REQUEST:
+        draft.refreshLoading = true;
+        draft.refreshError = null;
+        draft.refreshDone = false;
+        break;
+      case REFRESH_SUCCESS:
+        draft.refreshLoading = false;
+        draft.me = action.data.bady;
+        draft.refreshDone = true;
+        break;
+      case REFRESH_FAILURE:
+        draft.isLogInLoading = false;
+        draft.isLogInError = action.error;
         break;
       case SIGN_UP_REQUEST:
         draft.isSignUpLoading = true;
@@ -313,10 +335,10 @@ const reducer = (state = initialState, action) =>
         draft.isLoadMyInfoError = action.error;
         break;
       case ADD_POST_TO_ME:
-        draft.me.Posts.unshift({ id: action.data });
+        draft.me.posts.unshift({ id: action.data });
         break;
       case REMOVE_POST_OF_ME:
-        draft.me.Posts = draft.me.Posts.filter(v => v.id !== action.data);
+        draft.me.posts = draft.me.posts.filter(v => v.id !== action.data);
         break;
       case EDIT_NICKNAME_REQUEST:
         draft.editNicknameLoading = true;
@@ -408,8 +430,8 @@ const reducer = (state = initialState, action) =>
       case FOLLOW_USER_REQUEST:
         break;
       case FOLLOW_USER_SUCCESS:
-        draft.me.Followings.unshift({ id: action.data });
-        draft.userInfo.Followers.unshift({ id: action.data });
+        draft.me.followings.unshift({ id: action.data });
+        draft.userInfo.followers.unshift({ id: action.data });
         break;
 
       case FOLLOW_USER_FAILURE:

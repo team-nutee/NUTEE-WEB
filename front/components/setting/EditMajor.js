@@ -21,7 +21,6 @@ const EditCategory = () => {
   const customStyles = useMemo(() => ({ control: (css) => ({ ...css, width: "300px", border: '3px solid #005000', }), }), []);
 
   return (
-    <>
       <div style={pageWrapper}>
         <Select
           isMulti
@@ -34,7 +33,6 @@ const EditCategory = () => {
         />
         <Button style={buttonWrapper} onClick={onEditMajor}>확인</Button>
       </div>
-    </>
   );
 };
 

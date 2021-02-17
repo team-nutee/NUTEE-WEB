@@ -1,17 +1,10 @@
 import React, { useMemo } from "react";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-import { Row, Tabs, Divider } from "antd";
-import {
-  SmileOutlined,
-  SettingOutlined,
-  BookOutlined,
-  UnlockOutlined,
-  UserOutlined,
-  TagsOutlined,
-} from "@ant-design/icons";
-import { END } from "redux-saga";
 import axios from "axios";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
+import { Row, Tabs, Divider } from "antd";
+import { SmileOutlined, SettingOutlined, BookOutlined, UnlockOutlined, UserOutlined, TagsOutlined } from "@ant-design/icons";
 import AppLayout from "../components/AppLayout";
 import EditPassword from '../components/setting/EditPassword';
 import EditProfileImage from '../components/setting/EditProfileImage';
