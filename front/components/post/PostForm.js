@@ -1,69 +1,68 @@
-import React, { useCallback, useEffect, useRef, useMemo, useState } from "react";
-import { Form, Button, Dropdown, Input } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
+import { Form, Button, Dropdown, Input } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import {
   ADD_POST_REQUEST,
   REMOVE_IMAGE,
-  UPLOAD_IMAGES_REQUEST,
-} from "../../reducers/post";
-import { TARGET_URL } from "../../static";
-import { FileImageOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import useInput from "../../hooks/useInput";
-import { inter, major } from "../dummy";
+  UPLOAD_REQUEST,
+} from '../../reducers/post';
+import { TARGET_URL } from '../../static';
+import useInput from '../../hooks/useInput';
+import { inter, major } from '../dummy';
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const [title, onChangeTitle, setTitle] = useInput("");
-  const [text, onChangeText, setText] = useInput("");
+  const [title, onChangeTitle, setTitle] = useInput('');
+  const [text, onChangeText, setText] = useInput('');
   const [category, setCategory] = useState([]);
 
   const { imagePaths, isAddingPost, postAdded } = useSelector(
-    state => state.post
+    (state) => state.post,
   );
   const imageInput = useRef();
 
   useEffect(() => {
     if (postAdded) {
-      setTitle("");
-      setText("");
+      setTitle('');
+      setText('');
     }
   }, [postAdded]);
 
-  const onSubmitForm = useCallback(e => {
-      if (!title || !title.trim()) {
-        return alert("제목을 작성해주세요.");
-      };
-      if (!text || !text.trim()) {
-        return alert("게시글을 작성해주세요.");
-      };
+  const onSubmitForm = useCallback((e) => {
+    if (!title || !title.trim()) {
+      return alert('제목을 작성해주세요.');
+    }
+    if (!text || !text.trim()) {
+      return alert('게시글을 작성해주세요.');
+    }
     /*   const formData = new FormData();
       formData.append("images", imagePaths);
       formData.append("title", title);
       formData.append("content", text);
       formData.append("category", 'IT2'); */
-      console.log(title, text, '게시글작성 데이터');
+    console.log(title, text, '게시글작성 데이터');
 
-      dispatch({
-        type: ADD_POST_REQUEST,
-        data: {
-          title : title, 
-          content : text,
-          images: imagePaths,
-          category : 'IT2',
-        }
-      });
-    },
-    [text, imagePaths]
-  );
+    dispatch({
+      type: ADD_POST_REQUEST,
+      data: {
+        title,
+        content: text,
+        images: imagePaths,
+        category: 'IT2',
+      },
+    });
+  },
+  [text, imagePaths]);
 
-  const onChangeImages = useCallback(e => {
+  const onChangeImages = useCallback((e) => {
     console.log(e.target.files);
     const imageFormData = new FormData();
-    [].forEach.call(e.target.files, f => {
-      imageFormData.append("image", f);
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append('image', f);
     });
     dispatch({
-      type: UPLOAD_IMAGES_REQUEST,
+      type: UPLOAD_REQUEST,
       data: imageFormData,
     });
   }, []);
@@ -73,28 +72,28 @@ const PostForm = () => {
   }, [imageInput.current]);
 
   const onRemoveImage = useCallback(
-    index => () => {
+    (index) => () => {
       dispatch({
         type: REMOVE_IMAGE,
         index,
       });
     },
-    []
+    [],
   );
 
-  const formWrapper = useMemo(() => ({ height: "auto", overflow: "hidden", background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', margin: '7px 0 15px 0', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
-  const imageAndWriteWrapper = useMemo(() => ({ background: 'purple', marginBottom: '10px'}), []);
-  const buttonWrapper = useMemo(() => ({ background: '#13c276', borderColor: "white", width: '100px', margin: '10px 0px 10px 10px', color: 'white' }), []);
-  const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', width: '47vw', minWidth: '500px',  maxWidth: '672px', borderColor: '#c8e6d7', }), []);
-  
+  const formWrapper = useMemo(() => ({ height: 'auto', overflow: 'hidden', background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', margin: '7px 0 15px 0', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
+  const imageAndWriteWrapper = useMemo(() => ({ background: 'purple', marginBottom: '10px' }), []);
+  const buttonWrapper = useMemo(() => ({ background: '#13c276', borderColor: 'white', width: '100px', margin: '10px 0px 10px 10px', color: 'white' }), []);
+  const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', width: '47vw', minWidth: '500px', maxWidth: '672px', borderColor: '#c8e6d7' }), []);
+
   /* 작성, 이미지 업로드 버튼 */
   const uploadButtonWrapper = useMemo(() => ({ float: 'left', margin: '9px 0 5px 15px' }), []);
   const writeButtonWrapper = useMemo(() => ({ float: 'right', margin: '5px 15px', borderRadius: '3px', background: '#13c276', borderColor: '#fff', color: 'white' }), []);
   const iconWrapper = useMemo(() => ({ fontSize: '20px', color: '#13c276' }), []);
- 
+
   /* 이미지 업로드 및 제거 관련 */
-  const imagesWrapper = useMemo(() => ({ height: "auto" }), []);
-  const imagePathsWrapper = useMemo(() => ({ display: 'center', margin: '10px', width: '20%', float: "left", height: '60px', background: '#c8e6d7' }), []);
+  const imagesWrapper = useMemo(() => ({ height: 'auto' }), []);
+  const imagePathsWrapper = useMemo(() => ({ display: 'center', margin: '10px', width: '20%', float: 'left', height: '60px', background: '#c8e6d7' }), []);
   const removeImageIconWrapper = useMemo(() => ({ float: 'right', marginRight: '15px' }), []);
   const closeOutIconWrapper = useMemo(() => ({ color: 'black', position: 'absolute', background: 'white', borderRadius: '40px' }), []);
   const imagePathsImgWrapper = useMemo(() => ({ width: '100%', height: '100%' }), []);
@@ -106,12 +105,12 @@ const PostForm = () => {
     >
       {/* 임시 */}
       <Dropdown overlay={inter} value={category} placement="bottomCenter">
-        <Button style={buttonWrapper} shape={"round"}>
+        <Button style={buttonWrapper} shape="round">
           <b>카테고리</b>
         </Button>
       </Dropdown>
       <Dropdown overlay={major} placement="bottomCenter">
-        <Button style={buttonWrapper} shape={"round"}>
+        <Button style={buttonWrapper} shape="round">
           <b>내 전공</b>
         </Button>
       </Dropdown>

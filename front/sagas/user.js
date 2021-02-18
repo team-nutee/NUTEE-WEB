@@ -1,6 +1,6 @@
-import { all, call, put, takeLatest, fork } from "redux-saga/effects";
-import axios from "axios";
-import { AUTH_URL } from "../static";
+import { all, call, put, takeLatest, fork } from 'redux-saga/effects';
+import axios from 'axios';
+import { AUTH_URL } from '../static';
 import {
   FOLLOW_USER_REQUEST,
   FOLLOW_USER_SUCCESS,
@@ -74,7 +74,7 @@ import {
   UPLOAD_PROFILE_IMAGE_REQUEST,
   UPLOAD_PROFILE_IMAGE_SUCCESS,
   UPLOAD_PROFILE_IMAGE_FAILURE,
-} from "../reducers/user";
+} from '../reducers/user';
 
 function loadMyInfoAPI() {
   return axios.get(`${AUTH_URL}/auth/user/me`);
@@ -86,42 +86,42 @@ function* loadMyInfo() {
     console.log(result.data.body);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.log('LOAD_MY_INFO_FAILURE', err);
     yield put({
       type: LOAD_MY_INFO_FAILURE,
-      error: err.name
+      error: err.name, // 수정
     });
   }
 }
 
 function loadUserAPI(userId) {
-  return axios.get(`${AUTH_URL}/auth/user/${userId}`);
+  return axios.get(`${AUTH_URL}/auth/user/${userId}`, { data: {} });
 }
 
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
-    console.log('loadUserData', result.data);
+    console.log('loadUserData', result.data.body);
     yield put({
       type: LOAD_USER_SUCCESS,
-      data: result.data,
-      me: !action.data,
+      data: result.data.body,
+      me: !action.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
 /* const onLoginSuccess = accessToken => {
    // accessToken 설정
-  if(accessToken) { 
+  if(accessToken) {
     console.log('saga-user login token ok');
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   } else{
@@ -140,13 +140,13 @@ function* refresh(action) {
     const result = yield call(refreshAPI, action.data);
     yield put({
       type: REFRESH_SUCCESS,
-      data: result.data
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: REFRESH_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -158,35 +158,36 @@ function logInAPI(loginData) {
 function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);
-    const { accessToken } = result.data.body;
-    if (accessToken) { //token 확인용 if문 제거예정
+    const { accessToken, refreshToken } = result.data.body;
+    if (accessToken) { // token 확인용 if문 제거예정
       console.log('saga-user login token ok');
       localStorage.setItem('accessToken', accessToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      localStorage.setItem('refreshToken', refreshToken);
+      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     } else {
       console.log('saga-user login token null');
     }
     yield put({
       type: LOG_IN_SUCCESS,
-      data: result.data
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function logOutAPI(data) {
-  return axios.post(`${AUTH_URL}/auth/logout`, data);
+function logOutAPI() { // accessToken을 로그아웃에서 넘겨주는 것으로 할지 말지 고민 중(수정 예정)
+  const accessToken = localStorage.getItem('accessToken');
+  return axios.post(`${AUTH_URL}/auth/logout`, { data: { accessToken } });
 }
 
 function* logOut(action) {
   try {
     yield call(logOutAPI, action.data);
-    localStorage.removeItem('accessToken');
     yield put({
       type: LOG_OUT_SUCCESS,
     });
@@ -194,7 +195,7 @@ function* logOut(action) {
     console.error(err);
     yield put({
       type: LOG_OUT_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -213,12 +214,12 @@ function* signUp(action) {
     console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function checkOtpAPI(otp) { //otp 확인
+function checkOtpAPI(otp) {
   return axios.post(`${AUTH_URL}/auth/check/otp`, otp);
 }
 
@@ -228,15 +229,15 @@ function* checkOtp(action) {
     yield put({
       type: CHECK_OTP_SUCCESS,
     });
-  } catch (err) { // otp 인증 실패
+  } catch (err) {
     yield put({
       type: CHECK_OTP_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function sendOtpAPI(schoolEmail) { //이메일 인증 후 otp를 메일로 전송
+function sendOtpAPI(schoolEmail) { // 이메일 인증 후 otp를 메일로 전송
   return axios.post(`${AUTH_URL}/auth/otp`, schoolEmail);
 }
 
@@ -249,7 +250,7 @@ function* sendOtp(action) {
   } catch (err) { // 이메일 인증 실패
     yield put({
       type: SEND_OPT_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -267,7 +268,7 @@ function* checkDuplicateEmail(action) {
   } catch (err) {
     yield put({
       type: CHECK_DUPLICATE_EMAIL_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -282,11 +283,11 @@ function* checkId(action) {
     yield put({
       type: CHECK_ID_SUCCESS,
     });
-  } catch (err) { // ID 인증 실패
+  } catch (err) {
     console.error(err);
     yield put({
       type: CHECK_ID_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -304,13 +305,13 @@ function* checkNickname(action) {
   } catch (err) {
     yield put({
       type: CHECK_NICKNAME_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
 function uploadProfileImgAPI(formData) {
-  return axios.post(`${AUTH_URL / auth / profile}`, formData);
+  return axios.post(`${AUTH_URL}/auth/profile`, formData);
 }
 
 function* uploadProfileImg(action) {
@@ -318,7 +319,7 @@ function* uploadProfileImg(action) {
     const result = yield call(uploadProfileImgAPI, action.data);
     yield put({
       type: UPLOAD_PROFILE_IMAGE_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
@@ -329,8 +330,8 @@ function* uploadProfileImg(action) {
   }
 }
 
-function findEmailAPI(schoolEmail) {
-  return axios.post("/user/findid", schoolEmail);
+function findEmailAPI(schoolEmail) { // api X
+  return axios.post('/user/findid', schoolEmail);
 }
 
 function* findEmail(action) {
@@ -342,13 +343,13 @@ function* findEmail(action) {
   } catch (err) {
     yield put({
       type: FIND_EMAIL_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function findPasswordAPI(data) {
-  return axios.post("/user/reissuance", data);
+function findPasswordAPI(data) { // api X
+  return axios.post('/user/reissuance', data);
 }
 
 function* findPassword(action) {
@@ -360,12 +361,12 @@ function* findPassword(action) {
   } catch (err) {
     yield put({
       type: FIND_PASSWORD_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function followAPI(userId) {
+function followAPI(userId) { // api X
   return axios.post(`/user/${userId}/follow`);
 }
 
@@ -374,19 +375,18 @@ function* follow(action) {
     const result = yield call(followAPI, action.data);
     yield put({
       type: FOLLOW_USER_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: FOLLOW_USER_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-
-function unfollowAPI(userId) {
+function unfollowAPI(userId) { // api X
   return axios.delete(`/user/${userId}/follow`);
 }
 
@@ -395,19 +395,18 @@ function* unfollow(action) {
     const result = yield call(unfollowAPI, action.data);
     yield put({
       type: UNFOLLOW_USER_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: UNFOLLOW_USER_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-
-function loadFollowersAPI(userId, offset = 0, limit = 3) {
+function loadFollowersAPI(userId, offset = 0, limit = 3) { // api X
   return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`);
 }
 
@@ -416,18 +415,18 @@ function* loadFollowers(action) {
     const result = yield call(loadFollowersAPI, action.data, action.offset);
     yield put({
       type: LOAD_FOLLOWERS_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: LOAD_FOLLOWERS_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function loadFollowingsAPI(userId, offset = 0, limit = 3) {
+function loadFollowingsAPI(userId, offset = 0, limit = 3) { // api X
   return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`);
 }
 
@@ -436,18 +435,18 @@ function* loadFollowings(action) {
     const result = yield call(loadFollowingsAPI, action.data, action.offset);
     yield put({
       type: LOAD_FOLLOWINGS_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: LOAD_FOLLOWINGS_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function removeFollowerAPI(userId) {
+function removeFollowerAPI(userId) { // api X
   return axios.delete(`/user/${userId}/follower`);
 }
 
@@ -456,13 +455,13 @@ function* removeFollower(action) {
     const result = yield call(removeFollowerAPI, action.data);
     yield put({
       type: REMOVE_FOLLOWER_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: REMOVE_FOLLOWER_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -476,19 +475,19 @@ function* editNickname(action) {
     const result = yield call(editNicknameAPI, action.data);
     yield put({
       type: EDIT_NICKNAME_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: EDIT_NICKNAME_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function checkPasswordAPI(password) {
-  return axios.post("/user/passwordcheck", password);
+function checkPasswordAPI(password) { // 비밀번호 변경 전 비밀번호 확인 // api X
+  return axios.post('/user/passwordcheck', password);
 }
 
 function* checkPassword(action) {
@@ -496,12 +495,12 @@ function* checkPassword(action) {
     const result = yield call(checkPasswordAPI, action.data);
     yield put({
       type: EDIT_PWCK_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     yield put({
       type: EDIT_PWCK_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
@@ -515,20 +514,19 @@ function* editPassword(action) {
     const result = yield call(editPasswordAPI, action.data);
     yield put({
       type: EDIT_PASSWORD_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
-  } catch (err) { // 비밀번호 인증 실패
+  } catch (err) {
     console.error(err);
-    alert("비밀번호 변경에 실패하셨습니다.");
     yield put({
       type: EDIT_PASSWORD_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function editCategoryAPI(category) {
-  return axios.patch(`${AUTH_URL}/auth/user/interests`, category);
+function editCategoryAPI(interests) {
+  return axios.patch(`${AUTH_URL}/auth/user/interests`, interests);
 }
 
 function* editCategory(action) {
@@ -536,19 +534,19 @@ function* editCategory(action) {
     const result = yield call(editCategoryAPI, action.data);
     yield put({
       type: EDIT_CATEGORY_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: EDIT_CATEGORY_FAILURE,
-      error: err
+      error: err,
     });
   }
 }
 
-function editMajorAPI(major) {
-  return axios.patch(`${AUTH_URL}/auth/user/majors`, major);
+function editMajorAPI(majors) {
+  return axios.patch(`${AUTH_URL}/auth/user/majors`, majors);
 }
 
 function* editMajor(action) {
@@ -556,7 +554,7 @@ function* editMajor(action) {
     const result = yield call(editMajorAPI, action.data);
     yield put({
       type: EDIT_MAJOR_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
