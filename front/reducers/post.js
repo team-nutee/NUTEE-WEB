@@ -17,25 +17,36 @@ export const initialState = {
   editImagePaths: [], // 글 수정 미리보기 이미지 경로
   hasMorePosts: true,
 
+  loadPostLoading: false, // 포스트 로드
+  loadPostDone: false,
+  loadPostError: null,
   addPostLoading: false, // 포스트 업로드
   addPostDone: false,
   addPostError: null,
+  editPostLoading: false, // 포스트 수정
+  editPostDone: false,
+  editPostError: null,
+  removePostLoading: false, // 포스트 삭제
+  removePostDone: false,
+  removePostError: null,
 
+  loadComments: [], // 댓글
+  loadCommentsLoading: false, // 댓글 로드
+  loadCommentsDone: false,
+  loadCommentsError: null,
   addCommentLoading: false, // 댓글 업로드
   addCommentDone: false,
   addCommentError: null,
+  editCommentLoading: false, // 댓글 수정
+  editCommentDone: false,
+  editCommentError: null,
+  removeCommentLoading: false, // 댓글 삭제
+  removeCommentDone: false,
+  removeCommentError: null,
 
   addReCommentLoading: false, // 답글 업로드
   addReCommentDone: false,
   addReCommentError: null,
-
-  editPostLoading: false, // 포스트 수정, 수정
-  editPostDone: false,
-  editPostError: null,
-
-  editCommentLoading: false, // 댓글 수정
-  editCommentDone: false,
-  editCommentError: null,
 
   uploadLoading: false, // 업로드
   uploadDone: false,
@@ -44,6 +55,7 @@ export const initialState = {
   uploadEditImagesLoading: false, // 수정된 이미지 업로드
   uploadEditImagesDone: false,
   uploadEditImagesError: null,
+
 };
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
@@ -327,6 +339,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = action.error;
       break;
     case REMOVE_COMMENT_REQUEST:
+      draft.removeCommentLoading = true;
+      draft.removeCommentDone = false;
       break;
     case REMOVE_COMMENT_SUCCESS: {
       const postIndex = draft.mainPosts.findIndex(
@@ -336,30 +350,38 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         (v) => v.id === action.data.comments.id,
       );
       draft.mainPosts[postIndex].comments.splice(commentIndex, 1);
-      draft.addCommentLoading = false;
-      draft.addCommentDone = true;
+      draft.removeCommentLoading = false;
+      draft.removeCommentDone = true;
       break;
     }
     case REMOVE_COMMENT_FAILURE:
-      draft.addCommentLoading = false;
-      draft.addCommentError = action.error;
+      draft.removeCommentLoading = false;
+      draft.removeCommentError = action.error;
       break;
     case LOAD_COMMENTS_REQUEST:
+      draft.loadCommentsLoading = true;
+      draft.loadCommentsDone = false;
       break;
     case LOAD_COMMENTS_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.postId,
-      );
-      if (action.data.offset === 0) {
-        draft.mainPosts[postIndex].commentNum = action.data.comments.length;
-      } else {
-        draft.mainPosts[postIndex].commentNum = draft.mainPosts[
-          postIndex
-        ].commentNum.concat(action.data.comments);
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.postId);
+      if (draft.mainPosts.findIndex((v) => v.id === action.postId
+      && draft.mainPosts[postIndex].commentNum === action.data.comments.length)) {
+        if (action.data.offset === 0) {
+          draft.loadComments = action.data.comments;
+        } else {
+          draft.loadComments = draft.loadComments.concat(action.data.comments);
+        }
       }
+      console.log('action.data', action.data);
+      console.log('loadComments', draft.loadComments);
+      console.log('commentNum', draft.mainPosts.commentNum);
+      draft.loadCommentsLoading = false;
+      draft.loadCommentsDone = true;
       break;
     }
     case LOAD_COMMENTS_FAILURE:
+      draft.addCommentLoading = false;
+      draft.loadCommentsError = action.error;
       break;
     case LOAD_CATEGORY_POSTS_REQUEST:
     case LOAD_FAVORITE_POSTS_REQUEST:
@@ -372,6 +394,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_MY_LIKE_REQUEST:
       draft.mainPosts = !action.lastId ? [] : draft.mainPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadPostLoading = true;
+      draft.loadPostDone = false;
       break;
     case LOAD_CATEGORY_POSTS_SUCCESS:
     case LOAD_FAVORITE_POSTS_SUCCESS:
@@ -386,6 +410,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.mainPosts.push(data);
       });
       draft.hasMorePost = action.data.length === 10;
+      draft.loadPostLoading = false;
+      draft.loadPostDone = true;
       break;
     case LOAD_CATEGORY_POSTS_FAILURE:
     case LOAD_FAVORITE_POSTS_FAILURE:
@@ -396,6 +422,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_MY_POSTS_FAILURE:
     case LOAD_MY_COMMENTS_FAILURE:
     case LOAD_MY_LIKE_FAILURE:
+      draft.loadPostLoading = false;
+      // draft.loadPostError = action.error;
       break;
     case LIKE_POST_REQUEST: {
       break;

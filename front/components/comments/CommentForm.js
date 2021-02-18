@@ -36,7 +36,7 @@ const CommentForm = ({ onSubmitComment, commentText, onChangeCommentText, addCom
   );
 };
 
-CommentForm.prototype = {
+CommentForm.propTypes = {
   onSubmitComment: PropTypes.func,
   commentText: PropTypes.string,
   onChangeCommentText: PropTypes.func,

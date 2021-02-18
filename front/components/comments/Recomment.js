@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useMemo, useCallback } from 'react';
@@ -41,7 +43,7 @@ const Recomment = ({ item, post }) => {
     <List.Item
       style={listWrapper}
       actions={!edit ? [<a key="edit" onClick={onEdit}><EditOutlined /></a>,
-        <a key="delete" onClick={onRemove(post, item)}><DeleteFilled /></a>] : <></>}
+        <a key="delete" onClick={onRemove}><DeleteFilled /></a>] : <></>}
     >
       {item === null
         ? <></>
@@ -70,14 +72,9 @@ const Recomment = ({ item, post }) => {
           />
         )}
       <style jsx>
-        {
-                    `
-                    div {
-                        font-family: "Nanum Barun Gothic", sans-serif, ;
-                        font-weight: 200;
-                    }
-                   `
-                }
+        { `
+          div { font-family: "Nanum Barun Gothic", sans-serif, ; font-weight: 200; }
+        `}
       </style>
     </List.Item>
   );

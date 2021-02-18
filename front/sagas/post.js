@@ -395,7 +395,7 @@ function* loadComments(action) {
       data: {
         postId: action.data.postId,
         comments: result.data.body,
-        offset: 5,
+        offset: action.lastId,
       },
     });
   } catch (err) {

@@ -22,7 +22,7 @@ const RecommentBox = ({ reComment, post, onReply }) => {
   );
 };
 
-RecommentBox.prototype = {
+RecommentBox.propTypes = {
   reComment: PropTypes.object,
   post: PropTypes.object,
   onReply: PropTypes.func,

@@ -36,7 +36,7 @@ const PostCard = ({ post }) => {
   const [reportVisible, setReportVisible] = useState(false);
 
   const [lastId, setlastId] = useState(0);
-  const { mainPosts } = useSelector((state) => state.post);
+  const { mainPosts, loadComments } = useSelector((state) => state.post);
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
 
@@ -65,9 +65,7 @@ const PostCard = ({ post }) => {
   const editOk = () => { setEditVisible(false); };
   const editCancel = () => { setEditVisible(false); };
   const reportOk = () => { setReportVisible(false); };
-  const reportCancel = () => {
-    setReportVisible(false);
-  };
+  const reportCancel = () => { setReportVisible(false); };
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
@@ -157,10 +155,23 @@ const PostCard = ({ post }) => {
     setReportVisible(true);
   });
 
+  const EllipsisContent = (
+    <>
+      {me && post.user.id === me.id ? (
+        <>
+          {!post.retweet.id && <Button onClick={showModal}>수정</Button>}
+          <Button type="danger" onClick={onRemovePost}>삭제</Button>
+        </>
+      )
+        : <Button onClick={onReport}>신고</Button>}
+    </>
+  );
+
   const loadMore = (
-    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum
+    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum === loadComments.length
       && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum !== 0
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum % 5 === 0
+      && loadComments.length !== 0
+      && loadComments.length % 6 === 0
       ? (
         <div style={loadMoreDivWrapper}>
           <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
@@ -186,18 +197,8 @@ const PostCard = ({ post }) => {
                 <MessageOutlined style={iconWrapper} />
               </Badge>,
               <Popover
-                key="more"
-                content={(
-                  <Button.Group>
-                    {me && post.user.id === me.id ? (
-                      <>
-                        {!post.retweet.id && <Button onClick={showModal}>수정</Button>}
-                        <Button type="danger" onClick={onRemovePost}>삭제</Button>
-                      </>
-                    )
-                      : <Button onClick={onReport}>신고</Button>}
-                  </Button.Group>
-                )}
+                content={EllipsisContent}
+                trigger="click"
               >
                 <EllipsisOutlined />
               </Popover>,
@@ -244,13 +245,7 @@ const PostCard = ({ post }) => {
                           retweet={1}
                         />
                         <h5 style={retweetCardMetaWrapper}>
-                          댓글
-                          {' '}
-                          {post.retweet.commentNum}
-                          개 좋아요
-                          {' '}
-                          {post.retweet.likers ? post.retweet.likers.length : 0}
-                          개
+                          {`댓글 ${post.retweet.commentNum}개 좋아요 ${post.retweet.likers ? post.retweet.likers.length : 0}개`}
                         </h5>
                       </>
                     )}
@@ -301,7 +296,7 @@ const PostCard = ({ post }) => {
                 itemLayout="horizontal"
                 style={listWrapper}
                 loadMore={loadMore}
-                dataSource={post.comments || []}
+                dataSource={loadComments || []}
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
             )
@@ -359,7 +354,7 @@ PostCard.propTypes = {
       nickname: PropTypes.string,
       image: PropTypes.string,
     }),
-    images: PropTypes.string,
+    images: PropTypes.array,
     title: PropTypes.string,
     likers: PropTypes.object,
     commentNum: PropTypes.number,

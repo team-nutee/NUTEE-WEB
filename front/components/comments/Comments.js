@@ -4,16 +4,15 @@
 /* eslint-disable no-restricted-globals */
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { List } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
 import { DeleteFilled, EditOutlined, MessageOutlined } from '@ant-design/icons';
 import { REMOVE_COMMENT_REQUEST } from '../../reducers/post';
 import EditCommentForm from './EditCommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import ReCommentForm from './ReCommentForm';
-import RecommentBox from './RecommentBox';
 
 moment.locale('ko');
 
@@ -21,6 +20,7 @@ const Comments = ({ item, post }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
+  const { me } = useSelector((state) => state.user);
 
   const onEdit = () => {
     setEdit(true);
@@ -45,19 +45,34 @@ const Comments = ({ item, post }) => {
   });
 
   const listWrapper = useMemo(() => ({ fontFamily: 'NanumBarunGothic', marginLeft: '-15px', marginBottom: '-15px', border: 'none' }), []);
-  const contentWrapper = useMemo(() => ({ marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
-  const nicknameWrapper = useMemo(() => ({ marginRight: '10px' }), []);
+  const contentWrapper = useMemo(() => ({ marginRight: '-30px', marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
+  const nicknameWrapper = useMemo(() => ({ marginRight: '10px', fontWeight: 'bold', color: '#005000' }), []);
   const iconWrapper = useMemo(() => ({ color: '#005000' }), []);
-  const momentWrapper = useMemo(() => ({ float: 'right' }), []);
+  const momentWrapper = useMemo(() => ({ fontSize: '12px', marginBottom: '5px' }), []);
   const commentWrapper = useMemo(() => ({ fontFamily: 'Nanum Barun Gothic' }), []);
+  const editWrapper = useMemo(() => ({ }), []);
 
   return (
     <div style={commentWrapper}>
       <List.Item
         style={listWrapper}
-        actions={!edit ? [<a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>,
-          <a key="edit" onClick={onEdit}><EditOutlined style={iconWrapper} /></a>, // 수정 아이콘 내 댓글 아니면 안 보이도록
-          <a key="delete" onClick={onRemove(post, item)}><DeleteFilled style={iconWrapper} /></a>] : <></>}
+        actions={!edit ? [
+          <div style={editWrapper}>
+            <a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>
+            {me.id === item.id
+              ? (
+                <>
+                  <a key="edit" onClick={onEdit}>
+                    <EditOutlined style={iconWrapper} />
+                  </a>
+                  <a key="delete" onClick={onRemove}>
+                    <DeleteFilled style={iconWrapper} />
+                  </a>
+                </>
+              )
+              : <></>}
+          </div>,
+        ] : <></>}
       >
         {item === null
           ? <></>
@@ -72,7 +87,7 @@ const Comments = ({ item, post }) => {
                 </Link>
               )}
               description={edit
-                ? <EditCommentForm comment={item} edit={edit} setEdit={setEdit} postId={post.id} />
+                ? <EditCommentForm comment={item} setEdit={setEdit} postId={post.id} />
                 : (
                   <pre style={contentWrapper}>
                     <Link href={{ pathname: '/user', query: { id: item.user.id } }} as={`/user/${item.user.id}`}>
@@ -85,9 +100,7 @@ const Comments = ({ item, post }) => {
             />
           )}
       </List.Item>
-      {item.reComment
-        ? <RecommentBox reComment={item.reComment} post={post} onReply={onReply} />
-        : <></>}
+      {}
       {reply
         ? <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id} />
         : <></>}
