@@ -77,7 +77,7 @@ import {
 } from '../reducers/user';
 
 function loadMyInfoAPI() {
-  return axios.get(`${AUTH_URL}/auth/user/me`);
+  return axios.get(`${AUTH_URL}/auth/user/me`, { data: {} });
 }
 
 function* loadMyInfo() {

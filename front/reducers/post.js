@@ -1,22 +1,21 @@
 import produce from '../util/produce';
 
 export const initialState = {
-  mainPosts: [], // 전체 포스트들
-  categoryPosts: [], // 화면에 보일 카테고리 포스트들
-  majorPosts: [], // 화면에 보일 전공 포스트들
-  favoritePosts: [],
-
+  /* user */
   loadUserInfo: null, // 사용자의 정보 조회
-
   isLoadUserInfoLoading: false, // 사용자의 정보 로드
   isLoadUserInfoDone: false,
   isLoadUserInfoError: null,
 
+  /* post */
+  mainPosts: [], // 전체 포스트들
+  categoryPosts: [], // 화면에 보일 카테고리 포스트들
+  majorPosts: [], // 화면에 보일 전공 포스트들
+  favoritePosts: [],
   imagePaths: [], // 미리보기 이미지 경로
   singlePost: null,
   editImagePaths: [], // 글 수정 미리보기 이미지 경로
   hasMorePosts: true,
-
   loadPostLoading: false, // 포스트 로드
   loadPostDone: false,
   loadPostError: null,
@@ -30,6 +29,7 @@ export const initialState = {
   removePostDone: false,
   removePostError: null,
 
+  /* comment */
   loadComments: [], // 댓글
   loadCommentsLoading: false, // 댓글 로드
   loadCommentsDone: false,
@@ -43,19 +43,17 @@ export const initialState = {
   removeCommentLoading: false, // 댓글 삭제
   removeCommentDone: false,
   removeCommentError: null,
-
   addReCommentLoading: false, // 답글 업로드
   addReCommentDone: false,
   addReCommentError: null,
 
+  /* upload */
   uploadLoading: false, // 업로드
   uploadDone: false,
   uploadError: null,
-
   uploadEditImagesLoading: false, // 수정된 이미지 업로드
   uploadEditImagesDone: false,
   uploadEditImagesError: null,
-
 };
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
@@ -341,8 +339,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_COMMENT_REQUEST:
       draft.removeCommentLoading = true;
       draft.removeCommentDone = false;
+      draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
+      draft.removeCommentLoading = false;
       const postIndex = draft.mainPosts.findIndex(
         (v) => v.id === action.data.post.id,
       );
@@ -350,7 +350,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         (v) => v.id === action.data.comments.id,
       );
       draft.mainPosts[postIndex].comments.splice(commentIndex, 1);
-      draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
     }
@@ -361,8 +360,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_COMMENTS_REQUEST:
       draft.loadCommentsLoading = true;
       draft.loadCommentsDone = false;
+      draft.loadCommentsError = null;
       break;
     case LOAD_COMMENTS_SUCCESS: {
+      draft.loadCommentsLoading = false;
       const postIndex = draft.mainPosts.findIndex((v) => v.id === action.postId);
       if (draft.mainPosts.findIndex((v) => v.id === action.postId
       && draft.mainPosts[postIndex].commentNum === action.data.comments.length)) {
@@ -375,7 +376,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       console.log('action.data', action.data);
       console.log('loadComments', draft.loadComments);
       console.log('commentNum', draft.mainPosts.commentNum);
-      draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;
     }
@@ -396,6 +396,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       draft.loadPostLoading = true;
       draft.loadPostDone = false;
+      draft.loadPostError = null;
       break;
     case LOAD_CATEGORY_POSTS_SUCCESS:
     case LOAD_FAVORITE_POSTS_SUCCESS:

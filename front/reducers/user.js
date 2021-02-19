@@ -1,90 +1,89 @@
 import produce from '../util/produce';
 
 export const initialState = {
+  me: null,
+  userInfo: null, // 남의 정보
+  profileImagePath: '',
+
+  /* token */
+  refreshLoading: false, // 토큰 재발급
+  refreshDone: false,
+  refreshError: null,
+
+  /* user data load */
   isLoadMyInfoLoading: false, // 나의 정보 가져오기
   isLoadMyInfoDone: false,
   isLoadMyInfoError: null,
-
   isLoadUserLoading: false, // 유저 데이터 가져오기
   isLoadUserDone: false,
   isLoadUserError: null,
 
-  followLoading: false, // 팔로우
-  followDone: false,
-  followError: null,
-
-  unfollowLoading: false, // 언팔로우
-  unfollowDone: false,
-  unfollowError: null,
-
+  /* login&logout */
   isLogInLoading: false, // 로그인
   isLogInDone: false,
   isLogInError: null,
-
   isLogOutLoading: false, // 로그아웃
   isLogOutDone: false,
   isLogOutError: null,
 
+  /* signup */
   isSignUpLoading: false, // 회원가입
   isSignUpDone: false,
   isSignUpError: null,
+  checkNicknameLoading: false, // 닉네임 중복 가입 확인 여부
+  checkNicknameDone: false,
+  checkNicknameError: null,
+  checkIdLoading: false, // 아이디 중복 가입 확인 여부
+  checkIdDone: false,
+  checkIdError: null,
+  sendOtpLoading: false, // otp 전송
+  sendOtpDone: false,
+  sendOtpError: null,
+  checkDuplicateEmail: false, // 이메일 중복가입 확인 여부
+  checkOtp: false, // otp 인증 여부
 
+  /* edit */
   editNicknameLoading: false, // 닉네임 변경
   editNicknameDone: false,
   editNicknameError: null,
-
   editCategoryLoading: false, // 카테고리 변경
   editCategoryDone: false,
   editCategoryError: null,
-
   editMajorLoading: false, // 전공 변경
   editMajorDone: false,
   editMajorError: null,
 
+  /* follow */
+  followingList: [], // 팔로잉 리스트
+  followerList: [], // 팔로워 리스트
+  hasMoreFollower: false,
+  hasMoreFollowing: false,
   loadFollowingsLoading: false, // 팔로우 정보 로드
   loadFollowingsDone: false,
   loadFollowingsError: null,
-
   loadFollowersLoading: false, // 팔로워 정보 로드
   loadFollowersDone: false,
   loadFollowersError: null,
-
+  followLoading: false, // 팔로우
+  followDone: false,
+  followError: null,
+  unfollowLoading: false, // 언팔로우
+  unfollowDone: false,
+  unfollowError: null,
   removeFollowerLoading: false, // 팔로워 제거
   removeFollowerDone: false,
   removeFollowerError: null,
 
-  me: null,
-  userInfo: null, // 남의 정보
-
-  checkId: false, // 아이디 중복 가입 확인 여부
-  checkNickname: false, // 닉네임 중복 가입 확인 여부
-  checkDuplicateEmail: false, // 이메일 중복가입 확인 여부
-  sendOtp: false, // otp 전송
-  checkedOpt: false, // otp 인증 여부
-
+  /* find */
   checkedFindEmailLoading: false, // 이메일 찾기
   checkedFindEmailDone: false,
   checkedFindEmailError: null,
-
-  checkedFindPwLoading: false, // 비밀번호 찾기
-  checkedFindPwDone: false,
-  checkedFindPwError: null,
-
-  isCheckedPwLoading: false, // 비밀번호 확인 여부 (비번 변경 시)
-  isCheckedPwDone: false,
-  isCheckedPwError: null,
-
-  profileImagePath: '',
-
-  followingList: [], // 팔로잉 리스트
-  followerList: [], // 팔로워 리스트
-
-  hasMoreFollower: false,
-  hasMoreFollowing: false,
-
-  refreshLoading: false, // 토큰 재발급
-  refreshDone: false,
-  refreshError: null,
+  findPasswordLoading: false, // 비밀번호 찾기
+  findPasswordDone: false,
+  findPasswordError: null,
+  checkedPasswordLoading: false, // 비밀번호 확인 여부 (비번 변경 시)
+  checkedPasswordDone: false,
+  checkedPasswordError: null,
 };
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
@@ -250,50 +249,58 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case SIGN_UP_SUCCESS:
       draft.isSignUpLoading = false;
       draft.isSignUpDone = true;
-      draft.checkedOpt = false;
-      draft.checkDuplicateEmail = false;
-      draft.checkId = false;
-      draft.checkNickname = false;
       break;
     case SIGN_UP_FAILURE:
       draft.isSignUpLoading = false;
       draft.isSignUpError = action.error;
       break;
     case CHECK_ID_REQUEST:
-      draft.checkId = false;
+      draft.checkIdLoading = true;
+      draft.checkIdDone = false;
+      draft.checkIdE = null;
       break;
     case CHECK_ID_SUCCESS:
-      draft.checkId = true;
+      draft.checkIdLoading = false;
+      draft.checkIdDone = true;
       break;
     case CHECK_ID_FAILURE:
-      draft.checkId = false;
+      draft.checkIdLoading = false;
+      draft.checkIdError = action.error;
       break;
     case CHECK_NICKNAME_REQUEST:
-      draft.checkNickname = false;
+      draft.checkNicknameLoading = true;
+      draft.checkNicknameDone = false;
+      draft.checkNicknameError = null;
       break;
     case CHECK_NICKNAME_SUCCESS:
-      draft.checkNickname = true;
+      draft.checkNicknameLoading = false;
+      draft.checkNicknameDone = true;
       break;
     case CHECK_NICKNAME_FAILURE:
-      draft.checkNickname = false;
+      draft.checkNicknameDone = false;
+      draft.checkNicknameError = action.error;
       break;
     case CHECK_OTP_REQUEST:
-      draft.checkedOpt = false;
+      draft.checkOtp = false;
       break;
     case CHECK_OTP_SUCCESS:
-      draft.checkedOpt = true;
+      draft.checkOtp = true;
       break;
     case CHECK_OTP_FAILURE:
-      draft.checkedOpt = false;
+      draft.checkOtp = false;
       break;
     case SEND_OPT_REQUEST:
-      draft.sendOtp = false;
+      draft.sendOtpLoading = true;
+      draft.sendOtpDone = false;
+      draft.sendOtpError = null;
       break;
     case SEND_OPT_SUCCESS:
-      draft.sendOtp = true;
+      draft.sendOtpLoading = false;
+      draft.sendOtpDone = true;
       break;
     case SEND_OPT_FAILURE:
-      draft.sendOtp = false;
+      draft.sendOtpLoading = false;
+      draft.sendOtpError = action.error;
       break;
     case CHECK_DUPLICATE_EMAIL_REQUEST:
       draft.checkDuplicateEmail = false;
@@ -381,17 +388,17 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editMajorError = action.error;
       break;
     case EDIT_PWCK_REQUEST:
-      draft.isCheckedPwLoading = true;
-      draft.isCheckedPwDone = false;
-      draft.isCheckedPwError = null;
+      draft.checkedPasswordLoading = true;
+      draft.checkedPasswordDone = false;
+      draft.checkedPasswordError = null;
       break;
     case EDIT_PWCK_SUCCESS:
-      draft.isCheckedPwLoading = false;
-      draft.isCheckedPwDone = true;
+      draft.checkedPasswordLoading = false;
+      draft.checkedPasswordDone = true;
       break;
     case EDIT_PWCK_FAILURE:
-      draft.isCheckedPwLoading = false;
-      draft.isCheckedPwError = action.error;
+      draft.checkedPasswordLoading = false;
+      draft.checkedPasswordError = action.error;
       break;
     case FIND_EMAIL_REQUEST:
       draft.checkedFindEmailLoading = true;
@@ -407,17 +414,17 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.checkedFindEmailError = action.error;
       break;
     case FIND_PASSWORD_REQUEST:
-      draft.checkedFindPwLoading = true;
-      draft.checkedFindPwDone = false;
-      draft.checkedFindPwError = null;
+      draft.findPasswordLoading = true;
+      draft.findPasswordDone = false;
+      draft.findPasswordError = null;
       break;
     case FIND_PASSWORD_SUCCESS:
-      draft.checkedFindPwLoading = false;
-      draft.checkedFindPwDone = true;
+      draft.findPasswordLoading = false;
+      draft.findPasswordDone = true;
       break;
     case FIND_PASSWORD_FAILURE:
-      draft.checkedFindPwLoading = false;
-      draft.checkedFindPwError = action.error;
+      draft.findPasswordLoading = false;
+      draft.findPasswordError = action.error;
       break;
     case EDIT_PASSWORD_REQUEST:
       break;
@@ -454,7 +461,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_FOLLOWERS_REQUEST:
       draft.followerList = !action.offset ? [] : draft.followerList;
       draft.hasMoreFollower = action.offset ? draft.hasMoreFollower : true;
-      // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
       break;
     case LOAD_FOLLOWERS_SUCCESS:
       action.data.forEach((d) => {
@@ -467,7 +473,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_FOLLOWINGS_REQUEST:
       draft.followingList = !action.offset ? [] : draft.followingList;
       draft.hasMoreFollowing = action.offset ? draft.hasMoreFollowing : true;
-      // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
       break;
     case LOAD_FOLLOWINGS_SUCCESS:
       action.data.forEach((d) => {
