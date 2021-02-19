@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-alert */
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { Form, Button, Dropdown, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
@@ -30,19 +34,8 @@ const PostForm = () => {
   }, [postAdded]);
 
   const onSubmitForm = useCallback((e) => {
-    if (!title || !title.trim()) {
-      return alert('제목을 작성해주세요.');
-    }
-    if (!text || !text.trim()) {
-      return alert('게시글을 작성해주세요.');
-    }
-    /*   const formData = new FormData();
-      formData.append("images", imagePaths);
-      formData.append("title", title);
-      formData.append("content", text);
-      formData.append("category", 'IT2'); */
-    console.log(title, text, '게시글작성 데이터');
-
+    if (!title || !title.trim()) alert('제목을 작성해주세요.');
+    if (!text || !text.trim()) alert('게시글을 작성해주세요.');
     dispatch({
       type: ADD_POST_REQUEST,
       data: {

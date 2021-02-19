@@ -1,19 +1,21 @@
-import React, { useEffect, useMemo } from "react";
-import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { LOAD_NOTICE_REQUEST } from "../../reducers/notice";
-import { Col, Row } from "antd";
-import MyProfile from "../profiles/MyProfile";
-import Notice from "../Notice";
+import React, { useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { Col, Row } from 'antd';
+import PropTypes from 'prop-types';
+import { LOAD_NOTICE_REQUEST } from '../../reducers/notice';
+import MyProfile from '../profiles/MyProfile';
+import Notice from '../Notice';
 
 const LeftContents = ({ me }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({
       type: LOAD_NOTICE_REQUEST,
-    }); }, []);
+    });
+  }, []);
 
-  const wrapper = useMemo(() => ({ marginTop: '15px' }), [])
+  const wrapper = useMemo(() => ({ marginTop: '15px' }), []);
   const imgWrapper = useMemo(() => ({ width: '100%' }), []);
 
   return (
@@ -22,7 +24,7 @@ const LeftContents = ({ me }) => {
       <Row gutter={10}><Notice /></Row>
       <br />
       <Row gutter={10}>
-       <img style={imgWrapper} src={'/poster.png'} />
+        <img style={imgWrapper} src="/poster.png" alt="sowl" />
         <br />
         <Link href="https://github.com/team-nutee/NUTEE-WEB">
           <a target="_blank" rel="noreferrer">Made by S.OWL</a>
@@ -31,5 +33,9 @@ const LeftContents = ({ me }) => {
     </Col>
   );
 };
+
+LeftContents.propTypes = {
+  me: PropTypes.object,
+}.isRequired;
 
 export default LeftContents;

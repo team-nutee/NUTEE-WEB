@@ -1,13 +1,16 @@
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Input, Row } from "antd";
+import { Button, Input, Row } from 'antd';
+import { useDispatch } from 'react-redux';
+import { REPORT_REQUEST } from '../reducers/post';
 
 const { TextArea } = Input;
 
-const Report = ( postId, setReportVisible ) => {
+const Report = (postId, setReportVisible) => {
   const [report, setReport] = useState('');
+  const dispatch = useDispatch();
 
-  const onChangeReport = useCallback(e => {
+  const onChangeReport = useCallback((e) => {
     setReport(e.target.value);
   }, []);
 
@@ -15,15 +18,15 @@ const Report = ( postId, setReportVisible ) => {
     dispatch({
       type: REPORT_REQUEST,
       data: {
-        postId: postId,
+        postId,
         content: report,
       },
     });
     setReportVisible(false);
     setReport('');
   });
-  const blockWrapper = useMemo(() => ({ display: "flex", justifyContent: "center" }), []);
-  const buttonWrapper = useMemo(() => ({ background: "#13c276", color: "#fff", width: '80px', marginLeft: '10px' }), []);
+  const blockWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
+  const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '80px', marginLeft: '10px' }), []);
   const textWrapper = useMemo(() => ({ width: '300px' }), []);
 
   return (
@@ -35,15 +38,15 @@ const Report = ( postId, setReportVisible ) => {
         value={report}
         autoSize={{ minRows: 1, maxRows: 3 }}
         required
-      /> 
+      />
       <Button style={buttonWrapper} onClick={onSubmitReport}>신고</Button>
     </Row>
   );
 };
 
 Report.propTypes = {
-  postId : PropTypes.number.isRequired, 
-  setReportVisible : PropTypes.func.isRequired,
-};
+  postId: PropTypes.number,
+  setReportVisible: PropTypes.func,
+}.isRequired;
 
 export default Report;

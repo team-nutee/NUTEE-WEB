@@ -2,7 +2,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
 
 import user from './user';
-import notice from './notice'
+import notice from './notice';
 import post from './post';
 
 const rootReducer = (state, action) => {

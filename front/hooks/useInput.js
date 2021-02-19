@@ -6,7 +6,7 @@ const useInput = (initialValue = null) => {
     setValue(e.target.value);
   }, []);
   return [value, handler, setValue];
-}; 
+};
 export default useInput;
 
-//각각의 setState => 하나의 useInput
+// 각각의 setState => 하나의 useInput

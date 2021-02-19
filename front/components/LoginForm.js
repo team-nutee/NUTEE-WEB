@@ -1,25 +1,26 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Form, Input, Button, Row, Col, Modal } from "antd";
-import { IdcardOutlined, LockOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { loginRequestAction } from "../reducers/user";
-import Link from "next/link";
-import useInput from "../hooks/useInput";
-import FindId from "./find/FindId";
-import FindPw from "./find/FindPw";
+/* eslint-disable no-alert */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { Form, Input, Button, Row, Col, Modal } from 'antd';
+import { IdcardOutlined, LockOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import Link from 'next/link';
+import { loginRequestAction } from '../reducers/user';
+import useInput from '../hooks/useInput';
+import FindId from './find/FindId';
+import FindPw from './find/FindPw';
 
 const LoginForm = () => {
-  const [userId, onChangeUserId] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const [userId, onChangeUserId] = useInput('');
+  const [password, onChangePassword] = useInput('');
   const { isLogInLoading, isLogInError } = useSelector((state) => state.user);
   const [idVisible, setIdVisible] = useState(false);
   const [pwVisible, setPwVisible] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLogInError) {
-      alert(isLogInError);
-    }
+    if (isLogInError) alert(isLogInError);
   }, [isLogInError]);
 
   const onSubmitForm = useCallback(() => {
@@ -43,15 +44,15 @@ const LoginForm = () => {
   const paperWrapper = useMemo(() => ({ padding: '30vh 0' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center', padding: '5vh auto' }), []);
   const h3Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
-  const formWrapper = useMemo(() => ({ width: '35vw', minWidth: '310px', maxWidth: '450px', margin: '0 auto', }), []);
+  const formWrapper = useMemo(() => ({ width: '35vw', minWidth: '310px', maxWidth: '450px', margin: '0 auto' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
-  const loginWrapper = useMemo(() => ({ width: '100px', margin: '0 auto', }), []);
-  const loginButtonWrapper = useMemo(() => ({ background: '#13c276', borderColor: "white", width: '100px' }), []);
-  const idpwWrapper = useMemo(() => ({ width: '320px', margin: '10px auto', }), []);
-  const leftWrapper = useMemo(() => ({ fontWeight: 'bold',fontSize: '15px', width: '30%', float: 'left', color: '#005000', }), []);
-  const signupButtonWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '40%', float: 'left', textAlign: 'center', color: '#005000', }), []);
-  const rightWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '30%', float: 'right', textAlign: 'right', color: '#005000', }), []);
-  const errorWrapper = useMemo(() => ({ textAlign: 'center', color: 'red', }), []);
+  const loginWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+  const loginButtonWrapper = useMemo(() => ({ background: '#13c276', borderColor: 'white', width: '100px' }), []);
+  const idpwWrapper = useMemo(() => ({ width: '320px', margin: '10px auto' }), []);
+  const leftWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '30%', float: 'left', color: '#005000' }), []);
+  const signupButtonWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '40%', float: 'left', textAlign: 'center', color: '#005000' }), []);
+  const rightWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '30%', float: 'right', textAlign: 'right', color: '#005000' }), []);
+  const errorWrapper = useMemo(() => ({ textAlign: 'center', color: 'red' }), []);
 
   return (
     <>
@@ -99,7 +100,9 @@ const LoginForm = () => {
                   type="primary"
                   htmlType="submit"
                   loading={isLogInLoading}
-                >로그인</Button>
+                >
+                  로그인
+                </Button>
               </div>
             </Row>
             <br />

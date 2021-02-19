@@ -1,39 +1,40 @@
-import React, { useCallback, useMemo } from "react";
-import { Button, Input } from "antd";
-import { LockOutlined } from "@ant-design/icons";
-import { EDIT_PASSWORD_REQUEST, EDIT_PWCK_REQUEST } from "../../reducers/user";
-import { useDispatch, } from "react-redux";
-import useInput from "../../hooks/useInput";
+import React, { useCallback, useMemo } from 'react';
+import { Button, Input } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { EDIT_PASSWORD_REQUEST, EDIT_PWCK_REQUEST } from '../../reducers/user';
+import useInput from '../../hooks/useInput';
 
 const PwEditModal = () => {
-  const [existingPassword, onChangeExistingPassword] = useInput("");
-  const [editPassword, onChangeEditPassword] = useInput("");
+  const [existingPassword, onChangeExistingPassword] = useInput('');
+  const [editPassword, onChangeEditPassword] = useInput('');
   const dispatch = useDispatch();
 
-
   const onExistingPassword = useCallback(
-    async e => {
+    async (e) => {
       e.preventDefault();
       await dispatch({
         type: EDIT_PWCK_REQUEST,
         data: existingPassword,
       });
-    }, [existingPassword]);
+    }, [existingPassword],
+  );
 
   const onEditPassword = useCallback(
-    async e => {
+    async (e) => {
       e.preventDefault();
       await dispatch({
         type: EDIT_PASSWORD_REQUEST,
-        data: { password: editPassword }
+        data: { password: editPassword },
       });
-    }, [editPassword]);
+    }, [editPassword],
+  );
 
   const pageWrapper = useMemo(() => ({ marginTop: '70px' }), []);
-  const divWrapper = useMemo(() => ({ display: "flex", justifyContent: "center", marginBottom: '10px' }), []);
-  const inputWrapper = useMemo(() => ({ width: "300px", marginRight: "8px" }), []);
-  const prefixWrapper = useMemo(() => ({ color: "rgba(0,0,0,.25)" }), []);
-  const buttonWrapper = useMemo(() => ({ background: "#13c276", color: "#fff", width: "100px" }), []);
+  const divWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginBottom: '10px' }), []);
+  const inputWrapper = useMemo(() => ({ width: '300px', marginRight: '8px' }), []);
+  const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
+  const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '100px' }), []);
 
   return (
     <div style={pageWrapper}>
