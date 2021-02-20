@@ -47,6 +47,16 @@ export const initialState = {
   addReCommentDone: false,
   addReCommentError: null,
 
+  /* major&category data */
+  majorsData: [],
+  categoryData: [],
+  loadMajorDataLoading: false, // 전공 목록 로드
+  loadMajorDataDone: false,
+  loadMajorDataError: null,
+  loadCategoryLoading: false, // 카테고리 목록 로드
+  loadCategoryDone: false,
+  loadCategoryError: null,
+
   /* upload */
   uploadLoading: false, // 업로드
   uploadDone: false,
@@ -95,6 +105,14 @@ export const LOAD_MY_COMMENTS_FAILURE = 'LOAD_MY_COMMENTS_FAILURE';
 export const LOAD_MY_LIKE_REQUEST = 'LOAD_MY_LIKE_REQUEST';
 export const LOAD_MY_LIKE_SUCCESS = 'LOAD_MY_LIKE_SUCCESS';
 export const LOAD_MY_LIKE_FAILURE = 'LOAD_MY_LIKE_FAILURE';
+
+export const LOAD_MAJOR_DATA_REQUEST = 'LOAD_MAJOR_DATA_REQUEST';
+export const LOAD_MAJOR_DATA_SUCCESS = 'LOAD_MAJOR_DATA_SUCCESS';
+export const LOAD_MAJOR_DATA_FAILURE = 'LOAD_MAJOR_DATA_FAILURE';
+
+export const LOAD_CATEGORY_DATA_REQUEST = 'LOAD_CATEGORY_DATA_REQUEST';
+export const LOAD_CATEGORY_DATA_SUCCESS = 'LOAD_CATEGORY_DATA_SUCCESS';
+export const LOAD_CATEGORY_DATA_FAILURE = 'LOAD_CATEGORY_DATA_FAILURE';
 
 export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
@@ -271,18 +289,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case EDIT_POST_IMAGES:
       draft.editImagePaths = action.data;
       break;
-    case ADD_COMMENT_REQUEST:
-      draft.addCommentLoading = true;
-      draft.addCommentDone = false;
-      draft.addCommentError = null;
-      break;
-    case ADD_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.find((v) => v.id === action.data.post.id);
-      draft.mainPosts[postIndex].comments.push(action.data.comment);
-      draft.addCommentLoading = false;
-      draft.addCommentDone = true;
-      break;
-    }
     case ADD_COMMENT_FAILURE:
       draft.addCommentLoading = false;
       draft.addCommentError = action.err;
@@ -357,6 +363,21 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
       break;
+    case ADD_COMMENT_REQUEST:
+      draft.addCommentLoading = true;
+      draft.addCommentDone = false;
+      draft.addCommentError = null;
+      break;
+    case ADD_COMMENT_SUCCESS: {
+      draft.addCommentLoading = false;
+      if (draft.mainPosts.findIndex((v) => v.id === action.data.postId)) {
+        draft.loadComments.push(action.data.comment);
+      }
+      /* if (draft.mainPosts.find((v) => v.id === action.postId)) {
+        // draft.loadComments[postIndex].comments.push(action.comment); */
+      draft.addCommentDone = true;
+      break;
+    }
     case LOAD_COMMENTS_REQUEST:
       draft.loadCommentsLoading = true;
       draft.loadCommentsDone = false;
@@ -364,18 +385,18 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LOAD_COMMENTS_SUCCESS: {
       draft.loadCommentsLoading = false;
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.postId);
-      if (draft.mainPosts.findIndex((v) => v.id === action.postId
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
+      if (draft.mainPosts.find((v) => v.id === action.data.postId
       && draft.mainPosts[postIndex].commentNum === action.data.comments.length)) {
         if (action.data.offset === 0) {
-          draft.loadComments = action.data.comments;
+          draft.loadComments = action.comments;
         } else {
           draft.loadComments = draft.loadComments.concat(action.data.comments);
         }
       }
       console.log('action.data', action.data);
+      console.log('action.offset', action.data.offset);
       console.log('loadComments', draft.loadComments);
-      console.log('commentNum', draft.mainPosts.commentNum);
       draft.loadCommentsDone = true;
       break;
     }
@@ -426,20 +447,45 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostLoading = false;
       // draft.loadPostError = action.error;
       break;
-    case LIKE_POST_REQUEST: {
+    case LOAD_MAJOR_DATA_REQUEST:
+      draft.loadMajorDataLoading = true;
+      draft.loadMajorDataDone = false;
+      draft.loadMajorDataError = null;
       break;
-    }
+    case LOAD_MAJOR_DATA_SUCCESS:
+      draft.loadMajorDataLoading = false;
+      draft.majorsData = action.data;
+      draft.loadMajorDataDone = true;
+      break;
+    case LOAD_MAJOR_DATA_FAILURE:
+      draft.loadMajorDataLoading = false;
+      draft.loadMajorDataError = action.error;
+      break;
+    case LOAD_CATEGORY_DATA_REQUEST:
+      draft.loadCategoryLoading = true;
+      draft.loadCategoryDone = false;
+      draft.loadCategoryError = null;
+      break;
+    case LOAD_CATEGORY_DATA_SUCCESS:
+      draft.loadCategoryLoading = false;
+      draft.categoryData = action.data;
+      draft.loadCategoryDone = true;
+      break;
+    case LOAD_CATEGORY_DATA_FAILURE:
+      draft.loadCategoryLoading = false;
+      draft.loadCategoryError = action.error;
+      break;
+    case LIKE_POST_REQUEST:
+      break;
     case LIKE_POST_SUCCESS: {
       const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.post.id);
       draft.mainPosts[postIndex].likers.unshift({ id: action.data.user.id });
       break;
     }
-    case LIKE_POST_FAILURE: {
+    case LIKE_POST_FAILURE:
       break;
-    }
-    case UNLIKE_POST_REQUEST: {
+    case UNLIKE_POST_REQUEST:
       break;
-    }
     case UNLIKE_POST_SUCCESS: {
       const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.post.id);
       const likeIndex = (

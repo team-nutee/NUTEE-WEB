@@ -159,7 +159,7 @@ const PostCard = ({ post }) => {
     <>
       {me && post.user.id === me.id ? (
         <>
-          {!post.retweet.id && <Button onClick={showModal}>수정</Button>}
+          {(post.retweet === null || !post.retweet.id) && <Button onClick={showModal}>수정</Button>}
           <Button type="danger" onClick={onRemovePost}>삭제</Button>
         </>
       )

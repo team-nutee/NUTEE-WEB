@@ -7,6 +7,12 @@ import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
+  LOAD_MAJOR_DATA_REQUEST,
+  LOAD_MAJOR_DATA_SUCCESS,
+  LOAD_MAJOR_DATA_FAILURE,
+  LOAD_CATEGORY_DATA_REQUEST,
+  LOAD_CATEGORY_DATA_SUCCESS,
+  LOAD_CATEGORY_DATA_FAILURE,
   LIKE_POST_FAILURE,
   LIKE_POST_REQUEST,
   LIKE_POST_SUCCESS,
@@ -417,7 +423,7 @@ function* addComment(action) {
     yield put({
       type: ADD_COMMENT_SUCCESS,
       data: {
-        postId: action.data.postId,
+        postId: action.postId,
         comment: result.data,
       },
     });
@@ -609,8 +615,55 @@ function* retweet(action) {
   }
 }
 
+function majorsDataAPI() {
+  return axios.get(`${INDEX_URL}/sns/category/majors`, { data: {} });
+}
+
+function* majorsData(action) {
+  try {
+    const result = yield call(majorsDataAPI, action.data);
+    yield put({
+      type: LOAD_MAJOR_DATA_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_MAJOR_DATA_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function categoryDataAPI() {
+  return axios.get(`${INDEX_URL}/sns/category/interests`, { data: {} });
+}
+
+function* categoryData(action) {
+  try {
+    const result = yield call(categoryDataAPI, action.data);
+    yield put({
+      type: LOAD_CATEGORY_DATA_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_CATEGORY_DATA_FAILURE,
+      error: err,
+    });
+  }
+}
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
+}
+
+function* watchMajorsData() {
+  yield takeLatest(LOAD_MAJOR_DATA_REQUEST, majorsData);
+}
+function* watchCategoryData() {
+  yield takeLatest(LOAD_CATEGORY_DATA_REQUEST, categoryData);
 }
 
 function* watchEditPost() {
@@ -736,5 +789,7 @@ export default function* postSaga() {
     fork(watchRemoveComment),
     fork(watchReport),
     fork(watchAddReComment),
+    fork(watchMajorsData),
+    fork(watchCategoryData),
   ]);
 }
