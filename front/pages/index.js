@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
@@ -23,6 +23,7 @@ const Home = () => {
     categoryPosts,
   } = useSelector((state) => state.post);
   const dispatch = useDispatch();
+  const [mobileScreen, setMobileScreen] = useState(false);
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '55px' }), []);
 
@@ -32,24 +33,53 @@ const Home = () => {
     });
   }, []);
 
+  useEffect(
+    function onMobileWidth() {
+      if ((window.innerWidth || document.body.clientWidth) > 770) {
+        setMobileScreen(false);
+      } else {
+        setMobileScreen(true);
+      }
+      window.addEventListener('resize', onMobileWidth);
+      return () => {
+        window.removeEventListener('resize', onMobileWidth);
+      };
+    },
+  );
+
   return (
     <AppLayout>
-      <Row gutter={10} style={pageWrapper}>
-        {/* 프로필, 공지, 포스터 */}
-        <Col span={7}>
-          <LeftContents me={me} />
-        </Col>
-        {/* 게시글 */}
-        <Col span={17}>
-          <MainContents
-            me={me}
-            hasMorePost={hasMorePost}
-            mainPosts={mainPosts}
-            favoritePosts={favoritePosts}
-            categoryPosts={categoryPosts}
-          />
-        </Col>
-      </Row>
+      {mobileScreen ?
+        // 모바일 화면
+        <Row gutter={10} style={{paddingTop: '55px'}}>
+          <Col xs={24}>
+            <MainContents
+              me={me}
+              hasMorePost={hasMorePost}
+              mainPosts={mainPosts}
+              favoritePosts={favoritePosts}
+              categoryPosts={categoryPosts}
+            />
+          </Col>
+        </Row>
+        : 
+        <Row gutter={10} style={pageWrapper}>
+          {/* 프로필, 공지, 포스터 */}
+          <Col span={7}>
+            <LeftContents me={me} />
+          </Col>
+          {/* 게시글 */}
+          <Col span={17}>
+            <MainContents
+              me={me}
+              hasMorePost={hasMorePost}
+              mainPosts={mainPosts}
+              favoritePosts={favoritePosts}
+              categoryPosts={categoryPosts}
+            />
+          </Col>
+        </Row>
+      }
     </AppLayout>
   );
 };
