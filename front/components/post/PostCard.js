@@ -39,6 +39,7 @@ const PostCard = ({ post }) => {
   const { mainPosts, loadComments } = useSelector((state) => state.post);
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
+  const singlePostContent = me && post.id && mainPosts.find((v) => v.id === post.id);
 
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
@@ -237,13 +238,15 @@ const PostCard = ({ post }) => {
                     )}
                     description={(
                       <>
-                        <PostCardContent
-                          likers={post.likers ? post.likers.length : 0}
-                          commentN={post.commentNum}
-                          postTitle={post.retweet.title}
-                          postData={post.retweet.content}
-                          retweet={1}
-                        />
+                        {singlePostContent && (
+                          <PostCardContent
+                            likers={post.likers ? post.likers.length : 0}
+                            commentN={post.commentNum}
+                            postTitle={post.retweet.title}
+                            postData={post.retweet.content}
+                            retweet={1}
+                          />
+                        )}
                         <h5 style={retweetCardMetaWrapper}>
                           {`댓글 ${post.retweet.commentNum}개 좋아요 ${post.retweet.likers ? post.retweet.likers.length : 0}개`}
                         </h5>
@@ -274,12 +277,16 @@ const PostCard = ({ post }) => {
                       </>
                     )}
                     description={(
-                      <PostCardContent
-                        likers={post.likers ? post.likers.length : 0}
-                        commentN={post.commentNum}
-                        postTitle={post.title}
-                        postData={post.content}
-                      />
+                      <>
+                        {singlePostContent && (
+                        <PostCardContent
+                          likers={post.likers ? post.likers.length : 0}
+                          commentN={post.commentNum}
+                          postTitle={post.title}
+                          postData={post.content}
+                        />
+                        )}
+                      </>
                     )}
                     loading
                   />

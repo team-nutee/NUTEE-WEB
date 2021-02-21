@@ -127,7 +127,7 @@ function* loadFavoritePosts(action) {
 }
 
 function loadCategoryPostsAPI(lastId = 0, inter = 'IT2') { // inter='IT2' 게시글 있는 카테고리
-  return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=10`, { data: {} });
 }
 
 function* loadCategoryPosts(action) {
@@ -208,7 +208,7 @@ function* editPost(action) {
 }
 
 function removePostAPI(postId) {
-  return axios.delete(`${INDEX_URL}/sns/post/${postId}`);
+  return axios.delete(`${INDEX_URL}/sns/post/${postId}`, { data: {} });
 }
 
 function* removePost(action) {
@@ -251,11 +251,12 @@ function* report(action) {
 }
 
 function loadHashtagPostsAPI(tag, lastId) {
-  return axios.get(`${INDEX_URL}/sns/hashtag/${encodeURIComponent(tag)}?lastId=${lastId || 0}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/hashtag/${encodeURIComponent(tag)}?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadHashtagPosts(action) {
   try {
+    console.log('loadHashtag console');
     const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
@@ -270,7 +271,7 @@ function* loadHashtagPosts(action) {
 }
 
 function loadSearchPostsAPI(text, lastId) {
-  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`, { data: {} });
 }
 
 function* loadSearchPosts(action) {
@@ -310,7 +311,7 @@ function* loadUserInfo(action) {
 }
 
 function loadUserPostsAPI(id, lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/${id}/posts?lastId=${lastId || 0}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/user/${id}/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadUserPosts(action) {
@@ -330,7 +331,7 @@ function* loadUserPosts(action) {
 }
 
 function loadMyPostsAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/posts?lastId=${lastId || 0}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/user/me/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMyPosts(action) {
@@ -350,7 +351,7 @@ function* loadMyPosts(action) {
 }
 
 function loadMyCommentsAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId}&limit=10`, { data: {} });
 }
 
 function* loadMyComments(action) {
@@ -370,7 +371,7 @@ function* loadMyComments(action) {
 }
 
 function loadMyLikeAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId}&limit=10`);
+  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId}&limit=10`, { data: {} });
 }
 
 function* loadMyLike(action) {
