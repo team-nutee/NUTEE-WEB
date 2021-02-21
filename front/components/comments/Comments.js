@@ -100,7 +100,6 @@ const Comments = ({ item, post }) => {
             />
           )}
       </List.Item>
-      {}
       {reply
         ? <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id} />
         : <></>}
