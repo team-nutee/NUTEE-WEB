@@ -11,17 +11,17 @@ import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
-
-// favoritPosts, categoryPosts
+/* , favoritPosts, categoryPosts  */
 const MainContents = ({ target, mainPosts, hasMorePost }) => {
   const { me } = useSelector((state) => state.user);
+  const { loadPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   useEffect(() => {
     function onScroll() {
       if (window.pageYOffset + document.documentElement.clientHeight
         > document.documentElement.scrollHeight - 300) {
-        if (hasMorePost) {
+        if (hasMorePost && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
@@ -42,7 +42,7 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePost]);
+  }, [mainPosts.length, hasMorePost, !loadPostsLoading]);
 
   const tabsWrapper = useMemo(() => ({ color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '15px', paddingBotton: '10px' }), []);
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
@@ -58,19 +58,15 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
         </TabPane>
         <TabPane tab="전공" key="2" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
-          전공 게시글
-          {/*           {categoryPosts.map((c) => (
+          {mainPosts.map((c) => (
             <PostCard key={c.id} post={c} />
-          ))} */}
+          ))}
         </TabPane>
         <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm /> : <></>}
-          즐겨찾기 게시글
-          {/*         {
-            favoritPosts.map((f) => (
-              <PostCard key={f.id} post={f} />
-            ))
-          } */}
+          {mainPosts.map((f) => (
+            <PostCard key={f.id} post={f} />
+          ))}
         </TabPane>
       </Tabs>
     </>
@@ -83,8 +79,8 @@ MainContents.propTypes = {
   }),
   mainPosts: PropTypes.array,
   hasMorePost: PropTypes.bool,
-/*   favoritPosts: PropTypes.object,
-  categoryPosts: PropTypes.object, */
+  favoritPosts: PropTypes.array,
+  categoryPosts: PropTypes.array,
 }.isRequired;
 
 export default MainContents;
