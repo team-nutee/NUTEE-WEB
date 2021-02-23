@@ -34,6 +34,7 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const [editVisible, setEditVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
+  const [mobileScreen, setMobileScreen] = useState(false);
 
   const [lastId, setlastId] = useState(0);
   const { mainPosts, loadComments } = useSelector((state) => state.post);
@@ -41,7 +42,22 @@ const PostCard = ({ post }) => {
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
   const singlePostContent = me && post.id && mainPosts.find((v) => v.id === post.id);
 
+  useEffect(
+    function onMobileWidth() {
+      if ((window.innerWidth || document.body.clientWidth) > 750) {
+        setMobileScreen(false);
+      } else {
+        setMobileScreen(true);
+      }
+      window.addEventListener('resize', onMobileWidth);
+      return () => {
+        window.removeEventListener('resize', onMobileWidth);
+      };
+    },
+  );
+
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
+  const mobilePostCardWrapper = useMemo(() => ({ minWidth: '250px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
   const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
@@ -181,7 +197,7 @@ const PostCard = ({ post }) => {
   );
 
   return (
-    <div style={postCardWrapper}>
+    <div style={mobileScreen?mobilePostCardWrapper:postCardWrapper}>
       {post.blocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card>
         : (
           <Card

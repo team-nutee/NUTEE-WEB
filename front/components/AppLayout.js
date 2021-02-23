@@ -13,7 +13,7 @@ const AppLayout = ({ children }) => {
 
   useEffect(
     function onMobileWidth() {
-      if ((window.innerWidth || document.body.clientWidth) > 700) {
+      if ((window.innerWidth || document.body.clientWidth) > 750) {
         setMobileScreen(false);
       } else {
         setMobileScreen(true);

@@ -26,6 +26,8 @@ const Home = () => {
   const [mobileScreen, setMobileScreen] = useState(false);
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '55px' }), []);
+  const mobilePageWrapper = useMemo(() => ({ outline: 'none', width: '100vw', minWidth: '100px', maxWidth: '700px', paddingTop: '55px' }), []);
+
 
   useEffect(() => {
     dispatch({
@@ -35,7 +37,7 @@ const Home = () => {
 
   useEffect(
     function onMobileWidth() {
-      if ((window.innerWidth || document.body.clientWidth) > 770) {
+      if ((window.innerWidth || document.body.clientWidth) > 750) {
         setMobileScreen(false);
       } else {
         setMobileScreen(true);
@@ -51,8 +53,8 @@ const Home = () => {
     <AppLayout>
       {mobileScreen ?
         // 모바일 화면
-        <Row gutter={10} style={{paddingTop: '55px'}}>
-          <Col xs={24}>
+        <Row style={mobilePageWrapper}>
+          <Col span={24}>
             <MainContents
               me={me}
               hasMorePost={hasMorePost}
