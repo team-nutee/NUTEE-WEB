@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FIND_PASSWORD_REQUEST } from '../../reducers/user';
 
-const FindPw = ({ setPwVisible }) => {
+const FindPassword = ({ setPwVisible }) => {
   const [id, setId] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
@@ -75,8 +75,8 @@ const FindPw = ({ setPwVisible }) => {
   );
 };
 
-FindPw.propTypes = {
+FindPassword.propTypes = {
   setPwVisible: PropTypes.bool,
 }.isRequired;
 
-export default FindPw;
+export default FindPassword;

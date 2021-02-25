@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { logoutRequestAction } from '../reducers/user';
 import useInput from '../hooks/useInput';
 
@@ -19,7 +20,8 @@ const NavigationBar = ({ me }) => {
   }, [searchInput]);
 
   const onLogOut = useCallback(() => {
-    dispatch(logoutRequestAction());
+    const accessToken = localStorage.getItem('accessToken');
+    dispatch(logoutRequestAction({ accessToken }));
   }, []);
 
   useEffect(function onSearchWidth() {
@@ -115,6 +117,10 @@ const NavigationBar = ({ me }) => {
         : <></>}
     </Row>
   );
+};
+
+NavigationBar.propTypes = {
+  me: PropTypes.object.isRequired,
 };
 
 export default NavigationBar;

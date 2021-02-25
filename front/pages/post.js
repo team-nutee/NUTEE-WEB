@@ -18,7 +18,7 @@ const Post = ({ id }) => {
       <AppLayout>
         <Head>
           <title>
-            {singlePost.User.nickname}
+            {singlePost.user.nickname}
             님의 글
           </title>
           <meta name="description" content={singlePost.content} />
