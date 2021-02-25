@@ -144,9 +144,9 @@ export const EDIT_PWCK_REQUEST = 'EDIT_PWCK_REQUEST';
 export const EDIT_PWCK_SUCCESS = 'EDIT_PWCK_SUCCESS';
 export const EDIT_PWCK_FAILURE = 'EDIT_PWCK_FAILURE';
 
-export const EDIT_MAJOR_REQUEST = 'EDIT_PWCK_REQUEST';
-export const EDIT_MAJOR_SUCCESS = 'EDIT_PWCK_SUCCESS';
-export const EDIT_MAJOR_FAILURE = 'EDIT_PWCK_FAILURE';
+export const EDIT_MAJOR_REQUEST = 'EDIT_MAJOR_REQUEST';
+export const EDIT_MAJOR_SUCCESS = 'EDIT_MAJOR_SUCCESS';
+export const EDIT_MAJOR_FAILURE = 'EDIT_MAJOR_FAILURE';
 
 export const EDIT_CATEGORY_REQUEST = 'EDIT_CATEGORY_REQUEST';
 export const EDIT_CATEGORY_SUCCESS = 'EDIT_CATEGORY_SUCCESS';
@@ -193,8 +193,9 @@ export const loginRequestAction = (data) => ({
   data,
 });
 
-export const logoutRequestAction = () => ({
+export const logoutRequestAction = (data) => ({
   type: LOG_OUT_REQUEST,
+  data,
 });
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
@@ -340,10 +341,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.isLoadMyInfoError = action.error;
       break;
     case ADD_POST_TO_ME:
-      draft.me.posts.unshift({ userId: action.data });
+      // draft.me.posts.unshift({ userId: action.data });
       break;
     case REMOVE_POST_OF_ME:
-      draft.me.posts = draft.me.posts.filter((v) => v.id !== action.data);
+      // draft.me.posts = draft.me.posts.filter((v) => v.id !== action.data);
       break;
     case EDIT_NICKNAME_REQUEST:
       draft.editNicknameLoading = true;

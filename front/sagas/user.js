@@ -180,9 +180,8 @@ function* logIn(action) {
   }
 }
 
-function logOutAPI() { // accessToken을 로그아웃에서 넘겨주는 것으로 할지 말지 고민 중(수정 예정)
-  const accessToken = localStorage.getItem('accessToken');
-  return axios.post(`${AUTH_URL}/auth/logout`, { data: { accessToken } });
+function logOutAPI(accessToken) { // accessToken을 로그아웃에서 넘겨주는 것으로 할지 말지 고민 중(수정 예정)
+  return axios.post(`${AUTH_URL}/auth/logout`, accessToken);
 }
 
 function* logOut(action) {
@@ -407,7 +406,7 @@ function* unfollow(action) {
 }
 
 function loadFollowersAPI(userId, offset = 0, limit = 3) { // api X
-  return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`);
+  return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`, { data: {} });
 }
 
 function* loadFollowers(action) {
@@ -427,7 +426,7 @@ function* loadFollowers(action) {
 }
 
 function loadFollowingsAPI(userId, offset = 0, limit = 3) { // api X
-  return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`);
+  return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`, { data: {} });
 }
 
 function* loadFollowings(action) {
@@ -545,8 +544,8 @@ function* editCategory(action) {
   }
 }
 
-function editMajorAPI(majors) {
-  return axios.patch(`${AUTH_URL}/auth/user/majors`, majors);
+function editMajorAPI(data) {
+  return axios.patch(`${AUTH_URL}/auth/user/majors`, data.majors);
 }
 
 function* editMajor(action) {

@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { loginRequestAction } from '../reducers/user';
 import useInput from '../hooks/useInput';
 import FindId from './find/FindId';
-import FindPw from './find/FindPw';
+import FindPw from './find/FindPassword';
 
 const LoginForm = () => {
   const [userId, onChangeUserId] = useInput('');
