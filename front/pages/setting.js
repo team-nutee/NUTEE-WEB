@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { END } from 'redux-saga';
 import { Row, Tabs, Divider } from 'antd';
 import { SmileOutlined, SettingOutlined, BookOutlined, UnlockOutlined, UserOutlined, TagsOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import wrapper from '../store/configureStore';
+import { LOAD_MAJOR_DATA_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
 import EditPassword from '../components/setting/EditPassword';
@@ -20,6 +22,13 @@ const setting = () => {
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
   const setIconWrapper = useMemo(() => ({ marginRight: '5px' }), []);
   const dividerWrapper = useMemo(() => ({ fontSize: '20px' }), []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, []);
 
   return (
     <AppLayout>
@@ -104,6 +113,12 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   }
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_MAJOR_DATA_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch(END);
   console.log('getServerSideProps start_setting');
