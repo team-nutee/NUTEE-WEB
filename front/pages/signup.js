@@ -1,11 +1,8 @@
-/* eslint-disable consistent-return */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-alert */
+/* eslint-disable consistent-return */ /* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */ /* eslint-disable no-alert */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Select from 'react-select';
 import { END } from 'redux-saga';
@@ -13,21 +10,13 @@ import { Form, Input, Checkbox, Button, Row, Col, Modal } from 'antd';
 import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined } from '@ant-design/icons';
 import wrapper from '../store/configureStore';
 import {
-  LOAD_MY_INFO_REQUEST,
-  CHECK_ID_REQUEST,
-  CHECK_NICKNAME_REQUEST,
-  SEND_OPT_REQUEST,
-  CHECK_DUPLICATE_EMAIL_REQUEST,
-  CHECK_OTP_REQUEST,
-  SIGN_UP_REQUEST,
+  LOAD_MY_INFO_REQUEST, CHECK_ID_REQUEST, CHECK_NICKNAME_REQUEST, SEND_OPT_REQUEST,
+  CHECK_DUPLICATE_EMAIL_REQUEST, CHECK_OTP_REQUEST, SIGN_UP_REQUEST,
 } from '../reducers/user';
 import { LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_DATA_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
 import Terms from '../components/Terms';
 import NavigationBar from '../components/NavigationBar';
-
-const TextInput = ({ value }) => (<div>{value}</div>);
-TextInput.propTypes = { value: PropTypes.string }.isRequired;
 
 const Signup = () => {
   const [id, onChangeId, setId] = useInput('');
@@ -70,21 +59,27 @@ const Signup = () => {
     if (isSignUpError) alert(isSignUpError);
   }, [isSignUpError]);
 
+  const pageWrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center' }), []);
+  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '80px 0 50px 0' }), []);
+  const h1Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
+  const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
+  const failureWrapper = useMemo(() => ({ color: 'red', fontSize: '12px', marginLeft: '5px' }), []);
+  const successWrapper = useMemo(() => ({ color: 'green', fontSize: '12px', marginLeft: '5px' }), []);
+  const majorButtonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white', height: '39px' }), []);
+  const checkboxWrapper = useMemo(() => ({ margin: '0px 5px 5px 0px' }), []);
+  const termsWrapper = useMemo(() => ({ color: '#005000' }), []);
+  const selectWrapper = useMemo(() => ({ menu: (css) => ({ ...css, zIndex: 999 }) }), []);
+  const buttonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white' }), []);
+  const signupButtonWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+
   const onSubmit = useCallback(() => {
-    if (!checkIdDone) {
-      return alert('아이디가 확인되지 않았습니다.');
-    }
-    if (!checkNicknameDone) {
-      return alert('닉네임이 확인되지 않았습니다.');
-    }
+    if (!checkIdDone) return alert('아이디가 확인되지 않았습니다.');
+    if (!checkNicknameDone) return alert('닉네임이 확인되지 않았습니다.');
     if (password !== checkPassword) return setPasswordError(true);
     if (!schoolEmail) return setSchoolEmailError(true);
-    if (!checkDuplicateEmail) {
-      return alert('이메일이 인증되지 않았습니다.');
-    }
-    if (!checkOtp) {
-      return alert('otp가 확인되지 않았습니다.');
-    }
+    if (!checkDuplicateEmail) return alert('이메일이 인증되지 않았습니다.');
+    if (!checkOtp) return alert('otp가 확인되지 않았습니다.');
+    if (!term) return setTermError(true);
     if (!major || major.length === 0) {
       alert('전공이 확인되지 않았습니다.');
       return setMajorError(true);
@@ -93,7 +88,6 @@ const Signup = () => {
       alert('카테고리가 확인되지 않았습니다.');
       return setInterestsError(true);
     }
-    if (!term) return setTermError(true);
     dispatch({
       type: SIGN_UP_REQUEST,
       data: {
@@ -121,17 +115,13 @@ const Signup = () => {
     schoolEmail, checkDuplicateEmail, otp, checkOtp, major, interests, term]);
 
   const onCheckschoolEmail = () => {
-    if (!schoolEmail.includes('@office.skhu.ac.kr')) {
-      alert('이메일을 잘못 입력하셨습니다.');
-      return;
-    }
+    if (!schoolEmail.includes('@office.skhu.ac.kr')) return alert('이메일을 잘못 입력하셨습니다.');
     dispatch({
-      type: CHECK_DUPLICATE_EMAIL_REQUEST, // 중복된 이메일 확인
+      type: CHECK_DUPLICATE_EMAIL_REQUEST,
       data: { schoolEmail },
     });
-
     dispatch({
-      type: SEND_OPT_REQUEST, // 이메일 인증 -> OTP 전송
+      type: SEND_OPT_REQUEST,
       data: { schoolEmail },
     });
   };
@@ -151,15 +141,13 @@ const Signup = () => {
   };
 
   const onCheckNickname = () => {
-    if (nickname.length > 12) {
-      alert('닉네임은 최대 12자까지 가능합니다.');
-      return;
-    }
+    if (nickname.length > 12) return alert('닉네임은 최대 12자까지 가능합니다.');
     dispatch({
       type: CHECK_NICKNAME_REQUEST,
       data: { nickname },
     });
   };
+
   const onChangeCheckPassword = useCallback((e) => {
     setCheckPassword(e.target.value);
     setPasswordError(e.target.value !== password);
@@ -170,43 +158,45 @@ const Signup = () => {
     setSchoolEmail(e.target.value);
   }, [schoolEmail]);
 
-  const onChangeMajor = useCallback(() => {
-    if (major.length > 2) {
-      alert('전공을 다시 선택해주세요. 전공은 3개 이상 불가합니다.');
-      return setInterestsError(true);
-    }
-    if (major.length === 0) {
-      alert('전공을 선택해주세요');
-      return setInterestsError(true);
-    }
-    setMajorError(false);
-  }, [major]);
-
   const onChangeTerm = useCallback((e) => {
     setTermError(false);
     setTerm(e.target.checked);
   }, [term]);
 
-  const onChangeInterests = useCallback(() => {
+  const onChangeMajor = useCallback(() => {
+    if (major.length > 2) {
+      alert('전공을 다시 선택해주세요. 전공은 3개 이상 불가합니다.');
+      return setMajorError(true);
+    }
     if (major.length === 0) {
+      alert('전공을 선택해주세요');
+      return setMajorError(true);
+    }
+    setMajorError(false);
+  }, [major]);
+
+  const onChangeInterests = useCallback(() => {
+    if (interests.length === 0) {
       alert('카테고리를 선택해주세요');
       return setInterestsError(true);
     }
     setInterestsError(false);
-  }, [term]);
+  }, [interests]);
 
-  const pageWrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center' }), []);
-  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '80px 0 auto 0' }), []);
-  const h1Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
-  const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
-  const failureWrapper = useMemo(() => ({ color: 'red', fontSize: '12px', marginLeft: '5px' }), []);
-  const successWrapper = useMemo(() => ({ color: 'green', fontSize: '12px', marginLeft: '5px' }), []);
-  const majorButtonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white', height: '39px' }), []);
-  const checkboxWrapper = useMemo(() => ({ margin: '0px 5px 5px 0px' }), []);
-  const termsWrapper = useMemo(() => ({ color: '#005000' }), []);
-  const selectStyles = useMemo(() => ({ menu: (css) => ({ ...css, zIndex: 999 }) }), []);
-  const buttonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white' }), []);
-  const signupButtonWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+  const selectOptions = (v) => {
+    const objectData = v.map((data) => ({ value: data, label: data }));
+    return objectData;
+  };
+
+  const onSelectMajors = (selected) => {
+    const select = selected.map(({ value }) => value);
+    setMajor(select);
+  };
+
+  const onSelectInterests = (selected) => {
+    const select = selected.map(({ value }) => value);
+    setInterests(select);
+  };
 
   return (
     <div style={pageWrapper}>
@@ -322,11 +312,11 @@ const Signup = () => {
               <Select
                 isMulti
                 placeholder="학부 또는 전공을 선택해주세요."
-                name="user-majors"
+                name="user-major"
                 menuPlacement="top"
-                onChange={setMajor}
-                options={majorsData}
-                styles={selectStyles}
+                onChange={onSelectMajors}
+                options={selectOptions(majorsData)}
+                styles={selectWrapper}
                 required
               />
             </Col>
@@ -341,12 +331,12 @@ const Signup = () => {
             <Col span={18}>
               <Select
                 isMulti
-                placeholder="선호하는 카테고리를 선택해주세요."
-                styles={selectStyles}
+                placeholder="카테고리를 선택해주세요."
                 name="user-interests"
                 menuPlacement="top"
-                onChange={setInterests}
-                options={categoryData}
+                onChange={onSelectInterests}
+                options={selectOptions(categoryData)}
+                styles={selectWrapper}
                 required
               />
             </Col>
