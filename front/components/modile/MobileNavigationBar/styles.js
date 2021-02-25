@@ -45,20 +45,24 @@ export const NuteeMenu = styled.ul`
     flex-direction: column; 
     align-items: center; 
     width: 100%;
-    background: #c8e6d7;
+    background: #f0faf5;
     padding-bottom: 20px;
+    padding-left: 0px;
 `;
 
 export const MenuList = styled.li`
     padding: 8px 12px;
     list-style: none;
     color: #13c276;
+    width: 90%;
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: #13c276;
+    border-bottom-color: #b4efc8;
     font-style: 'Do Hyeon';
     font-size: 17px;
+    font-weight: 600;
     text-decoration: none;
+    text-align: center;
 
     & a {
         color: #13c276;

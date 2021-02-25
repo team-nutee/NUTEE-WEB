@@ -35,7 +35,7 @@ const MobileNavigationBar = ({ me }) => {
   }, [showMenu]);
   
   /* 검색 */
-  const searchWrapper = useMemo(() => ({ float: "left", margin: '0 5px 0 20px', width: '200px' }), []);
+  const searchWrapper = useMemo(() => ({ float: "left", margin: '0 5px 0 20px', minWidth: '150px', maxWidth: '720px' }), []);
   const showSearchWrapper = useMemo(() => ({ fontSize: '30px', color: '#13c276', marginTop: '2px' }), []);
 
   return (
@@ -60,6 +60,7 @@ const MobileNavigationBar = ({ me }) => {
             <>
               <NuteeMenu>
                 <MenuList>
+                  <div style={{display: 'flex', justifyContent: 'center'}}>
                   <Input
                   placeholder="검색어를 입력하세요."
                   allowClear
@@ -67,6 +68,7 @@ const MobileNavigationBar = ({ me }) => {
                   style={searchWrapper}
                   onChange={onChangeSearchInput}
                 /><SearchOutlined style={showSearchWrapper} onClick={onSearch} />
+                  </div>
                 </MenuList>
                 <MenuList><Link href="/profile"><a>프로필</a></Link></MenuList>
                 <MenuList>학사</MenuList>
