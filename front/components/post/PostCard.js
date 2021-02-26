@@ -31,17 +31,15 @@ const PostCard = ({ post }) => {
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const { me } = useSelector((state) => state.user);
   const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
-  const dispatch = useDispatch();
   const [editVisible, setEditVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
-  const { mainPosts, loadComments } = useSelector((state) => state.post);
+  const { mainPosts, loadComments, loadPostDone } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
-  const singlePostContent = me && post.id && mainPosts.find((v) => v.id === post.id);
-
+  const singlePostContent = me && mainPosts.find((v) => v.id === post.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
-  const mobilePostCardWrapper = useMemo(() => ({ minWidth: '250px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
   const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
@@ -80,7 +78,7 @@ const PostCard = ({ post }) => {
       });
       setlastId(lastId + 5);
     }
-  }, []);
+  }, [loadPostDone]);
 
   const onLoadMoreComments = () => {
     dispatch({
@@ -168,17 +166,24 @@ const PostCard = ({ post }) => {
     </>
   );
 
-  const loadMore = (
-    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum === loadComments.length
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum !== 0
-      && loadComments.length !== 0
-      && loadComments.length % 6 === 0
+  const postIndex = () => {
+    const index = mainPosts.findIndex((v) => v.id === post.id);
+    console.log('postIndex', index);
+    return index;
+  };
+
+  /*   const loadMore = (
+    loadComments[postIndex]
+      .comments === loadComments.comments
+      && loadComments[postIndex].comments !== 0
+      && loadComments.comments.length !== 0
+      && loadComments.comments.length % 6 === 0
       ? (
         <div style={loadMoreDivWrapper}>
           <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
         </div>
       ) : null
-  );
+  ); */
 
   return (
     <div style={postCardWrapper}>
@@ -296,15 +301,14 @@ const PostCard = ({ post }) => {
         )}
       {commentFormOpened && (
         <div style={commentWrapper}>
-          {mainPosts[mainPosts.findIndex((v) => v.id === post.id)].commentNum !== 0
-            && mainPosts[mainPosts.findIndex((v) => v.id === post.id)]
+          {loadComments[postIndex] !== null && loadComments[postIndex]
             ? (
               <List
                 itemLayout="horizontal"
                 style={listWrapper}
-                loadMore={loadMore}
-                dataSource={loadComments || []}
-                renderItem={(item) => <Comments item={item} post={post} />}
+                // loadMore={loadMore}
+                dataSource={loadComments[postIndex] || []}
+                renderItem={(item) => <Comments item={item.comments} post={post} />}
               />
             )
             : <></>}
@@ -359,7 +363,7 @@ PostCard.propTypes = {
     user: PropTypes.shape({
       id: PropTypes.number,
       nickname: PropTypes.string,
-      image: PropTypes.string,
+      image: PropTypes.object,
     }),
     images: PropTypes.array,
     title: PropTypes.string,

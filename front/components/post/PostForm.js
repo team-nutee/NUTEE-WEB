@@ -1,56 +1,59 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */ /* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-alert */
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
-import { Form, Button, Dropdown, Input } from 'antd';
+import { Form, Button, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import {
-  ADD_POST_REQUEST,
-  REMOVE_IMAGE,
-  UPLOAD_REQUEST,
-} from '../../reducers/post';
-import { TARGET_URL } from '../../static';
+import Select from 'react-select';
+import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_REQUEST } from '../../reducers/post';
+import { INDEX_URL } from '../../static';
 import useInput from '../../hooks/useInput';
-import { inter, major } from '../dummy';
 
-const PostForm = () => {
+const PostForm = (me) => {
   const dispatch = useDispatch();
   const [title, onChangeTitle, setTitle] = useInput('');
   const [text, onChangeText, setText] = useInput('');
-  const [category, setCategory] = useState([]);
-  const { imagePaths, isAddingPost, postAdded } = useSelector((state) => state.post);
+  const [category, setCategory] = useState();
+  const {
+    categoryData,
+    imagePaths,
+    addPostLoading,
+    addPostDone,
+  } = useSelector((state) => state.post);
+  const { majors } = me.me;
   const imageInput = useRef();
+  console.log('imagePaths', imagePaths);
 
   useEffect(() => {
-    if (postAdded) {
-      setTitle('');
-      setText('');
-    }
-  }, [postAdded]);
+    if (addPostDone) setTitle(''); setText('');
+  }, [addPostDone]);
 
-  const onSubmitForm = useCallback((e) => {
-    if (!title || !title.trim()) alert('제목을 작성해주세요.');
-    if (!text || !text.trim()) alert('게시글을 작성해주세요.');
-    dispatch({
-      type: ADD_POST_REQUEST,
-      data: {
-        title,
-        content: text,
-        images: imagePaths,
-        category: 'IT2',
-      },
-    });
-  },
-  [text, imagePaths]);
+  const onSubmitForm = useCallback(() => {
+    if (!category) return alert('카테고리를 선택해주세요.');
+    if (!title || !title.trim()) return alert('제목을 작성해주세요.');
+    if (!text || !text.trim()) return alert('게시글을 작성해주세요.');
+    return (
+      dispatch({
+        type: ADD_POST_REQUEST,
+        data: {
+          title,
+          content: text,
+          images: imagePaths,
+          category,
+        },
+      })
+    );
+  }, [title, text, imagePaths, category]);
 
   const onChangeImages = useCallback((e) => {
-    console.log(e.target.files);
+    console.log('e.target.files', e.target.files);
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append('image', f);
     });
+    console.log('imageFormData', imageFormData);
+    console.log('onChangeImages', ' 이미지 업로드');
     dispatch({
       type: UPLOAD_REQUEST,
       data: imageFormData,
@@ -61,25 +64,34 @@ const PostForm = () => {
     imageInput.current.click();
   }, [imageInput.current]);
 
-  const onRemoveImage = useCallback(
-    (index) => () => {
-      dispatch({
-        type: REMOVE_IMAGE,
-        index,
-      });
-    },
-    [],
-  );
+  const onRemoveImage = useCallback((index) => () => {
+    dispatch({
+      type: REMOVE_IMAGE,
+      index,
+    });
+  }, []);
+
+  const postCategoryList = (m, i) => {
+    const categoryList = [];
+    m.map((data) => (categoryList.push({ value: data, label: data })));
+    i.map((data) => (categoryList.push({ value: data, label: data })));
+    return categoryList;
+  };
+
+  const onSelectCategory = (s) => {
+    setCategory(s.value);
+  };
 
   const formWrapper = useMemo(() => ({ height: 'auto', overflow: 'hidden', background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', margin: '7px 0 15px 0', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
   const imageAndWriteWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
-  const buttonWrapper = useMemo(() => ({ background: '#13c276', borderColor: 'white', width: '100px', margin: '10px 0px 10px 10px', color: 'white' }), []);
   const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', width: '47vw', minWidth: '500px', maxWidth: '672px', borderColor: '#c8e6d7' }), []);
 
   /* 작성, 이미지 업로드 버튼 */
   const uploadButtonWrapper = useMemo(() => ({ float: 'left', margin: '9px 0 5px 15px' }), []);
   const writeButtonWrapper = useMemo(() => ({ float: 'right', margin: '5px 15px', borderRadius: '3px', background: '#13c276', borderColor: '#fff', color: 'white' }), []);
   const iconWrapper = useMemo(() => ({ fontSize: '20px', color: '#13c276' }), []);
+  const customStyles = useMemo(() => ({ control: (css) => ({ ...css, width: '230px', height: '32px', zIndex: '999', minHeight: '32px' }) }), []);
+  const categoryButtonWrapper = useMemo(() => ({ width: '230px', margin: '10px' }), []);
 
   /* 이미지 업로드 및 제거 관련 */
   const imagesWrapper = useMemo(() => ({ height: 'auto' }), []);
@@ -93,18 +105,17 @@ const PostForm = () => {
       style={formWrapper}
       onFinish={onSubmitForm}
     >
-      {/* 임시 */}
-      <Dropdown overlay={inter} value={category} placement="bottomCenter">
-        <Button style={buttonWrapper} shape="round">
-          <b>카테고리</b>
-        </Button>
-      </Dropdown>
-      <Dropdown overlay={major} placement="bottomCenter">
-        <Button style={buttonWrapper} shape="round">
-          <b>내 전공</b>
-        </Button>
-      </Dropdown>
-
+      <div style={categoryButtonWrapper}>
+        <Select
+          placeholder="카테고리"
+          name="categoty"
+          onChange={onSelectCategory}
+          options={postCategoryList(majors, categoryData)}
+          styles={customStyles}
+          menuPlacement="auto"
+          maxMenuHeight={150}
+        />
+      </div>
       <Input.TextArea
         style={inputWrapper}
         value={title}
@@ -120,40 +131,28 @@ const PostForm = () => {
         placeholder="내용을 입력해주세요."
       />
       <div style={imageAndWriteWrapper}>
-        <input
-          type="file"
-          name="image"
-          multiple
-          hidden
-          ref={imageInput}
-          onChange={onChangeImages}
-        />
-        <div onClick={onClickImageUpload} style={uploadButtonWrapper}>
-          <FileImageOutlined style={iconWrapper} />
-        </div>
         <Button
           type="primary"
           style={writeButtonWrapper}
           htmlType="submit"
-          loading={isAddingPost}
+          loading={addPostLoading}
         >
           <b>작성</b>
         </Button>
+        <div onClick={onClickImageUpload} style={uploadButtonWrapper}>
+          <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
+          <FileImageOutlined style={iconWrapper} />
+        </div>
       </div>
       <br />
       <br />
-
       <div style={imagesWrapper}>
         {imagePaths.map((v, i) => (
           <div key={v} style={imagePathsWrapper}>
+            <img src={`${INDEX_URL}/${v}`} style={imagePathsImgWrapper} alt={v} />
             <div onClick={onRemoveImage(i)} style={removeImageIconWrapper}>
               <CloseCircleOutlined style={closeOutIconWrapper} />
             </div>
-            <img
-              src={`${TARGET_URL}/${v}`}
-              style={imagePathsImgWrapper}
-              alt={v}
-            />
           </div>
         ))}
       </div>

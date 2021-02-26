@@ -9,7 +9,6 @@ import { Divider } from 'antd';
 const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => {
   const [showMore, setShowMore] = useState(false);
   const cssChange = () => { setShowMore(true); };
-
   const pageWrapper = useMemo(() => ({ margin: '0 30px 15px 0' }), []);
   const postDataPreWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'NanumBarunGothic', fontSize: '15px' }), []);
   const retweetWrapper = useMemo(() => ({ position: 'absolute', right: '-5px', bottom: '-25px', fontSize: '12px' }), []);
@@ -28,16 +27,15 @@ const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => 
   );
 
   const urlReg = /(?:(http(s)?:\/\/|[\s\t\r\n\[\]\`\<\>\"\'])((?:[\w$\-_\.+!*\'\(\),]|%[0-9a-f][0-9a-f])*\:(?:[\w$\-_\.+!*\'\(\),;\?&=]|%[0-9a-f][0-9a-f])+\@)?(?:((?:(?:[a-z0-9\-가-힣]+\.)+[a-z0-9\-]{2,})|(?:[\d]{1,3}\.){3}[\d]{1,3})|localhost)(?:\:([0-9]+))?((?:\/(?:[\w$\-_\.+!*\'\(\),;:@&=ㄱ-ㅎㅏ-ㅣ가-힣]|%[0-9a-f][0-9a-f])+)*)(?:\/([^\s\/\?\.:<>|#]*(?:\.[^\s\/\?:<>|#]+)*))?(\/?[\?;](?:[a-z0-9\-]+(?:=[^\s:&<>]*)?\&)*[a-z0-9\-]+(?:=[^\s:&<>]*)?)?(#[\w\-]+)?)/;
-  const urlRegExp = (
-    <>
-      {postData.split(`${urlReg}gi`).map((u) => {
-        if (u.match(urlReg)) {
-          return <Link href={u.slice(0)} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
-        }
-        return u;
-      })}
-    </>
-  );
+  const urlRegExp = () => {
+    const url = postData.split(`${urlReg}gi`).map((u) => {
+      if (u.match(urlReg)) {
+        return <Link href={u.slice(0)} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+      }
+      return u;
+    });
+    return url;
+  };
 
   return (
     <div style={pageWrapper}>

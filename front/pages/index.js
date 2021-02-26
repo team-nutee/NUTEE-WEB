@@ -7,6 +7,7 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_FAVORITE_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_REQUEST,
+  LOAD_CATEGORY_DATA_REQUEST,
 } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import LeftContents from '../components/contents/LeftContents';
@@ -74,6 +75,9 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch({
     type: LOAD_CATEGORY_POSTS_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch(END);
   console.log('getServerSideProps start_index');

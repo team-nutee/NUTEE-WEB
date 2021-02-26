@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, call, throttle } from 'redux-saga/effects';
 import axios from 'axios';
 import {
   ADD_POST_FAILURE,
@@ -145,8 +145,8 @@ function* loadCategoryPosts(action) {
   }
 }
 
-function loadPostAPI(postId) {
-  return axios.get(`${INDEX_URL}/sns/post/${postId}`);
+function loadPostAPI(data) {
+  return axios.get(`${INDEX_URL}/sns/post/${data.postId}`, { data: {} });
 }
 
 function* loadPost(action) {
@@ -550,7 +550,7 @@ function* editImages(action) {
 }
 
 function likePostAPI(postId) {
-  return axios.post(`${INDEX_URL}/sns/post/${postId}/like`);
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/like`, { data: {} });
 }
 
 function* likePost(action) {
