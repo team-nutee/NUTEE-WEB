@@ -1,5 +1,4 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-alert */
+/* eslint-disable no-restricted-globals */ /* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +33,7 @@ const PostCard = ({ post }) => {
   const [editVisible, setEditVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
-  const { mainPosts, loadComments, loadPostDone } = useSelector((state) => state.post);
+  const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
@@ -42,7 +41,7 @@ const PostCard = ({ post }) => {
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
-  const aWrapper = useMemo(() => ({ margin: '0px 10px 0px 10px' }), []);
+  const aWrapper = useMemo(() => ({ margin: '0px 10px' }), []);
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
   const modalWrapper = useMemo(() => ({ padding: '50px', zIndex: 1 }), []);
@@ -80,6 +79,7 @@ const PostCard = ({ post }) => {
     }
   }, [loadPostDone]);
 
+  /*
   const onLoadMoreComments = () => {
     dispatch({
       type: LOAD_COMMENTS_REQUEST,
@@ -90,6 +90,7 @@ const PostCard = ({ post }) => {
     });
     setlastId(lastId + 5);
   };
+  */
 
   const onSubmitComment = useCallback((e) => {
     e.preventDefault();
@@ -166,24 +167,18 @@ const PostCard = ({ post }) => {
     </>
   );
 
-  const postIndex = () => {
-    const index = mainPosts.findIndex((v) => v.id === post.id);
-    console.log('postIndex', index);
-    return index;
-  };
-
-  /*   const loadMore = (
-    loadComments[postIndex]
-      .comments === loadComments.comments
-      && loadComments[postIndex].comments !== 0
-      && loadComments.comments.length !== 0
-      && loadComments.comments.length % 6 === 0
+  /*
+  const loadMore = (
+    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments
+      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments !== 0
+      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments % 5 === 0
       ? (
         <div style={loadMoreDivWrapper}>
           <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
         </div>
       ) : null
-  ); */
+  );
+  */
 
   return (
     <div style={postCardWrapper}>
@@ -301,14 +296,15 @@ const PostCard = ({ post }) => {
         )}
       {commentFormOpened && (
         <div style={commentWrapper}>
-          {loadComments[postIndex] !== null && loadComments[postIndex]
+          {mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments !== 0
+            && mainPosts[mainPosts.findIndex((v) => v.id === post.id)]
             ? (
               <List
                 itemLayout="horizontal"
                 style={listWrapper}
                 // loadMore={loadMore}
-                dataSource={loadComments[postIndex] || []}
-                renderItem={(item) => <Comments item={item.comments} post={post} />}
+                dataSource={post.comments || []}
+                renderItem={(item) => <Comments item={item} post={post} />}
               />
             )
             : <></>}

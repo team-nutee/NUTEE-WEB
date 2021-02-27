@@ -1,38 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import { CloseOutlined } from '@ant-design/icons';
-import { Modal, ModalContent, CloseBtn, SlickWrapper, ImgWrapper } from './style';
-import { TARGET_URL } from '../../static';
+import { Modal, ImagesContent, CloseBtn, ImgWrapper, Indicator } from './style';
 
-// const [currentSlide, setCurrentSlide] = useState(0);
-const ImagesZoom = ({ images, onClose }) => (
-  <Modal>
-    <ModalContent>
-      <SlickWrapper>
+const ImagesZoom = ({ images, onClose }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  return (
+    <Modal>
+      <ImagesContent>
         <CloseBtn>
-          <div>
-            <CloseOutlined onClick={onClose} />
-          </div>
+          <CloseOutlined onClick={onClose} />
         </CloseBtn>
         <div>
+          <Indicator>
+            <div>{`${currentSlide + 1} / ${images.length}`}</div>
+          </Indicator>
           <Slider
             dots
-            infinite={false}
+            initialSlide={0}
+            infinite
+            beforeChange={(slide) => setCurrentSlide(slide)}
             slidesToShow={1}
             slidesToScroll={1}
           >
             {images.map((v) => (
               <ImgWrapper>
-                <img src={`${TARGET_URL}/${v.src}`} alt={v.src} />
+                <img src={`${v.src.replace(/\/thumb\//, '/original/')}`} alt={v.src} />
               </ImgWrapper>
             ))}
           </Slider>
         </div>
-      </SlickWrapper>
-    </ModalContent>
-  </Modal>
-);
+      </ImagesContent>
+    </Modal>
+  );
+};
 
 ImagesZoom.propTypes = {
   images: PropTypes.arrayOf(PropTypes.shape({

@@ -1,13 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-alert */
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-} from 'react';
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { Form, Button, Dropdown, Input } from 'antd';
 import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,9 +18,7 @@ const EditForm = ({ postId, postContent, postImages, visible, setVisible }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState(postContent);
   const [text, setText] = useState(postContent);
-  const { editImagePaths, editPostLoading, editPostDone } = useSelector(
-    (state) => state.post,
-  );
+  const { editImagePaths, editPostLoading, editPostDone } = useSelector((state) => state.post);
   const imageInput = useRef();
 
   useEffect(() => {
@@ -39,7 +31,7 @@ const EditForm = ({ postId, postContent, postImages, visible, setVisible }) => {
         data: images,
       });
     }
-  }, [editPostDone, visible, postContent, dispatch, postImages]);
+  }, [editPostDone, visible, postContent, postImages]);
 
   const onEditForm = useCallback((e) => {
     e.preventDefault();

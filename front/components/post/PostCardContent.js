@@ -26,6 +26,7 @@ const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => 
     </>
   );
 
+  // url 입력 시 링크로 생성(수정 해야 함)
   const urlReg = /(?:(http(s)?:\/\/|[\s\t\r\n\[\]\`\<\>\"\'])((?:[\w$\-_\.+!*\'\(\),]|%[0-9a-f][0-9a-f])*\:(?:[\w$\-_\.+!*\'\(\),;\?&=]|%[0-9a-f][0-9a-f])+\@)?(?:((?:(?:[a-z0-9\-가-힣]+\.)+[a-z0-9\-]{2,})|(?:[\d]{1,3}\.){3}[\d]{1,3})|localhost)(?:\:([0-9]+))?((?:\/(?:[\w$\-_\.+!*\'\(\),;:@&=ㄱ-ㅎㅏ-ㅣ가-힣]|%[0-9a-f][0-9a-f])+)*)(?:\/([^\s\/\?\.:<>|#]*(?:\.[^\s\/\?:<>|#]+)*))?(\/?[\?;](?:[a-z0-9\-]+(?:=[^\s:&<>]*)?\&)*[a-z0-9\-]+(?:=[^\s:&<>]*)?)?(#[\w\-]+)?)/;
   const urlRegExp = () => {
     const url = postData.split(`${urlReg}gi`).map((u) => {
@@ -49,12 +50,12 @@ const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => 
             {retweet && retweet === 1
               ? (
                 <h5 style={retweetWrapper}>
-                  {`댓글 ${commentN}개 좋아요${likers}개`}
+                  {`댓글 ${commentN === undefined ? 0 : commentN}개 좋아요${likers}개`}
                 </h5>
               )
               : (
                 <h5 style={h5Wrapper}>
-                  {`댓글 ${commentN}개 좋아요${likers}개`}
+                  {`댓글 ${commentN === undefined ? 0 : commentN}개 좋아요${likers}개`}
                 </h5>
               )}
           </div>
@@ -67,7 +68,7 @@ const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => 
                   {hashTagRegExp}
                   {urlRegExp}
                   <h5 style={h5Wrapper}>
-                    {`댓글 ${commentN}개 좋아요${likers}개`}
+                    {`댓글 ${commentN === undefined ? 0 : commentN}개 좋아요${likers}개`}
                   </h5>
                 </>
               )
@@ -76,7 +77,7 @@ const PostCardContent = ({ postTitle, postData, commentN, likers, retweet }) => 
                   {hashTagRegExp}
                   {urlRegExp}
                   <h5 style={h5Wrapper}>
-                    {`댓글 ${commentN}개 좋아요${likers}개`}
+                    {`댓글 ${commentN === undefined ? 0 : commentN}개 좋아요${likers}개`}
                   </h5>
                 </pre>
               )}

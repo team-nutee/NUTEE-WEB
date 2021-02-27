@@ -6,17 +6,8 @@ import ImagesZoom from '../ImagesZoom';
 const PostImages = ({ images }) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
-  const onZoom = useCallback(() => {
-    setShowImagesZoom(true);
-  }, []);
-  const onClose = useCallback(() => {
-    setShowImagesZoom(false);
-  }, []);
-  /*
-  const onBackDrop = useCallback(() => {
-    setShowImagesZoom(false);
-  }, []);
-  */
+  const onZoom = useCallback(() => { setShowImagesZoom(true); }, []);
+  const onClose = useCallback(() => { setShowImagesZoom(false); }, []);
 
   const imgWrapper = useMemo(() => ({ width: '50%', display: 'inline-block' }), []);
   const img2Wrapper = useMemo(() => ({ width: '50%' }), []);
@@ -25,7 +16,7 @@ const PostImages = ({ images }) => {
   if (images.length === 1) {
     return (
       <>
-        <img role="presentation" src={`http://localhost:80/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -33,8 +24,8 @@ const PostImages = ({ images }) => {
   if (images.length === 2) {
     return (
       <>
-        <img role="presentation" style={imgWrapper} src={`http://localhost:80/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
-        <img role="presentation" style={imgWrapper} src={`http://localhost:80/${images[1].src}`} alt={images[1].src} onClick={onZoom} />
+        <img role="presentation" style={imgWrapper} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={imgWrapper} src={`${images[1].src}`} alt={images[1].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -42,7 +33,7 @@ const PostImages = ({ images }) => {
   return (
     <>
       <div>
-        <img role="presentation" style={img2Wrapper} src={`http://localhost:80/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={img2Wrapper} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
         <div
           role="presentation"
           style={img3Wrapper}
@@ -50,8 +41,7 @@ const PostImages = ({ images }) => {
         >
           <PlusOutlined />
           <br />
-          {images.length - 1}
-          개의 사진 더보기
+          {`${images.length - 1}개의 사진 더보기`}
         </div>
       </div>
       {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
