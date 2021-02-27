@@ -45,29 +45,27 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
         <TabPane
           tab={(
             <span>
-              내가 쓴 글
+              나의 글
               <Badge count={250} style={badge1Wrapper} />
             </span>
           )}
           key="1"
           style={tabPaneWrapper}
         >
-          {me && <PostForm />}
-          내가 쓴 글 리스트
+          {me && <PostForm me={me} />}
           {mainPosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
         <TabPane
           tab={(
             <span>
-              내가 쓴 댓글
+              나의 댓글
               <Badge count={50} style={badge2Wrapper} />
             </span>
           )}
           key="2"
           style={tabPaneWrapper}
         >
-          {me && <PostForm />}
-          내가 쓴 댓글 리스트
+          {me && <PostForm me={me} />}
         </TabPane>
         <TabPane
           tab={(
@@ -79,8 +77,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
           key="3"
           style={tabPaneWrapper}
         >
-          {me && <PostForm />}
-          내가 추천한 글 리스트
+          {me && <PostForm me={me} />}
         </TabPane>
       </Tabs>
     </>

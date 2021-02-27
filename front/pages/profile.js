@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Col, Row } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST, LOAD_MY_LIKE_REQUEST } from '../reducers/post';
@@ -13,8 +13,15 @@ import wrapper from '../store/configureStore';
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
   const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '55px' }), []);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, []);
 
   return (
     <>

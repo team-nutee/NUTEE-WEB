@@ -104,9 +104,11 @@ const Comments = ({ item, post }) => {
         ? <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id} />
         : <></>}
       <style jsx>
-        {`div { 
-          font-family: "Nanum Barun Gothic", sans-serif, ; font-weight: 200;
-        }`}
+        {
+          `div { 
+            font-family: "Nanum Barun Gothic", sans-serif, ; font-weight: 200;
+          }`
+        }
       </style>
     </div>
   );

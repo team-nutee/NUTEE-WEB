@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, call, throttle } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
   ADD_POST_FAILURE,
@@ -172,11 +172,11 @@ function addPostAPI(postData) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    yield put({ // post reducer의 데이터를 수정
+    yield put({ // post reducer
       type: ADD_POST_SUCCESS,
       data: result.data.body,
     });
-    yield put({ // user reducer의 데이터를 수정
+    yield put({ // user reducer
       type: ADD_POST_TO_ME,
       data: result.data.body.id,
     });
@@ -611,7 +611,6 @@ function* retweet(action) {
     yield put({
       type: RETWEET_FAILURE,
       error: err,
-      // alert(e.response && e.response.data);
     });
   }
 }

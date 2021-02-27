@@ -1,22 +1,17 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Avatar } from 'antd';
 import PropTypes from 'prop-types';
-import { AUTH_URL } from '../../static';
 
-const ProfileAvatar = ({ imagePath }) => {
-  const avatarWrapper = useMemo(() => ({ border: '1px solid #d8d8d8' }), []);
-
-  return (
-    <>
-      {imagePath
-        ? <Avatar size={50} style={avatarWrapper} src={`${AUTH_URL}/${imagePath}`} />
-        : <Avatar size={50} style={avatarWrapper} src="/nutee_profile.png" />}
-    </>
-  );
-};
+const ProfileAvatar = ({ imagePath }) => (
+  <>
+    {imagePath ? <Avatar size={50} src={imagePath.src} /> : <Avatar size={50} src="/nutee_profile.png" />}
+  </>
+);
 
 ProfileAvatar.propTypes = {
-  imagePath: PropTypes.string,
+  imagePath: PropTypes.shape({
+    src: PropTypes.string,
+  }),
 }.isRequired;
 
 export default ProfileAvatar;

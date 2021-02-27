@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Card } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import {
   FOLLOW_USER_REQUEST,
@@ -16,27 +14,21 @@ const UserProfile = ({ target }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
 
-  const onFollow = useCallback(
-    (userId) => () => {
-      dispatch({
-        type: FOLLOW_USER_REQUEST,
-        data: userId,
-      });
-    }, [],
-  );
+  const onFollow = useCallback((userId) => () => {
+    dispatch({
+      type: FOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
 
-  const onUnfollow = useCallback(
-    (userId) => () => {
-      dispatch({
-        type: UNFOLLOW_USER_REQUEST,
-        data: userId,
-      });
-    }, [],
-  );
+  const onUnfollow = useCallback((userId) => () => {
+    dispatch({
+      type: UNFOLLOW_USER_REQUEST,
+      data: userId,
+    });
+  }, []);
 
   const cardWrapper = useMemo(() => ({ color: 'black' }), []);
-  const setWrapper = useMemo(() => ({ float: 'right', color: 'black', fontSize: '13px', marginLeft: '5px' }), []);
-  const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, 0.7)', marginRight: '3px' }), []);
   const button1Wrapper = useMemo(() => ({ float: 'right', marginLeft: '5px', fontSize: '13px', width: '55px' }), []);
   const button2Wrapper = useMemo(() => ({ float: 'right', marginLeft: '5px', fontSize: '13px', width: '65px' }), []);
 
@@ -56,37 +48,11 @@ const UserProfile = ({ target }) => {
     <>
       {target
         ? (
-          <Card
-            style={cardWrapper}
-          >
+          <Card style={cardWrapper}>
             <Meta
-              avatar={
-                // 프로필 이미지
-                target.Image ? (
-                  <ProfileAvatar
-                    nickname={target.nickname}
-                    imagePath={target.image}
-                  />
-                ) : (<ProfileAvatar nickname={target.nickname} />)
-              }
-              title={`nickname_${target.nickname}`}
-              description={
-                // 프로필 설정 or 팔로우 언팔로우
-                !target || me.id === target.id
-                  ? (
-                    <div>
-                      <Link href="/setting">
-                        <a style={setWrapper}>
-                          <b>
-                            <SettingOutlined style={prefixWrapper} />
-                            설정
-                          </b>
-                        </a>
-                      </Link>
-                    </div>
-                  )
-                  : follow
-              }
+              avatar={target.image ? <ProfileAvatar imagePath={target.image} /> : <ProfileAvatar />}
+              title={target.nickname}
+              description={follow}
             />
           </Card>
         )

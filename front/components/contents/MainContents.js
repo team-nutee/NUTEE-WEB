@@ -51,22 +51,22 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
     <>
       <Tabs defaultActiveKey="1" type="card" style={tabsWrapper}>
         <TabPane tab="전체 게시글" key="1" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm /> : <></>}
+          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
           {mainPosts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </TabPane>
         <TabPane tab="전공" key="2" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm /> : <></>}
-          {mainPosts.map((c) => (
+          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+          {/*  {mainPosts.map((c) => (
             <PostCard key={c.id} post={c} />
-          ))}
+          ))} */}
         </TabPane>
         <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm /> : <></>}
-          {mainPosts.map((f) => (
+          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+          {/* {mainPosts.map((f) => (
             <PostCard key={f.id} post={f} />
-          ))}
+          ))} */}
         </TabPane>
       </Tabs>
     </>

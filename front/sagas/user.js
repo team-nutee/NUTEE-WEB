@@ -1,6 +1,6 @@
 import { all, call, put, takeLatest, fork } from 'redux-saga/effects';
 import axios from 'axios';
-import { AUTH_URL } from '../static';
+import { AUTH_URL, INDEX_URL } from '../static';
 import {
   FOLLOW_USER_REQUEST,
   FOLLOW_USER_SUCCESS,
@@ -77,7 +77,7 @@ import {
 } from '../reducers/user';
 
 function loadMyInfoAPI() {
-  return axios.get(`${AUTH_URL}/auth/user/me`, { data: {} });
+  return axios.get(`${INDEX_URL}/sns/user/me`, { data: {} });
 }
 
 function* loadMyInfo() {
@@ -92,7 +92,7 @@ function* loadMyInfo() {
     console.log('LOAD_MY_INFO_FAILURE', err);
     yield put({
       type: LOAD_MY_INFO_FAILURE,
-      error: err.name, // 수정
+      error: err.name,
     });
   }
 }
@@ -118,18 +118,6 @@ function* loadUser(action) {
     });
   }
 }
-
-/* const onLoginSuccess = accessToken => {
-   // accessToken 설정
-  if(accessToken) {
-    console.log('saga-user login token ok');
-    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-  } else{
-    console.log('saga-user login token null');
-  }
-  setTimeout(watchRefresh(), (1 * 3600 * 1000) - 60000);
-}
-*/
 
 function refreshAPI(data) {
   return axios.post(`${AUTH_URL}/auth/refresh`, data);
@@ -159,7 +147,7 @@ function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);
     const { accessToken, refreshToken } = result.data.body;
-    if (accessToken) { // token 확인용 if문 제거예정
+    if (accessToken) {
       console.log('saga-user login token ok');
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
@@ -180,7 +168,7 @@ function* logIn(action) {
   }
 }
 
-function logOutAPI(accessToken) { // accessToken을 로그아웃에서 넘겨주는 것으로 할지 말지 고민 중(수정 예정)
+function logOutAPI(accessToken) {
   return axios.post(`${AUTH_URL}/auth/logout`, accessToken);
 }
 
