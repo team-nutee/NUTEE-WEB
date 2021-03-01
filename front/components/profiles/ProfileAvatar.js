@@ -26,19 +26,11 @@ const ProfileAvatar = ({ imagePath }) => {
       {imagePath
         ? 
         <>
-         {mobileScreen ?
-          <Avatar size={100} style={avatarWrapper} src={`${AUTH_URL}/${imagePath}`} />
-          :
-          <Avatar size={50} style={avatarWrapper} src={`${AUTH_URL}/${imagePath}`} />
-         }
+         <Avatar size={mobileScreen?100:50} style={avatarWrapper} src={`${AUTH_URL}/${imagePath}`} />
         </>
         : 
         <>
-          {mobileScreen ? 
-            <Avatar size={100} style={avatarWrapper} src="/nutee_profile.png" />
-            :
-            <Avatar size={50} style={avatarWrapper} src="/nutee_profile.png" />
-          }
+          <Avatar size={mobileScreen?100:50} style={avatarWrapper} src="/nutee_profile.png" />
         </>
       }
     </>

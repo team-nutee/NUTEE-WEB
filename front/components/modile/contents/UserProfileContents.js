@@ -75,8 +75,8 @@ const UserProfileContents = ({ target }) => {
           <Card
             style={cardWrapper}
             actions={[
-                <div key="followers">팔로워<br/>{followingList.length}</div>,
-                <div key="followings">팔로잉<br/>{followerList.length}</div>
+                <div key="followers"><Link href="/mobileFollowerList"><a>팔로워<br/>{followingList.length}</a></Link></div>,
+                <div key="followings"><Link href="/mobileFollowingList"><a>팔로잉<br/>{followerList.length}</a></Link></div>
             ]}
           >
             <Meta
