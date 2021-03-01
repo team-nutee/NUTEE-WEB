@@ -8,7 +8,7 @@ import LoginForm from './LoginForm';
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
-  const wrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', height: '1000vh' }), []);
+  const wrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center', minHeight: '100vh' }), []);
   const [mobileScreen, setMobileScreen] = useState(false);
 
   useEffect(
