@@ -167,6 +167,23 @@ const PostCard = ({ post }) => {
     </>
   );
 
+  const date = new Date();
+  const today = moment(date).format('YYYY.MM.DD');
+  const postCreatedAt = moment(post.createdAt).format('YYYY.MM.DD');
+  const time = (
+    <>
+      {today === postCreatedAt ? (
+        <>
+          <p style={momentWrapper}>{moment(post.createdAt).startOf('hour').fromNow()}</p>
+        </>
+      ) : (
+        <>
+          <p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p>
+        </>
+      )}
+    </>
+  );
+
   /*
   const loadMore = (
     mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments
@@ -233,7 +250,7 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.retweet.user.nickname}</p>
-                        <p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p>
+                        {time}
                       </>
                     )}
                     description={(
@@ -273,7 +290,7 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.user.nickname}</p>
-                        <p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p>
+                        {time}
                       </>
                     )}
                     description={(
