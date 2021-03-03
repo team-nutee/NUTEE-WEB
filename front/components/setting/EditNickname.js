@@ -1,22 +1,28 @@
 /* eslint-disable no-alert */
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Input, Row } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { EDIT_NICKNAME_REQUEST } from '../../reducers/user';
 import useInput from '../../hooks/useInput';
 
 const EditNickname = () => {
-  const [editNickname, onChangeEditNickname] = useInput('');
+  const [editNickname, onChangeEditNickname, setEditNickname] = useInput('');
+  const { editNicknameDone } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (editNicknameDone) alert('닉네임이 변경되었습니다.');
+  }, [editNicknameDone]);
 
   const onEditNickname = useCallback(async (e) => {
     e.preventDefault();
     if (editNickname.length > 12) alert('최대 12자까지 가능합니다.');
     await dispatch({
       type: EDIT_NICKNAME_REQUEST,
-      data: { password: editNickname },
+      data: { nickname: editNickname },
     });
+    setEditNickname('');
   }, [editNickname]);
 
   const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '70px' }), []);

@@ -23,10 +23,11 @@ const PostForm = (me) => {
   } = useSelector((state) => state.post);
   const { majors } = me.me;
   const imageInput = useRef();
+  console.log('me', me);
   console.log('imagePaths', imagePaths);
 
   useEffect(() => {
-    if (addPostDone) setTitle(''); setText('');
+    if (addPostDone) setTitle(''); setText(''); setCategory();
   }, [addPostDone]);
 
   const onSubmitForm = useCallback(() => {
@@ -50,10 +51,8 @@ const PostForm = (me) => {
     console.log('e.target.files', e.target.files);
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
-      imageFormData.append('image', f);
+      imageFormData.append('images', f);
     });
-    console.log('imageFormData', imageFormData);
-    console.log('onChangeImages', ' 이미지 업로드');
     dispatch({
       type: UPLOAD_REQUEST,
       data: imageFormData,
@@ -96,7 +95,7 @@ const PostForm = (me) => {
   /* 이미지 업로드 및 제거 관련 */
   const imagesWrapper = useMemo(() => ({ height: 'auto' }), []);
   const imagePathsWrapper = useMemo(() => ({ display: 'center', margin: '10px', width: '20%', float: 'left', height: '60px', background: '#c8e6d7' }), []);
-  const removeImageIconWrapper = useMemo(() => ({ float: 'right', marginRight: '15px' }), []);
+  const removeImageIconWrapper = useMemo(() => ({ float: 'right', margin: '-60px 15px 0px 0', background: 'red' }), []);
   const closeOutIconWrapper = useMemo(() => ({ color: 'black', position: 'absolute', background: 'white', borderRadius: '40px' }), []);
   const imagePathsImgWrapper = useMemo(() => ({ width: '100%', height: '100%' }), []);
 
@@ -139,17 +138,17 @@ const PostForm = (me) => {
         >
           <b>작성</b>
         </Button>
-        <div onClick={onClickImageUpload} style={uploadButtonWrapper}>
+        <Form encType="multipart/form-data" onClick={onClickImageUpload} style={uploadButtonWrapper}>
           <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
           <FileImageOutlined style={iconWrapper} />
-        </div>
+        </Form>
       </div>
       <br />
       <br />
       <div style={imagesWrapper}>
         {imagePaths.map((v, i) => (
           <div key={v} style={imagePathsWrapper}>
-            <img src={`${INDEX_URL}/${v}`} style={imagePathsImgWrapper} alt={v} />
+            <img src={v} style={imagePathsImgWrapper} alt={v} />
             <div onClick={onRemoveImage(i)} style={removeImageIconWrapper}>
               <CloseCircleOutlined style={closeOutIconWrapper} />
             </div>
