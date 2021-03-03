@@ -5,14 +5,13 @@ import { Tabs } from 'antd';
 import {
   LOAD_POSTS_REQUEST,
   LOAD_FAVORITE_POSTS_REQUEST,
-  LOAD_CATEGORY_POSTS_REQUEST,
 } from '../../reducers/post';
 import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
-/* , favoritPosts, categoryPosts  */
-const MainContents = ({ target, mainPosts, hasMorePost }) => {
+
+const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts }) => {
   const { me } = useSelector((state) => state.user);
   const { loadPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
@@ -31,10 +30,6 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
             type: LOAD_FAVORITE_POSTS_REQUEST,
             lastId,
           });
-          dispatch({
-            type: LOAD_CATEGORY_POSTS_REQUEST,
-            lastId,
-          });
         }
       }
     }
@@ -50,6 +45,12 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
   return (
     <>
       <Tabs defaultActiveKey="1" type="card" style={tabsWrapper}>
+        <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
+          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+          {favoritePosts.map((f) => (
+            <PostCard key={f.id} post={f} />
+          ))}
+        </TabPane>
         <TabPane tab="전체 게시글" key="1" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
           {mainPosts.map((post) => (
@@ -58,14 +59,8 @@ const MainContents = ({ target, mainPosts, hasMorePost }) => {
         </TabPane>
         <TabPane tab="전공" key="2" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {/*  {mainPosts.map((c) => (
+          {/* {majorPosts.map((c) => (
             <PostCard key={c.id} post={c} />
-          ))} */}
-        </TabPane>
-        <TabPane tab="즐겨찾기" key="3" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {/* {mainPosts.map((f) => (
-            <PostCard key={f.id} post={f} />
           ))} */}
         </TabPane>
       </Tabs>

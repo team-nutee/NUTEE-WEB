@@ -126,7 +126,7 @@ function* loadFavoritePosts(action) {
   }
 }
 
-function loadCategoryPostsAPI(lastId = 0, inter = 'IT2') { // inter='IT2' 게시글 있는 카테고리
+function loadCategoryPostsAPI(lastId = 0, inter = 'INTER2') {
   return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=10`, { data: {} });
 }
 

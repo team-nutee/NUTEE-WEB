@@ -16,9 +16,18 @@ export const initialState = {
   singlePost: null,
   editImagePaths: [], // 글 수정 미리보기 이미지 경로
   hasMorePosts: true,
-  loadPostsLoading: false, // 포스트 로드
+  loadPostsLoading: false, // 모든 포스트 로드
   loadPostsDone: false,
   loadPostsError: null,
+  loadCategoryPostsLoading: false, // 카테고리 포스트 로드
+  loadCategoryPostsDone: false,
+  loadCategoryPostsError: null,
+  loadFavoritePostsLoading: false, // 즐겨찾기 포스트 로드
+  loadFavoritePostsDone: false,
+  loadFavoritePostsError: null,
+  loadMajorPostsLoading: false, // 전공 포스트 로드
+  loadMajorPostsDone: false,
+  loadMajorPostsError: null,
   addPostLoading: false, // 포스트 업로드
   addPostDone: false,
   addPostError: null,
@@ -401,7 +410,43 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadCommentsError = action.error;
       break;
     case LOAD_CATEGORY_POSTS_REQUEST:
+      draft.categoryPosts = !action.lastId ? [] : draft.categoryPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadCategoryPostsLoading = true;
+      draft.loadCategoryPostsDone = false;
+      draft.loadCategoryPostsError = null;
+      break;
+    case LOAD_CATEGORY_POSTS_SUCCESS:
+      action.data.forEach((data) => {
+        draft.categoryPosts.push(data);
+      });
+      draft.hasMorePost = action.data.length === 10;
+      draft.loadCategoryPostsLoading = false;
+      draft.loadCategoryPostsDone = true;
+      break;
+    case LOAD_CATEGORY_POSTS_FAILURE:
+      draft.loadCategoryPostsLoading = false;
+      draft.loadCategoryPostsError = action.error;
+      break;
     case LOAD_FAVORITE_POSTS_REQUEST:
+      draft.categoryPosts = !action.lastId ? [] : draft.favoritePosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadFavoritePostsLoading = true;
+      draft.loadFavoritePostsDone = false;
+      draft.loadFavoritePostsError = null;
+      break;
+    case LOAD_FAVORITE_POSTS_SUCCESS:
+      action.data.forEach((data) => {
+        draft.favoritePosts.push(data);
+      });
+      draft.hasMorePost = action.data.length === 10;
+      draft.loadFavoritePostsLoading = false;
+      draft.loadFavoritePostsDone = true;
+      break;
+    case LOAD_FAVORITE_POSTS_FAILURE:
+      draft.loadFavoritePostsLoading = false;
+      draft.loadFavoritePostsDone = true;
+      break;
     case LOAD_SEARCH_POSTS_REQUEST:
     case LOAD_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
@@ -415,8 +460,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsDone = false;
       draft.loadPostsError = null;
       break;
-    case LOAD_CATEGORY_POSTS_SUCCESS:
-    case LOAD_FAVORITE_POSTS_SUCCESS:
+
     case LOAD_SEARCH_POSTS_SUCCESS:
     case LOAD_POSTS_SUCCESS:
     case LOAD_HASHTAG_POSTS_SUCCESS:
@@ -431,8 +475,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
       break;
-    case LOAD_CATEGORY_POSTS_FAILURE:
-    case LOAD_FAVORITE_POSTS_FAILURE:
     case LOAD_SEARCH_POSTS_FAILURE:
     case LOAD_POSTS_FAILURE:
     case LOAD_HASHTAG_POSTS_FAILURE:
