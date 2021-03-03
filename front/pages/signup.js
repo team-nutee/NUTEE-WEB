@@ -59,8 +59,8 @@ const Signup = () => {
     if (isSignUpError) alert(isSignUpError);
   }, [isSignUpError]);
 
-  const pageWrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center' }), []);
-  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '80px 0 50px 0' }), []);
+  const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
+  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', marginTop: '15vh' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
   const failureWrapper = useMemo(() => ({ color: 'red', fontSize: '12px', marginLeft: '5px' }), []);

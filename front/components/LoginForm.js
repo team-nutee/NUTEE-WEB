@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Form, Input, Button, Row, Col, Modal } from 'antd';
+import { Divider, Form, Input, Button, Row, Col, Modal } from 'antd';
 import { IdcardOutlined, LockOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import { loginRequestAction } from '../reducers/user';
+import { loginRequestAction, LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import useInput from '../hooks/useInput';
 import FindId from './find/FindId';
 import FindPw from './find/FindPassword';
@@ -14,7 +14,7 @@ import FindPw from './find/FindPassword';
 const LoginForm = () => {
   const [userId, onChangeUserId] = useInput('');
   const [password, onChangePassword] = useInput('');
-  const { isLogInLoading, isLogInError } = useSelector((state) => state.user);
+  const { isLogInLoading, isLogInError, isLogInDone } = useSelector((state) => state.user);
   const [idVisible, setIdVisible] = useState(false);
   const [pwVisible, setPwVisible] = useState(false);
   const dispatch = useDispatch();
@@ -22,6 +22,14 @@ const LoginForm = () => {
   useEffect(() => {
     if (isLogInError) alert(isLogInError);
   }, [isLogInError]);
+
+  useEffect(() => {
+    if (isLogInDone) {
+      dispatch({
+        type: LOAD_MY_INFO_REQUEST,
+      });
+    }
+  }, [isLogInDone]);
 
   const onSubmitForm = useCallback(() => {
     console.log(userId, password);
@@ -41,12 +49,12 @@ const LoginForm = () => {
     setPwVisible(false);
   };
 
-  const paperWrapper = useMemo(() => ({ padding: '30vh 0' }), []);
+  const paperWrapper = useMemo(() => ({ padding: '30vh 0 20vh 0' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center', padding: '5vh auto' }), []);
   const h3Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
-  const formWrapper = useMemo(() => ({ width: '35vw', minWidth: '310px', maxWidth: '450px', margin: '0 auto' }), []);
+  const formWrapper = useMemo(() => ({ width: '35vw', minWidth: '310px', maxWidth: '450px', margin: '0 auto', border: '3px solid #c8e6d7', background: '#c8e6d7', borderRadius: '5px' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
-  const loginWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+  const loginWrapper = useMemo(() => ({ width: '100px', margin: '0 auto', background: '#f0faf5' }), []);
   const loginButtonWrapper = useMemo(() => ({ background: '#13c276', borderColor: 'white', width: '100px' }), []);
   const idpwWrapper = useMemo(() => ({ width: '320px', margin: '10px auto' }), []);
   const leftWrapper = useMemo(() => ({ fontWeight: 'bold', fontSize: '15px', width: '30%', float: 'left', color: '#005000' }), []);
@@ -57,7 +65,7 @@ const LoginForm = () => {
   return (
     <>
       <div style={paperWrapper}>
-        <h1 style={h1Wrapper}>로그인</h1>
+        <Divider><h1 style={h1Wrapper}>로그인</h1></Divider>
         <h3 style={h3Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
         <Form onFinish={onSubmitForm}>
           <Col>

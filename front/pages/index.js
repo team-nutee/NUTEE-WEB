@@ -25,11 +25,23 @@ const Home = () => {
   } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
-  const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '55px' }), []);
+  const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   useEffect(() => {
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
+    });
+    dispatch({
+      type: LOAD_FAVORITE_POSTS_REQUEST,
+    });
+    dispatch({
+      type: LOAD_CATEGORY_DATA_REQUEST,
+    });
+    dispatch({
+      type: LOAD_CATEGORY_POSTS_REQUEST,
+    });
+    dispatch({
+      type: LOAD_POSTS_REQUEST,
     });
   }, []);
 

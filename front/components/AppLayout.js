@@ -7,17 +7,15 @@ import LoginForm from './LoginForm';
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
-  const wrapper = useMemo(() => ({ background: '#f0faf5', display: 'flex', justifyContent: 'center' }), []);
+  const wrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
 
   return (
-    <>
-      <div style={wrapper}>
-        {/* 메뉴바 */}
-        <NavigationBar me={me} />
-        {/* 본문 내용 */}
-        {me ? <Row>{children}</Row> : <LoginForm />}
-      </div>
-    </>
+    <div style={wrapper}>
+      {/* 메뉴바 */}
+      <NavigationBar me={me} />
+      {/* 본문 내용 */}
+      {me ? <Row>{children}</Row> : <LoginForm />}
+    </div>
   );
 };
 

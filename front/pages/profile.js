@@ -15,7 +15,7 @@ const Profile = () => {
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
-  const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '55px' }), []);
+  const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   useEffect(() => {
     dispatch({

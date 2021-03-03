@@ -34,7 +34,7 @@ const Search = ({ text }) => {
     };
   }, [mainPosts.length, hasMorePost]);
 
-  const colWrapper = useMemo(() => ({ minWidth: '550px' }), []);
+  const colWrapper = useMemo(() => ({ minWidth: '560px' }), []);
 
   return (
     <>
