@@ -9,6 +9,7 @@ export const initialState = {
 
   /* post */
   mainPosts: [], // 전체 포스트들
+  commentlist: [], // 댓글들
   categoryPosts: [], // 화면에 보일 카테고리 포스트들
   majorPosts: [], // 화면에 보일 전공 포스트들
   favoritePosts: [],
@@ -370,7 +371,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.find((v) => v.id === action.data.post.id);
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       draft.mainPosts[postIndex].comments.push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
@@ -383,15 +384,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LOAD_COMMENTS_SUCCESS: {
       const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.postId,
+        (v) => v.id === action.data.postId,
       );
-      if (action.data.offset === 0) {
-        draft.mainPosts[postIndex].commentNum = action.data.comments.length;
-      } else {
-        draft.mainPosts[postIndex].commentNum = draft.mainPosts[
-          postIndex
-        ].commentNum.concat(action.data.comments);
+      const commentIndex = action.data.postId;
+      if (action.data.comments !== null ) {
+        if (action.data.offset === 0) {
+          draft.mainPosts[postIndex].commentNum = action.data.comments.length;
+        } else {
+          draft.mainPosts[postIndex].commentNum = draft.mainPosts[
+            postIndex
+          ].commentNum.concat(action.data.comments);
+        }
       }
+      draft.commentlist[commentIndex] = action.data.comments;                          
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;

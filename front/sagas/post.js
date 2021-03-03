@@ -409,7 +409,7 @@ function* loadComments(action) {
     console.error(err);
     yield put({
       type: LOAD_COMMENTS_FAILURE,
-      error: err,
+      error: err.response.data,
     });
   }
 }
@@ -425,7 +425,7 @@ function* addComment(action) {
       type: ADD_COMMENT_SUCCESS,
       data: {
         postId: action.postId,
-        comment: result.data,
+        comment: result.data.body.content,
       },
     });
   } catch (err) {
