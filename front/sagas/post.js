@@ -425,7 +425,7 @@ function* addComment(action) {
       type: ADD_COMMENT_SUCCESS,
       data: {
         postId: action.postId,
-        comment: result.data.body.content,
+        comment: result.data.body,
       },
     });
   } catch (err) {
@@ -496,8 +496,8 @@ function* addReComment(action) {
       type: ADD_RECOMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
-        parentId: result.data.body.id,
-        reComment: result.data.body.reComment,
+        parentId: action.data.parentId,
+        reComment: result.data.body,
       },
     });
   } catch (err) {

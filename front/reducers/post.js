@@ -10,6 +10,7 @@ export const initialState = {
   /* post */
   mainPosts: [], // 전체 포스트들
   commentlist: [], // 댓글들
+  reCommentList: [],
   categoryPosts: [], // 화면에 보일 카테고리 포스트들
   majorPosts: [], // 화면에 보일 전공 포스트들
   favoritePosts: [],
@@ -310,24 +311,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addReCommentError = null;
       break;
     case ADD_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.post.id,
-      );
-      const commentIndex = draft.mainPosts[postIndex].comments.findIndex(
-        (v) => v.id === action.data.parentId,
-      );
-      if (
-        draft.mainPosts[postIndex].comments[commentIndex].reComment
-          === undefined
-      ) {
-        draft.mainPosts[postIndex].Comments[commentIndex].reComment = [];
-        draft.mainPosts[postIndex].Comments[commentIndex].reComment.push(
-          action.data.reComment,
-        );
+      const { parentId } = action.data;
+      if (draft.reCommentList[parentId] === undefined) {
+        draft.reCommentList[parentId] = [];
+        draft.reCommentList[parentId].push(action.data.reComment);
       } else {
-        draft.mainPosts[postIndex].comments[commentIndex].reComment.push(
-          action.data.reComment,
-        );
+        draft.reCommentList[parentId].push(action.data.reComment);
       }
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
@@ -359,13 +348,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.post.id,
+      const commentIndex = draft.commentlist[action.data.postId].findIndex(
+        (v) => v.id === action.data.commentId,
       );
-      const commentIndex = draft.mainPosts[postIndex].comments.findIndex(
-        (v) => v.id === action.data.comments.id,
-      );
-      draft.mainPosts[postIndex].comments.splice(commentIndex, 1);
+      draft.commentlist[action.data.postid].splice(commentIndex, 1);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -380,8 +366,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
-      draft.mainPosts[postIndex].comments.push(action.data.comment);
+      const commentIndex = action.data.postId;
+      draft.commentlist[commentIndex].push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -405,7 +391,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           ].commentNum.concat(action.data.comments);
         }
       }
-      draft.commentlist[commentIndex] = action.data.comments;
+      if (action.data.comments === null) {
+        draft.commentlist[commentIndex] = [];
+      } else {
+        draft.commentlist[commentIndex] = action.data.comments;
+      }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;
