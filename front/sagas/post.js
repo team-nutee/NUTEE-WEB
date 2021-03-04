@@ -425,7 +425,7 @@ function* addComment(action) {
       type: ADD_COMMENT_SUCCESS,
       data: {
         postId: action.postId,
-        comment: result.data.body.content,
+        comment: result.data.body,
       },
     });
   } catch (err) {

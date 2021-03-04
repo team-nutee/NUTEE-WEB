@@ -380,8 +380,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
-      draft.mainPosts[postIndex].comments.push(action.data.comment);
+      const commentIndex = action.data.postId;
+      draft.commentlist[commentIndex].push(action.data.comment)
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
