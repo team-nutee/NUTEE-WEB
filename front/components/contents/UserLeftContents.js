@@ -4,12 +4,12 @@ import { Row, Col } from 'antd';
 import UserProfile from '../profiles/UserProfile';
 import UserFolloList from '../profiles/UserFolloList';
 import MyProfile from '../profiles/MyProfile';
+import LinkContents from '../LinkContents';
 
 const UserLeftContents = (target) => {
   const { me } = useSelector((state) => state.user);
   const user = target.target;
   const wrapper = useMemo(() => ({ marginTop: '15px' }), []);
-  const imgWrapper = useMemo(() => ({ marginTop: '10px', width: '100%' }), []);
 
   return (
     <Col style={wrapper}>
@@ -19,9 +19,7 @@ const UserLeftContents = (target) => {
       <Row gutter={10}>
         {!user || me.id === user.id ? <UserFolloList /> : <></>}
       </Row>
-      <Row gutter={10}>
-        <img style={imgWrapper} src="/poster.png" alt="sowl" />
-      </Row>
+      <Row gutter={10}><LinkContents /></Row>
     </Col>
   );
 };

@@ -396,7 +396,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         (v) => v.id === action.data.postId,
       );
       const commentIndex = action.data.postId;
-      if (action.data.comments !== null ) {
+      if (action.data.comments !== null) {
         if (action.data.offset === 0) {
           draft.mainPosts[postIndex].commentNum = action.data.comments.length;
         } else {
@@ -405,7 +405,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           ].commentNum.concat(action.data.comments);
         }
       }
-      draft.commentlist[commentIndex] = action.data.comments;                          
+      draft.commentlist[commentIndex] = action.data.comments;
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;
@@ -522,7 +522,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LIKE_POST_SUCCESS: {
       const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
-      draft.mainPosts[postIndex].likers.unshift({ id: action.data.userId });
+      draft.mainPosts[postIndex].likers.push({ id: action.data.userId });
       break;
     }
     case LIKE_POST_FAILURE:

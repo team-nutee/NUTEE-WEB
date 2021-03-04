@@ -291,7 +291,7 @@ function* loadSearchPosts(action) {
 }
 
 function loadUserInfoAPI(id) {
-  return axios.get(`${INDEX_URL}/sns/user/${id}`);
+  return axios.get(`${INDEX_URL}/sns/user/${id}`, { data: {} });
 }
 
 function* loadUserInfo(action) {

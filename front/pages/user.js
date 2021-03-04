@@ -25,7 +25,7 @@ const User = () => {
           <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
           <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
           <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:image" content="localhost:3000/favicon.ico" />
+          <meta property="og:image" content="localhost:80/favicon.ico" />
           <meta property="og:url" content={`https://localhost:80/user/${userInfo.id}`} />
         </Head>
       )}

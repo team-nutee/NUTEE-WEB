@@ -21,6 +21,15 @@ const Profile = () => {
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
     });
+    dispatch({
+      type: LOAD_MY_POSTS_REQUEST,
+    });
+    dispatch({
+      type: LOAD_MY_COMMENTS_REQUEST,
+    });
+    dispatch({
+      type: LOAD_MY_LIKE_REQUEST,
+    });
   }, []);
 
   return (
