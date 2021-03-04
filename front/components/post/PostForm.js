@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Select from 'react-select';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_REQUEST } from '../../reducers/post';
-import { INDEX_URL } from '../../static';
 import useInput from '../../hooks/useInput';
 
 const PostForm = (me) => {
@@ -27,7 +26,7 @@ const PostForm = (me) => {
   console.log('imagePaths', imagePaths);
 
   useEffect(() => {
-    if (addPostDone) setTitle(''); setText(''); setCategory();
+    if (addPostDone) setTitle(''); setText(''); setCategory(null);
   }, [addPostDone]);
 
   const onSubmitForm = useCallback(() => {

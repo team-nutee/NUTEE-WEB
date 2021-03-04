@@ -41,7 +41,6 @@ const EditCategory = () => {
     <div style={pageWrapper}>
       <Select
         isMulti
-        autoFocus
         placeholder="학부 또는 전공을 선택해주세요."
         styles={customStyles}
         name="user-interests"

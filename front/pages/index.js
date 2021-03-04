@@ -3,12 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import { Col, Row } from 'antd';
-import {
-  LOAD_POSTS_REQUEST,
-  LOAD_FAVORITE_POSTS_REQUEST,
-  LOAD_CATEGORY_POSTS_REQUEST,
-  LOAD_CATEGORY_DATA_REQUEST,
-} from '../reducers/post';
+import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import LeftContents from '../components/contents/LeftContents';
 import wrapper from '../store/configureStore';
@@ -17,12 +12,7 @@ import AppLayout from '../components/AppLayout';
 
 const Home = () => {
   const { me } = useSelector((state) => state.user);
-  const {
-    mainPosts,
-    hasMorePost,
-    favoritePosts,
-    categoryPosts,
-  } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePost, favoritePosts } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
@@ -36,9 +26,6 @@ const Home = () => {
     });
     dispatch({
       type: LOAD_CATEGORY_DATA_REQUEST,
-    });
-    dispatch({
-      type: LOAD_CATEGORY_POSTS_REQUEST,
     });
     dispatch({
       type: LOAD_POSTS_REQUEST,
@@ -59,7 +46,6 @@ const Home = () => {
             hasMorePost={hasMorePost}
             mainPosts={mainPosts}
             favoritePosts={favoritePosts}
-            categoryPosts={categoryPosts}
           />
         </Col>
       </Row>
@@ -84,9 +70,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch({
     type: LOAD_FAVORITE_POSTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_CATEGORY_POSTS_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_CATEGORY_DATA_REQUEST,

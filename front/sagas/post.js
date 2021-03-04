@@ -573,7 +573,7 @@ function* likePost(action) {
 }
 
 function unlikePostAPI(postId) {
-  return axios.delete(`${INDEX_URL}/sns/post/${postId}/unlike`);
+  return axios.delete(`${INDEX_URL}/sns/post/${postId}/unlike`, { data: {} });
 }
 
 function* unlikePost(action) {

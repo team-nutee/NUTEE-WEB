@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
+import { GithubOutlined } from '@ant-design/icons';
 import { LOAD_NOTICE_REQUEST } from '../../reducers/notice';
 import MyProfile from '../profiles/MyProfile';
 import Notice from '../Notice';
@@ -16,7 +17,7 @@ const LeftContents = ({ me }) => {
   }, []);
 
   const wrapper = useMemo(() => ({ marginTop: '15px' }), []);
-  const imgWrapper = useMemo(() => ({ width: '100%' }), []);
+  const IconWrapper = useMemo(() => ({ marginRight: '5px' }), []);
 
   return (
     <Col gutter={10} style={wrapper}>
@@ -24,10 +25,11 @@ const LeftContents = ({ me }) => {
       <Row gutter={10}><Notice /></Row>
       <br />
       <Row gutter={10}>
-        <img style={imgWrapper} src="/poster.png" alt="sowl" />
-        <br />
         <Link href="https://github.com/team-nutee/NUTEE-WEB">
-          <a target="_blank" rel="noreferrer">Made by S.OWL</a>
+          <a target="_blank" rel="noreferrer">
+            <GithubOutlined style={IconWrapper} />
+            Made by S.OWL__TEAM-NUTEE
+          </a>
         </Link>
       </Row>
     </Col>
