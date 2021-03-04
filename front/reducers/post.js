@@ -381,7 +381,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_COMMENT_SUCCESS: {
       const commentIndex = action.data.postId;
-      draft.commentlist[commentIndex].push(action.data.comment)
+      draft.commentlist[commentIndex].push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -405,7 +405,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           ].commentNum.concat(action.data.comments);
         }
       }
-      draft.commentlist[commentIndex] = action.data.comments;                          
+      if (action.data.comments === null) {
+        draft.commentlist[commentIndex] = [];
+      }else {
+        draft.commentlist[commentIndex] = action.data.comments;                          
+      }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;
