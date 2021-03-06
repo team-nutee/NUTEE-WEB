@@ -7,9 +7,9 @@ import { Col, Form, Row, Input } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import Send from './Send';
-import { EDIT_COMMENT_REQUEST } from '../../reducers/post';
+import { EDIT_RECOMMENT_REQUEST } from '../../reducers/post';
 
-const EditCommentForm = ({ comment, setEdit, postId }) => {
+const EditRecommentForm = ({ comment, setEdit, postId, parentId }) => {
   const dispatch = useDispatch();
   const [commentText, setCommentText] = useState(comment.content);
   const [editComment, setEditComment] = useState(false);
@@ -27,11 +27,12 @@ const EditCommentForm = ({ comment, setEdit, postId }) => {
       return;
     }
     dispatch({
-      type: EDIT_COMMENT_REQUEST,
+      type: EDIT_RECOMMENT_REQUEST,
       data: {
         postId,
         commentId: comment.id,
         content: commentText,
+        parentId: parentId,
       },
     });
     setEditComment(true);
@@ -86,7 +87,7 @@ const EditCommentForm = ({ comment, setEdit, postId }) => {
   );
 };
 
-EditCommentForm.propTypes = {
+EditRecommentForm.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,
@@ -95,4 +96,4 @@ EditCommentForm.propTypes = {
   postId: PropTypes.number,
 }.isRequired;
 
-export default EditCommentForm;
+export default EditRecommentForm;

@@ -49,6 +49,9 @@ export const initialState = {
   editCommentLoading: false, // 댓글 수정
   editCommentDone: false,
   editCommentError: null,
+  editReCommentLoading: false, // 대댓글 수정
+  editReCommentDone: false,
+  editReCommentError: null,
   removeCommentLoading: false, // 댓글 삭제
   removeCommentDone: false,
   removeCommentError: null,
@@ -156,6 +159,10 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
 export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
 export const EDIT_COMMENT_FAILURE = 'EDIT_COMMENT_FAILURE';
+
+export const EDIT_RECOMMENT_REQUEST = 'EDIT_RECOMMENT_REQUEST';
+export const EDIT_RECOMMENT_SUCCESS = 'EDIT_RECOMMENT_SUCCESS';
+export const EDIT_RECOMMENT_FAILURE = 'EDIT_RECOMMENT_FAILURE';
 
 export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
@@ -332,13 +339,31 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.post.id);
-      draft.mainPosts[postIndex].comments = action.data.comment;
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
+      draft.commentList[action.data.postId].[commentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
     }
     case EDIT_COMMENT_FAILURE:
+      draft.editCommentLoading = false;
+      draft.editCommentError = action.error;
+      break;
+    case EDIT_RECOMMENT_REQUEST:
+      draft.editCommentLoading = true;
+      draft.editCommentDone = false;
+      draft.editCommentError = null;
+      break;
+    case EDIT_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+      console.log(commentIndex);
+      const reCommentIndex = draft.commentList[action.data.postId].[commentIndex].reComment.findIndex((v) => v.id === action.data.commentId);
+      draft.commentList[action.data.postId].[commentIndex].reComment[reCommentIndex] = action.data.comment;
+      draft.editCommentLoading = false;
+      draft.editCommentDone = true;
+      break;
+    }
+    case EDIT_RECOMMENT_FAILURE:
       draft.editCommentLoading = false;
       draft.editCommentError = action.error;
       break;

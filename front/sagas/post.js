@@ -70,6 +70,9 @@ import {
   EDIT_COMMENT_SUCCESS,
   EDIT_COMMENT_FAILURE,
   EDIT_COMMENT_REQUEST,
+  EDIT_RECOMMENT_SUCCESS,
+  EDIT_RECOMMENT_FAILURE,
+  EDIT_RECOMMENT_REQUEST,
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
   REMOVE_COMMENT_REQUEST,
@@ -448,7 +451,8 @@ function* editComment(action) {
       type: EDIT_COMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
-        comment: result.data,
+        comment: result.data.body,
+        commentId: result.data.body.id,
       },
     });
   } catch (err) {
@@ -456,6 +460,32 @@ function* editComment(action) {
     console.log(err);
     yield put({
       type: EDIT_COMMENT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function editReCommentAPI(data) {
+  return axios.patch(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}`, data);
+}
+
+function* editReComment(action) {
+  try {
+    const result = yield call(editReCommentAPI, action.data);
+    yield put({
+      type: EDIT_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        comment: result.data.body,
+        commentId: result.data.body.id,
+        parentId: action.data.parentId,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    console.log(err);
+    yield put({
+      type: EDIT_RECOMMENT_FAILURE,
       error: err,
     });
   }
@@ -722,6 +752,10 @@ function* watchEditComment() {
   yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
 }
 
+function* watchEditReComment() {
+  yield takeLatest(EDIT_RECOMMENT_REQUEST, editReComment);
+}
+
 function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
@@ -786,6 +820,7 @@ export default function* postSaga() {
     fork(watchEditPost),
     fork(watchEditImages),
     fork(watchEditComment),
+    fork(watchEditReComment),
     fork(watchRemoveComment),
     fork(watchReport),
     fork(watchAddReComment),

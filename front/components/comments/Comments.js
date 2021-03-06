@@ -60,7 +60,7 @@ const Comments = ({ item, post }) => {
         actions={!edit ? [
           <div style={editWrapper}>
             <a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>
-            {me.id === item.id
+            {me.id === item.user.id
               ? (
                 <>
                   <a key="edit" onClick={onEdit}>
@@ -108,6 +108,7 @@ const Comments = ({ item, post }) => {
         reComment = {item.reComment || []}
         post={post}
         onReply = {onReply}
+        parentId = {item.id}
       />
       <style jsx>
         {
