@@ -9,8 +9,7 @@ export const initialState = {
 
   /* post */
   mainPosts: [], // 전체 포스트들
-  commentlist: [], // 댓글들
-  reCommentList: [],
+  commentList: [], // 댓글들
   categoryPosts: [], // 화면에 보일 카테고리 포스트들
   majorPosts: [], // 화면에 보일 전공 포스트들
   favoritePosts: [],
@@ -311,13 +310,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addReCommentError = null;
       break;
     case ADD_RECOMMENT_SUCCESS: {
-      const { parentId } = action.data;
-      if (draft.reCommentList[parentId] === undefined) {
-        draft.reCommentList[parentId] = [];
-        draft.reCommentList[parentId].push(action.data.reComment);
-      } else {
-        draft.reCommentList[parentId].push(action.data.reComment);
-      }
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+
+      draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
@@ -367,7 +362,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_COMMENT_SUCCESS: {
       const commentIndex = action.data.postId;
-      draft.commentlist[commentIndex].push(action.data.comment);
+      draft.commentList[commentIndex].push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -392,9 +387,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         }
       }
       if (action.data.comments === null) {
-        draft.commentlist[commentIndex] = [];
+        draft.commentList[commentIndex] = [];
       } else {
-        draft.commentlist[commentIndex] = action.data.comments;
+        draft.commentList[commentIndex] = action.data.comments;
       }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;

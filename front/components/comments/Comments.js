@@ -22,7 +22,6 @@ const Comments = ({ item, post }) => {
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
   const { me } = useSelector((state) => state.user);
-  const { reCommentList } = useSelector((state) => state.post);
 
   const onEdit = () => {
     setEdit(true);
@@ -105,11 +104,11 @@ const Comments = ({ item, post }) => {
       {reply
         ? <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id} />
         : <></>}
-      {/* <RecommentBox 
-        reComment = {reCommentList[item.id]}
+      <RecommentBox 
+        reComment = {item.reComment || []}
         post={post}
         onReply = {onReply}
-      /> */}
+      />
       <style jsx>
         {
           `div { 

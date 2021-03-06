@@ -29,7 +29,7 @@ const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const { me } = useSelector((state) => state.user);
-  const { addCommentDone, addCommentLoading, commentlist } = useSelector((state) => state.post);
+  const { addCommentDone, addCommentLoading, commentList } = useSelector((state) => state.post);
   const [editVisible, setEditVisible] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
@@ -320,7 +320,7 @@ const PostCard = ({ post }) => {
                 itemLayout="horizontal"
                 style={listWrapper}
                 // loadMore={loadMore}
-                dataSource={commentlist[post.id] || []}
+                dataSource={commentList[post.id] || []}
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
             )
