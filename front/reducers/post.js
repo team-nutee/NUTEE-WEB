@@ -312,7 +312,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_RECOMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
 
-      draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
+      if (draft.commentList[action.data.postId].[commentIndex].reComment === null){
+        draft.commentList[action.data.postId].[commentIndex].reComment = [];
+        draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
+      } else {
+        draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
+      };
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
