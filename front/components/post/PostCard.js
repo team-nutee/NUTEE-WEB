@@ -1,50 +1,38 @@
 /* eslint-disable no-restricted-globals */ /* eslint-disable no-alert */
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
 import { AlertOutlined, RetweetOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import moment from 'moment';
-import {
-  ADD_COMMENT_REQUEST,
-  LIKE_POST_REQUEST,
-  LOAD_COMMENTS_REQUEST,
-  REMOVE_POST_REQUEST,
-  RETWEET_REQUEST,
-  UNLIKE_POST_REQUEST,
-} from '../../reducers/post';
+import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
-import EditForm from './EditForm';
 import Comments from '../comments/Comments';
 import CommentForm from '../comments/CommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import Report from '../Report';
-import useInput from '../../hooks/useInput';
 
 moment.locale('ko');
 
 const PostCard = ({ post }) => {
+  const dispatch = useDispatch();
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-  const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const { me } = useSelector((state) => state.user);
-  const { addCommentDone, addCommentLoading, commentlist } = useSelector((state) => state.post);
-  const [editVisible, setEditVisible] = useState(false);
+  const { commentlist } = useSelector((state) => state.post);
   const [reportVisible, setReportVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
-  const dispatch = useDispatch();
+  const [editMode, setEditMode] = useState(false);
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
-  const singlePostContent = me && mainPosts.find((v) => v.id === post.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
   const aWrapper = useMemo(() => ({ margin: '0px 10px' }), []);
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
-  const modalWrapper = useMemo(() => ({ padding: '50px', zIndex: 1 }), []);
   const heartWrapper = useMemo(() => ({ color: '#eb2f96', fontSize: '20px' }), []);
   const badge1Wrapper = useMemo(() => ({ background: '#f50', size: 'small', zIndex: '0' }), []);
   const badge2Wrapper = useMemo(() => ({ background: '#87d068', size: 'small', zIndex: '0' }), []);
@@ -59,11 +47,10 @@ const PostCard = ({ post }) => {
   const postWrapperTest = useMemo(() => ({ margin: '0', padding: '0' }), []);
   const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
 
-  const showModal = () => { setEditVisible(true); };
-  const editOk = () => { setEditVisible(false); };
-  const editCancel = () => { setEditVisible(false); };
-  const reportOk = () => { setReportVisible(false); };
-  const reportCancel = () => { setReportVisible(false); };
+  const reportOk = useCallback(() => { setReportVisible(false); }, []);
+  const reportCancel = useCallback(() => { setReportVisible(false); }, []);
+  const onClickEdit = useCallback(() => { setEditMode(true); }, []);
+  const onCancelEdit = useCallback(() => { setEditMode(false); }, []);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
@@ -73,7 +60,7 @@ const PostCard = ({ post }) => {
         data: {
           postId: post.id,
         },
-        lastId: lastId,
+        lastId,
       });
       setlastId(lastId + 5);
     }
@@ -91,24 +78,6 @@ const PostCard = ({ post }) => {
     setlastId(lastId + 5);
   };
   */
-
-  const onSubmitComment = useCallback((e) => {
-    e.preventDefault();
-    if (!me) {
-      return alert('로그인이 필요합니다.');
-    }
-    return dispatch({
-      type: ADD_COMMENT_REQUEST,
-      data: {
-        content: commentText,
-      },
-      postId: post.id,
-    });
-  }, [me && me.id, commentText]);
-
-  useEffect(() => {
-    setCommentText('');
-  }, [addCommentDone === true]);
 
   const onLike = useCallback(() => {
     if (!me.id) {
@@ -159,7 +128,7 @@ const PostCard = ({ post }) => {
     <>
       {me && post.user.id === me.id ? (
         <>
-          {(post.retweet === null || !post.retweet.id) && <Button onClick={showModal}>수정</Button>}
+          {(post.retweet === null || !post.retweet.id) && <Button onClick={onClickEdit}>수정</Button>}
           <Button type="danger" onClick={onRemovePost}>삭제</Button>
         </>
       )
@@ -167,22 +136,31 @@ const PostCard = ({ post }) => {
     </>
   );
 
-  const date = new Date();
-  const today = moment(date).format('YYYY.MM.DD');
-  const postCreatedAt = moment(post.createdAt).format('YYYY.MM.DD');
-  const time = (
-    <>
-      {today === postCreatedAt ? (
-        <>
-          <p style={momentWrapper}>{moment(post.createdAt).startOf('hour').fromNow()}</p>
-        </>
-      ) : (
-        <>
-          <p style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</p>
-        </>
-      )}
-    </>
-  );
+  const time = () => {
+    const date = new Date();
+    const postCreateAt = new Date(post.createdAt);
+    const today = moment(date).format('YYYY.MM.DD');
+    const postCreatedAtHours = moment(postCreateAt).add(9, 'hours');
+    const postCreatedAt = moment(postCreatedAtHours).format('YYYY.MM.DD');
+    const todayBetweenTime = moment(date);
+    const postCreateAtBetweenTime = moment(postCreatedAtHours).subtract(-0.7, 'minute');
+    const betweenTime = moment.duration(todayBetweenTime.diff(postCreateAtBetweenTime)).asMinutes();
+
+    return (
+      <>
+        {today === postCreatedAt && (betweenTime <= 59) ? (
+          <>
+            <span style={momentWrapper}>{moment(postCreateAtBetweenTime).startOf('minute').fromNow()}</span>
+          </>
+        ) : (
+          <>
+            <span style={momentWrapper}>{moment(postCreatedAtHours).format('LLLL')}</span>
+          </>
+        )}
+        {post.updatedAt === post.createdAt ? <></> : <small> (수정)</small>}
+      </>
+    );
+  };
 
   /*
   const loadMore = (
@@ -250,20 +228,15 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.retweet.user.nickname}</p>
-                        {time}
+                        {time()}
                       </>
                     )}
                     description={(
                       <>
-                        {singlePostContent && (
-                          <PostCardContent
-                            likers={post.likers ? post.likers.length : 0}
-                            commentN={post.commentNum}
-                            postTitle={post.retweet.title}
-                            postData={post.retweet.content}
-                            retweet={1}
-                          />
-                        )}
+                        <PostCardContent
+                          post={post.retweet}
+                          retweet={1}
+                        />
                         <h5 style={retweetCardMetaWrapper}>
                           {`댓글 ${post.retweet.commentNum}개 좋아요 ${post.retweet.likers ? post.retweet.likers.length : 0}개`}
                         </h5>
@@ -274,7 +247,7 @@ const PostCard = ({ post }) => {
               )
               : (
                 <div style={postWrapperTest}>
-                  <div style={tagWrapper}><Tag color="purple">{post.category}</Tag></div>
+                  {editMode ? <></> : <div style={tagWrapper}><Tag color="purple">{post.category}</Tag></div>}
                   <Card.Meta
                     avatar={
                       post.user.id
@@ -290,19 +263,17 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.user.nickname}</p>
-                        {time}
+                        {editMode ? <></> : <>{time()}</>}
                       </>
                     )}
                     description={(
                       <>
-                        {singlePostContent && (
                         <PostCardContent
-                          likers={post.likers ? post.likers.length : 0}
-                          commentN={post.commentNum}
-                          postTitle={post.title}
-                          postData={post.content}
+                          post={post}
+                          me={me}
+                          editMode={editMode}
+                          onCancelEdit={onCancelEdit}
                         />
-                        )}
                       </>
                     )}
                     loading
@@ -332,23 +303,6 @@ const PostCard = ({ post }) => {
           </div>
         </div>
       )}
-
-      <Modal
-        title="게시글 수정"
-        visible={editVisible}
-        onOk={editOk}
-        onCancel={editCancel}
-        bodyStyle={modalWrapper}
-        footer={null}
-      >
-        <EditForm
-          postId={post.id}
-          postContent={post.content}
-          postImages={post.images}
-          setVisible={setEditVisible}
-          visible={editVisible}
-        />
-      </Modal>
       <Modal
         title={(
           <span>
@@ -377,13 +331,14 @@ PostCard.propTypes = {
     }),
     images: PropTypes.array,
     title: PropTypes.string,
-    likers: PropTypes.object,
+    likers: PropTypes.array,
     commentNum: PropTypes.number,
     category: PropTypes.string,
     content: PropTypes.string,
     comments: PropTypes.object,
     blocked: PropTypes.bool,
     createdAt: PropTypes.string,
+    updatedAt: PropTypes.string,
     retweet: PropTypes.shape({
       id: PropTypes.number,
       title: PropTypes.string,
