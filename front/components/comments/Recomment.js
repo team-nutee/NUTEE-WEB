@@ -9,13 +9,13 @@ import Link from 'next/link';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { EditOutlined, DeleteFilled } from '@ant-design/icons';
-import { REMOVE_COMMENT_REQUEST } from '../../reducers/post';
+import { REMOVE_RECOMMENT_REQUEST } from '../../reducers/post';
 import ProfileAvatar from '../profiles/ProfileAvatar';
-import EditCommentForm from './EditCommentForm';
+import EditRecommentForm from './EditRecommentForm';
 
 moment.locale('ko');
 
-const Recomment = ({ item, post }) => {
+const Recomment = ({ item, post, parentId }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const onEdit = () => {
@@ -28,9 +28,10 @@ const Recomment = ({ item, post }) => {
       return;
     }
     dispatch({
-      type: REMOVE_COMMENT_REQUEST,
+      type: REMOVE_RECOMMENT_REQUEST,
       commentId: item.id,
       postId: post.id,
+      parentId: parentId,
     });
   });
 
@@ -58,14 +59,14 @@ const Recomment = ({ item, post }) => {
               </Link>
                 )}
             description={edit
-              ? <EditCommentForm comment={item} edit={edit} setEdit={setEdit} postId={post.id} />
+              ? <EditRecommentForm comment={item} edit={edit} setEdit={setEdit} postId={post.id} parentId={parentId} />
               : (
                 <pre style={contentWrapper}>
                   <Link href={`/user/${item.user.id}`} prefetch={false}>
 
                     <a style={nicknameWrapper}>{item.user.nickname}</a>
                   </Link>
-                  <div style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
+                  <div style={momentWrapper}>{moment(item.createdAt).format('YYYY.MM.DD')}</div>
                   {item.content}
                 </pre>
               )}

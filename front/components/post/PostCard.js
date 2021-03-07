@@ -20,7 +20,7 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const { me } = useSelector((state) => state.user);
-  const { commentlist } = useSelector((state) => state.post);
+  const { commentList } = useSelector((state) => state.post);
   const [reportVisible, setReportVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
@@ -291,7 +291,7 @@ const PostCard = ({ post }) => {
                 itemLayout="horizontal"
                 style={listWrapper}
                 // loadMore={loadMore}
-                dataSource={commentlist[post.id] || []}
+                dataSource={commentList[post.id] || []}
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
             )

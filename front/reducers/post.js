@@ -9,8 +9,7 @@ export const initialState = {
 
   /* post */
   mainPosts: [], // 전체 포스트들
-  commentlist: [], // 댓글들
-  reCommentList: [],
+  commentList: [], // 댓글들
   categoryPosts: [], // 화면에 보일 카테고리 포스트들
   majorPosts: [], // 화면에 보일 전공 포스트들
   favoritePosts: [],
@@ -50,9 +49,15 @@ export const initialState = {
   editCommentLoading: false, // 댓글 수정
   editCommentDone: false,
   editCommentError: null,
+  editReCommentLoading: false, // 답글 수정
+  editReCommentDone: false,
+  editReCommentError: null,
   removeCommentLoading: false, // 댓글 삭제
   removeCommentDone: false,
   removeCommentError: null,
+  removeReCommentLoading: false, // 답글 삭제
+  removeReCommentDone: false,
+  removeReCommentError: null,
   addReCommentLoading: false, // 답글 업로드
   addReCommentDone: false,
   addReCommentError: null,
@@ -158,9 +163,17 @@ export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
 export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS';
 export const EDIT_COMMENT_FAILURE = 'EDIT_COMMENT_FAILURE';
 
+export const EDIT_RECOMMENT_REQUEST = 'EDIT_RECOMMENT_REQUEST';
+export const EDIT_RECOMMENT_SUCCESS = 'EDIT_RECOMMENT_SUCCESS';
+export const EDIT_RECOMMENT_FAILURE = 'EDIT_RECOMMENT_FAILURE';
+
 export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
 export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
+
+export const REMOVE_RECOMMENT_REQUEST = 'REMOVE_RECOMMENT_REQUEST';
+export const REMOVE_RECOMMENT_SUCCESS = 'REMOVE_RECOMMENT_SUCCESS';
+export const REMOVE_RECOMMENT_FAILURE = 'REMOVE_RECOMMENT_FAILURE';
 
 export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST';
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
@@ -309,13 +322,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addReCommentError = null;
       break;
     case ADD_RECOMMENT_SUCCESS: {
-      const { parentId } = action.data;
-      if (draft.reCommentList[parentId] === undefined) {
-        draft.reCommentList[parentId] = [];
-        draft.reCommentList[parentId].push(action.data.reComment);
-      } else {
-        draft.reCommentList[parentId].push(action.data.reComment);
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+
+      if (draft.commentList[action.data.postId][commentIndex].reComment === null){
+        draft.commentList[action.data.postId][commentIndex].reComment = [];
       }
+      draft.commentList[action.data.postId][commentIndex].reComment.push(action.data.reComment);
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
@@ -330,13 +342,30 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.post.id);
-      draft.mainPosts[postIndex].comments = action.data.comment;
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
     }
     case EDIT_COMMENT_FAILURE:
+      draft.editCommentLoading = false;
+      draft.editCommentError = action.error;
+      break;
+    case EDIT_RECOMMENT_REQUEST:
+      draft.editCommentLoading = true;
+      draft.editCommentDone = false;
+      draft.editCommentError = null;
+      break;
+    case EDIT_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex] = action.data.comment;
+      draft.editCommentLoading = false;
+      draft.editCommentDone = true;
+      break;
+    }
+    case EDIT_RECOMMENT_FAILURE:
       draft.editCommentLoading = false;
       draft.editCommentError = action.error;
       break;
@@ -346,17 +375,38 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
-      const commentIndex = draft.commentlist[action.data.postId].findIndex(
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
         (v) => v.id === action.data.commentId,
       );
-      draft.commentlist[action.data.postid].splice(commentIndex, 1);
-      draft.addCommentLoading = false;
-      draft.addCommentDone = true;
+      draft.commentList[action.data.postId].splice(commentIndex, 1);
+      draft.removeCommentLoading = false;
+      draft.removeCommentDone = true;
       break;
     }
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
+      break;
+    case REMOVE_RECOMMENT_REQUEST:
+      draft.removeReCommentLoading = true;
+      draft.removeReCommentDone = false;
+      draft.removeReCommentError = null;
+      break;
+    case REMOVE_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
+        (v) => v.id === action.data.parentId,
+      );
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
+        (v) => v.id === action.data.commentId,
+      )
+      draft.commentList[action.data.postId][commentIndex].reComment.splice(reCommentIndex, 1);
+      draft.removeReCommnetLoading = false;
+      draft.removeReCommnetDone = true;
+      break;
+    }
+    case REMOVE_RECOMMENT_FAILURE:
+      draft.removeReCommentLoading = false;
+      draft.removeReCommentError = action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;
@@ -365,7 +415,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_COMMENT_SUCCESS: {
       const commentIndex = action.data.postId;
-      draft.commentlist[commentIndex].push(action.data.comment);
+      draft.commentList[commentIndex].push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -381,6 +431,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       );
       const commentIndex = action.data.postId;
       if (action.data.comments !== null) {
+        draft.commentList[commentIndex] = action.data.comments;
         if (action.data.offset === 0) {
           draft.mainPosts[postIndex].commentNum = action.data.comments.length;
         } else {
@@ -388,11 +439,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             postIndex
           ].commentNum.concat(action.data.comments);
         }
-      }
-      if (action.data.comments === null) {
-        draft.commentlist[commentIndex] = [];
       } else {
-        draft.commentlist[commentIndex] = action.data.comments;
+        draft.commentList[commentIndex] = [];
       }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;

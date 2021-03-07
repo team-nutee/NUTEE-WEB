@@ -70,8 +70,14 @@ import {
   EDIT_COMMENT_SUCCESS,
   EDIT_COMMENT_FAILURE,
   EDIT_COMMENT_REQUEST,
+  EDIT_RECOMMENT_SUCCESS,
+  EDIT_RECOMMENT_FAILURE,
+  EDIT_RECOMMENT_REQUEST,
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
+  REMOVE_RECOMMENT_REQUEST,
+  REMOVE_RECOMMENT_SUCCESS,
+  REMOVE_RECOMMENT_FAILURE,
   REMOVE_COMMENT_REQUEST,
   REPORT_SUCCESS,
   REPORT_FAILURE,
@@ -448,7 +454,7 @@ function* editComment(action) {
       type: EDIT_COMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
-        comment: result.data,
+        comment: result.data.body,
       },
     });
   } catch (err) {
@@ -461,8 +467,33 @@ function* editComment(action) {
   }
 }
 
+function editReCommentAPI(data) {
+  return axios.patch(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}`, data);
+}
+
+function* editReComment(action) {
+  try {
+    const result = yield call(editReCommentAPI, action.data);
+    yield put({
+      type: EDIT_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        comment: result.data.body,
+        parentId: action.data.parentId,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    console.log(err);
+    yield put({
+      type: EDIT_RECOMMENT_FAILURE,
+      error: err,
+    });
+  }
+}
+
 function removeCommentAPI(postId, commentId) {
-  return axios.delete(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}`);
+  return axios.delete(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}`, { data: {} });
 }
 
 function* removeComment(action) {
@@ -480,6 +511,31 @@ function* removeComment(action) {
     console.error(e);
     yield put({
       type: REMOVE_COMMENT_FAILURE,
+      error: e,
+    });
+  }
+}
+
+function removeReCommentAPI(postId, commentId) {
+  return axios.delete(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}`, { data: {} });
+}
+
+function* removeReComment(action) {
+  try {
+    const result = yield call(removeReCommentAPI, action.postId, action.commentId, action.parentId);
+    yield put({
+      type: REMOVE_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.postId,
+        commentId: action.commentId,
+        comment: result.data.body,
+        parentId: action.parentId,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: REMOVE_RECOMMENT_FAILURE,
       error: e,
     });
   }
@@ -722,8 +778,16 @@ function* watchEditComment() {
   yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
 }
 
+function* watchEditReComment() {
+  yield takeLatest(EDIT_RECOMMENT_REQUEST, editReComment);
+}
+
 function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
+}
+
+function* watchRemoveReComment() {
+  yield takeLatest(REMOVE_RECOMMENT_REQUEST, removeReComment);
 }
 
 function* watchLoadComments() {
@@ -786,7 +850,9 @@ export default function* postSaga() {
     fork(watchEditPost),
     fork(watchEditImages),
     fork(watchEditComment),
+    fork(watchEditReComment),
     fork(watchRemoveComment),
+    fork(watchRemoveReComment),
     fork(watchReport),
     fork(watchAddReComment),
     fork(watchMajorsData),
