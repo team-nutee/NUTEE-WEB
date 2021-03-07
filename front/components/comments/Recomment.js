@@ -9,7 +9,7 @@ import Link from 'next/link';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { EditOutlined, DeleteFilled } from '@ant-design/icons';
-import { REMOVE_COMMENT_REQUEST } from '../../reducers/post';
+import { REMOVE_RECOMMENT_REQUEST } from '../../reducers/post';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import EditRecommentForm from './EditRecommentForm';
 
@@ -28,9 +28,10 @@ const Recomment = ({ item, post, parentId }) => {
       return;
     }
     dispatch({
-      type: REMOVE_COMMENT_REQUEST,
+      type: REMOVE_RECOMMENT_REQUEST,
       commentId: item.id,
       postId: post.id,
+      parentId: parentId,
     });
   });
 

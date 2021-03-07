@@ -49,12 +49,15 @@ export const initialState = {
   editCommentLoading: false, // 댓글 수정
   editCommentDone: false,
   editCommentError: null,
-  editReCommentLoading: false, // 대댓글 수정
+  editReCommentLoading: false, // 답글 수정
   editReCommentDone: false,
   editReCommentError: null,
   removeCommentLoading: false, // 댓글 삭제
   removeCommentDone: false,
   removeCommentError: null,
+  removeReCommentLoading: false, // 답글 삭제
+  removeReCommentDone: false,
+  removeReCommentError: null,
   addReCommentLoading: false, // 답글 업로드
   addReCommentDone: false,
   addReCommentError: null,
@@ -167,6 +170,10 @@ export const EDIT_RECOMMENT_FAILURE = 'EDIT_RECOMMENT_FAILURE';
 export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
 export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
+
+export const REMOVE_RECOMMENT_REQUEST = 'REMOVE_RECOMMENT_REQUEST';
+export const REMOVE_RECOMMENT_SUCCESS = 'REMOVE_RECOMMENT_SUCCESS';
+export const REMOVE_RECOMMENT_FAILURE = 'REMOVE_RECOMMENT_FAILURE';
 
 export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST';
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS';
@@ -319,12 +326,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_RECOMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
 
-      if (draft.commentList[action.data.postId].[commentIndex].reComment === null){
-        draft.commentList[action.data.postId].[commentIndex].reComment = [];
-        draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
-      } else {
-        draft.commentList[action.data.postId].[commentIndex].reComment.push(action.data.reComment);
-      };
+      if (draft.commentList[action.data.postId][commentIndex].reComment === null){
+        draft.commentList[action.data.postId][commentIndex].reComment = [];
+      }
+      draft.commentList[action.data.postId][commentIndex].reComment.push(action.data.reComment);
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
@@ -339,8 +344,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_COMMENT_SUCCESS: {
-      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
-      draft.commentList[action.data.postId].[commentIndex] = action.data.comment;
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
@@ -356,9 +361,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case EDIT_RECOMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
-      console.log(commentIndex);
-      const reCommentIndex = draft.commentList[action.data.postId].[commentIndex].reComment.findIndex((v) => v.id === action.data.commentId);
-      draft.commentList[action.data.postId].[commentIndex].reComment[reCommentIndex] = action.data.comment;
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
@@ -373,17 +377,38 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
-      const commentIndex = draft.commentlist[action.data.postId].findIndex(
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
         (v) => v.id === action.data.commentId,
       );
-      draft.commentlist[action.data.postid].splice(commentIndex, 1);
-      draft.addCommentLoading = false;
-      draft.addCommentDone = true;
+      draft.commentList[action.data.postId].splice(commentIndex, 1);
+      draft.removeCommentLoading = false;
+      draft.removeCommentDone = true;
       break;
     }
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
+      break;
+    case REMOVE_RECOMMENT_REQUEST:
+      draft.removeReCommentLoading = true;
+      draft.removeReCommentDone = false;
+      draft.removeReCommentError = null;
+      break;
+    case REMOVE_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
+        (v) => v.id === action.data.parentId,
+      );
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
+        (v) => v.id === action.data.commentId,
+      )
+      draft.commentList[action.data.postId][commentIndex].reComment.splice(reCommentIndex, 1);
+      draft.removeReCommnetLoading = false;
+      draft.removeReCommnetDone = true;
+      break;
+    }
+    case REMOVE_RECOMMENT_FAILURE:
+      draft.removeReCommentLoading = false;
+      draft.removeReCommentError = action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;
@@ -408,6 +433,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       );
       const commentIndex = action.data.postId;
       if (action.data.comments !== null) {
+        draft.commentList[commentIndex] = action.data.comments;
         if (action.data.offset === 0) {
           draft.mainPosts[postIndex].commentNum = action.data.comments.length;
         } else {
@@ -415,11 +441,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             postIndex
           ].commentNum.concat(action.data.comments);
         }
-      }
-      if (action.data.comments === null) {
-        draft.commentList[commentIndex] = [];
       } else {
-        draft.commentList[commentIndex] = action.data.comments;
+        draft.commentList[commentIndex] = [];
       }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
