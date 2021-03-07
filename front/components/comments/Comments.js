@@ -94,7 +94,13 @@ const Comments = ({ item, post }) => {
                     <Link href={{ pathname: '/user', query: { id: item.user.id } }} as={`/user/${item.user.id}`}>
                       <a style={nicknameWrapper}>{item.user.nickname}</a>
                     </Link>
-                    <div style={momentWrapper}>{moment(item.createdAt).format('YYYY.MM.DD')}</div>
+                    <div style={momentWrapper}>
+                      {moment(item.createdAt).format('YYYY.MM.DDTHH:mm:ss') === moment(item.updatedAt).format('YYYY.MM.DDTHH:mm:ss')
+                      ? 
+                      moment(item.createdAt).format('YYYY.MM.DD')
+                      : 
+                      moment(item.updatedAt).format('YYYY.MM.DD'+' (수정됨)')}
+                    </div>
                     {item.content}
                   </pre>
                 )}
