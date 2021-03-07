@@ -188,13 +188,13 @@ function* addPost(action) {
   }
 }
 
-function editPostAPI(postData) {
-  return axios.patch(`${INDEX_URL}/sns/post/${postData.postId}`, postData);
+function editPostAPI(postData, postId) {
+  return axios.patch(`${INDEX_URL}/sns/post/${postId}`, postData);
 }
 
 function* editPost(action) {
   try {
-    const result = yield call(editPostAPI, action.data);
+    const result = yield call(editPostAPI, action.data, action.postId);
     yield put({
       type: EDIT_POST_SUCCESS,
       data: result.data,

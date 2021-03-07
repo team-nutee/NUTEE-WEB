@@ -261,9 +261,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           (v, i) => i === action.index
         );
         draft.editImagePaths.splice(index, 1); */
-      draft.editImagePaths = draft.editImagePaths.filter(
-        (v, i) => i !== action.data,
-      );
+      draft.editImagePaths = draft.editImagePaths.filter((v, i) => i !== action.data);
       break;
     }
     case ADD_POST_REQUEST:
@@ -272,10 +270,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addPostError = null;
       break;
     case ADD_POST_SUCCESS:
-      draft.addPostLoading = false;
-      draft.addPostDone = true;
       draft.mainPosts.unshift(action.data);
       draft.imagePaths = [];
+      draft.addPostLoading = false;
+      draft.addPostDone = true;
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;
@@ -289,9 +287,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case EDIT_POST_SUCCESS: {
       const index = draft.mainPosts.findIndex((v) => v.id === action.data.id);
       draft.mainPosts[index] = action.data;
+      draft.EditImagePaths = [];
       draft.editPostLoading = false;
       draft.editPostDone = true;
-      draft.EditImagePaths = [];
       break;
     }
     case EDIT_POST_FAILURE:
