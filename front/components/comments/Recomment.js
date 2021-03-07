@@ -66,7 +66,7 @@ const Recomment = ({ item, post, parentId }) => {
 
                     <a style={nicknameWrapper}>{item.user.nickname}</a>
                   </Link>
-                  <div style={momentWrapper}>{moment(post.createdAt).format('YYYY.MM.DD')}</div>
+                  <div style={momentWrapper}>{moment(item.createdAt).format('YYYY.MM.DD')}</div>
                   {item.content}
                 </pre>
               )}
