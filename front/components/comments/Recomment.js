@@ -3,7 +3,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useMemo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { List } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
@@ -18,6 +18,7 @@ moment.locale('ko');
 const Recomment = ({ item, post, parentId }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
+  const { me } = useSelector((state) => state.user);
   const onEdit = () => {
     setEdit(true);
   };
@@ -43,8 +44,18 @@ const Recomment = ({ item, post, parentId }) => {
   return (
     <List.Item
       style={listWrapper}
-      actions={!edit ? [<a key="edit" onClick={onEdit}><EditOutlined /></a>,
-        <a key="delete" onClick={onRemove}><DeleteFilled /></a>] : <></>}
+      actions={!edit ? [
+        <div>
+        <a key="edit" onClick={onEdit}><EditOutlined /></a>,
+        {me.id === item.user.id 
+          ? (
+            <>
+              <a key="delete" onClick={onRemove}><DeleteFilled /></a> 
+            </> 
+          ) 
+          : <></>}
+        </div>,
+        ] : <></>}
     >
       {item === null
         ? <></>
