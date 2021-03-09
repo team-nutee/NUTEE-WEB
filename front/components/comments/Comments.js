@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { List } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
-import { DeleteFilled, EditOutlined, MessageOutlined } from '@ant-design/icons';
-import { REMOVE_COMMENT_REQUEST } from '../../reducers/post';
+import { DeleteFilled, EditOutlined, MessageOutlined, HeartTwoTone, HeartOutlined } from '@ant-design/icons';
+import { REMOVE_COMMENT_REQUEST, LIKE_COMMENT_REQUEST, UNLIKE_COMMENT_REQUEST } from '../../reducers/post';
 import EditCommentForm from './EditCommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import ReCommentForm from './ReCommentForm';
@@ -22,6 +22,7 @@ const Comments = ({ item, post }) => {
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
   const { me } = useSelector((state) => state.user);
+  const id =useSelector((state) => state.user.me?.id);
 
   const onEdit = () => {
     setEdit(true);
@@ -29,6 +30,31 @@ const Comments = ({ item, post }) => {
   const onReply = () => {
     setReply(true);
   };
+  const onLike = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    dispatch({
+      type: LIKE_COMMENT_REQUEST,
+      data: {
+        commentId: item.id,
+        postId: post.id,
+      }
+    })
+  }, [id]);
+  const onUnlike = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    dispatch({
+      type: UNLIKE_COMMENT_REQUEST,
+      data: {
+        commentId: item.id,
+        postId: post.id,
+        userId: id,
+      }
+    })
+  }, [id]);
   const cancelReply = () => {
     setReply(false);
   };
@@ -53,11 +79,22 @@ const Comments = ({ item, post }) => {
   const commentWrapper = useMemo(() => ({ fontFamily: 'Nanum Barun Gothic' }), []);
   const editWrapper = useMemo(() => ({ }), []);
 
+
+  const liked = item.likers.find((v) => v.id === id);
+  
+
   return (
     <div style={commentWrapper}>
       <List.Item
         style={listWrapper}
         actions={!edit ? [
+          <div>
+            {liked
+              ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
+              : <HeartOutlined key="heart" onClick={onLike} />
+            }
+            {item.likers.length}
+          </div>,
           <div style={editWrapper}>
             <a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>
             {me.id === item.user.id

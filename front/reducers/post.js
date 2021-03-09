@@ -61,6 +61,12 @@ export const initialState = {
   addReCommentLoading: false, // 답글 업로드
   addReCommentDone: false,
   addReCommentError: null,
+  likeCommentLoading: false, // 댓글 좋아요
+  likeCommentDone: false,
+  likeCommentError: null,
+  unlikeCommentLoading: false, // 댓글 좋아요 취소
+  unlikeCommentDone: false,
+  unlikeCommentError: null,
 
   /* major&category data */
   majorsData: [],
@@ -182,6 +188,14 @@ export const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENTS_FAILURE';
 export const ADD_RECOMMENT_REQUEST = 'ADD_RECOMMENT_REQUEST';
 export const ADD_RECOMMENT_SUCCESS = 'ADD_RECOMMENT_SUCCESS';
 export const ADD_RECOMMENT_FAILURE = 'ADD_RECOMMENT_FAILURE';
+
+export const LIKE_COMMENT_REQUEST = 'LIKE_COMMENT_REQUEST';
+export const LIKE_COMMENT_SUCCESS = 'LIKE_COMMENT_SUCCESS';
+export const LIKE_COMMENT_FAILURE = 'LIKE_COMMENT_FAILURE';
+
+export const UNLIKE_COMMENT_REQUEST = 'UNLIKE_COMMENT_REQUEST';
+export const UNLIKE_COMMENT_SUCCESS = 'UNLIKE_COMMENT_SUCCESS';
+export const UNLIKE_COMMENT_FAILURE = 'UNLIKE_COMMENT_FAILURE';
 
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
@@ -414,12 +428,52 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const commentIndex = action.data.postId;
-      draft.commentList[commentIndex].push(action.data.comment);
+      draft.commentList[action.data.postId].push(action.data.comment);
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.comment.id);
+      if (draft.commentList[action.data.postId][commentIndex].likers === null) {
+        draft.commentList[action.data.postId][commentIndex].likers = [];
+      }
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
     }
+    case ADD_COMMENT_FAILURE:
+      draft.addCommentLoading = false;
+      draft.addCommentsError = action.error;
+      break;
+    case LIKE_COMMENT_REQUEST:
+      draft.likeCommentLoading = true;
+      draft.likeCommentDone = false;
+      draft.likeCommentError = null;
+      break;
+    case LIKE_COMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
+      draft.commentList[action.data.postId][commentIndex].likers.push( {id: action.data.like.user.id});
+      draft.likeCommentLoading = false;
+      draft.likeCommentDone = true;
+      break;
+    }
+    case LIKE_COMMENT_FAILURE:
+      draft.likeCommentLoading = false;
+      draft.likeCommentsError = action.error;
+      break;
+    case UNLIKE_COMMENT_REQUEST:
+      draft.unlikeCommentLoading = true;
+      draft.unlikeCommentDone = false;
+      draft.unlikeCommentError = null;
+      break;
+    case UNLIKE_COMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
+      const likeIndex = draft.commentList[action.data.postId][commentIndex].likers.findIndex((v) => v.id === action.data.userId);
+      draft.commentList[action.data.postId][commentIndex].likers.splice(likeIndex, 1);
+      draft.unlikeCommentLoading = false;
+      draft.unlikeCommentDone = true;
+      break;
+    }
+    case UNLIKE_COMMENT_FAILURE:
+      draft.unlikeCommentLoading = false;
+      draft.unlikeCommentsError = action.error;
+      break;
     case LOAD_COMMENTS_REQUEST:
       draft.loadCommentsLoading = true;
       draft.loadCommentsDone = false;
@@ -447,7 +501,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     }
     case LOAD_COMMENTS_FAILURE:
-      draft.addCommentLoading = false;
+      draft.loadCommentLoading = false;
       draft.loadCommentsError = action.error;
       break;
     case LOAD_CATEGORY_POSTS_REQUEST:
