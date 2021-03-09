@@ -8,8 +8,8 @@ import { List } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { EditOutlined, DeleteFilled } from '@ant-design/icons';
-import { REMOVE_RECOMMENT_REQUEST } from '../../reducers/post';
+import { EditOutlined, DeleteFilled, HeartTwoTone, HeartOutlined } from '@ant-design/icons';
+import { REMOVE_RECOMMENT_REQUEST, LIKE_RECOMMENT_REQUEST, UNLIKE_RECOMMENT_REQUEST } from '../../reducers/post';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import EditRecommentForm from './EditRecommentForm';
 
@@ -19,9 +19,38 @@ const Recomment = ({ item, post, parentId }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const { me } = useSelector((state) => state.user);
+  const id = useSelector((state) => state.user.me?.id);
   const onEdit = () => {
     setEdit(true);
   };
+
+  const onLike = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    dispatch({
+      type: LIKE_RECOMMENT_REQUEST,
+      data: {
+        commentId: item.id,
+        postId: post.id,
+        parentId,
+      }
+    })
+  }, [id]);
+  const onUnlike = useCallback(() => {
+    if (!id) {
+      return alert('로그인이 필요합니다.');
+    }
+    dispatch({
+      type: UNLIKE_RECOMMENT_REQUEST,
+      data: {
+        commentId: item.id,
+        postId: post.id,
+        userId: id,
+        parentId,
+      }
+    })
+  }, [id]);
 
   const onRemove = useCallback(() => {
     const result = confirm('정말로 삭제하시겠습니까?');
@@ -41,10 +70,19 @@ const Recomment = ({ item, post, parentId }) => {
   const nicknameWrapper = useMemo(() => ({ marginRight: '10px' }), []);
   const momentWrapper = useMemo(() => ({ float: 'right' }), []);
 
+  const liked = item.likers.find((v) => v.id === id);
+
   return (
     <List.Item
       style={listWrapper}
       actions={!edit ? [
+        <div>
+          {liked
+            ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike}/>
+            : <HeartOutlined key="heart" onClick={onLike} />
+          }
+          {item.likers.length}
+        </div>,
         <div>
         <a key="edit" onClick={onEdit}><EditOutlined /></a>,
         {me.id === item.user.id 

@@ -94,6 +94,12 @@ import {
   UNLIKE_COMMENT_REQUEST,
   UNLIKE_COMMENT_SUCCESS,
   UNLIKE_COMMENT_FAILURE,
+  LIKE_RECOMMENT_REQUEST,
+  LIKE_RECOMMENT_SUCCESS,
+  LIKE_RECOMMENT_FAILURE,
+  UNLIKE_RECOMMENT_REQUEST,
+  UNLIKE_RECOMMENT_SUCCESS,
+  UNLIKE_RECOMMENT_FAILURE,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 import { INDEX_URL } from '../static';
@@ -620,6 +626,57 @@ function* unlikeComment(action) {
   }
 }
 
+function likeReCommentAPI(data) {
+  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/like`, data);
+}
+
+function* likeReComment(action) {
+  try {
+    const result = yield call(likeReCommentAPI, action.data);
+    yield put({
+      type: LIKE_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        commentId: action.data.commentId,
+        parentId: action.data.parentId,
+        like: result.data.body,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LIKE_RECOMMENT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function unlikeReCommentAPI(data) {
+  return axios.delete(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/unlike`, { data: {} });
+}
+
+function* unlikeReComment(action) {
+  try {
+    const result = yield call(unlikeReCommentAPI, action.data);
+    yield put({
+      type: UNLIKE_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        commentId: action.data.commentId,
+        userId: action.data.userId,
+        parentId: action.data.parentId,
+        unlike: result.data.body,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: UNLIKE_RECOMMENT_FAILURE,
+      error: e,
+    });
+  }
+}
+
 function uploadAPI(formData) {
   return axios.post(`${INDEX_URL}/sns/upload`, formData); // '/post/images'
 }
@@ -857,6 +914,14 @@ function* watchUnlikeComment() {
   yield takeLatest(UNLIKE_COMMENT_REQUEST, unlikeComment);
 }
 
+function* watchLikeReComment() {
+  yield takeLatest(LIKE_RECOMMENT_REQUEST, likeReComment);
+}
+
+function* watchUnlikeReComment() {
+  yield takeLatest(UNLIKE_RECOMMENT_REQUEST, unlikeReComment);
+}
+
 function* watchUpload() {
   yield takeLatest(UPLOAD_REQUEST, upload);
 }
@@ -922,5 +987,7 @@ export default function* postSaga() {
     fork(watchCategoryData),
     fork(watchLikeComment),
     fork(watchUnlikeComment),
+    fork(watchLikeReComment),
+    fork(watchUnlikeReComment),
   ]);
 }

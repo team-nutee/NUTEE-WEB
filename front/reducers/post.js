@@ -67,6 +67,12 @@ export const initialState = {
   unlikeCommentLoading: false, // 댓글 좋아요 취소
   unlikeCommentDone: false,
   unlikeCommentError: null,
+  likeReCommentLoading: false, // 답글 좋아요
+  likeReCommentDone: false,
+  likeReCommentError: null,
+  unlikeReCommentLoading: false, // 답글 좋아요 취소
+  unlikeReCommentDone: false,
+  unlikeReCommentError: null,
 
   /* major&category data */
   majorsData: [],
@@ -196,6 +202,14 @@ export const LIKE_COMMENT_FAILURE = 'LIKE_COMMENT_FAILURE';
 export const UNLIKE_COMMENT_REQUEST = 'UNLIKE_COMMENT_REQUEST';
 export const UNLIKE_COMMENT_SUCCESS = 'UNLIKE_COMMENT_SUCCESS';
 export const UNLIKE_COMMENT_FAILURE = 'UNLIKE_COMMENT_FAILURE';
+
+export const LIKE_RECOMMENT_REQUEST = 'LIKE_RECOMMENT_REQUEST';
+export const LIKE_RECOMMENT_SUCCESS = 'LIKE_RECOMMENT_SUCCESS';
+export const LIKE_RECOMMENT_FAILURE = 'LIKE_RECOMMENT_FAILURE';
+
+export const UNLIKE_RECOMMENT_REQUEST = 'UNLIKE_RECOMMENT_REQUEST';
+export const UNLIKE_RECOMMENT_SUCCESS = 'UNLIKE_RECOMMENT_SUCCESS';
+export const UNLIKE_RECOMMENT_FAILURE = 'UNLIKE_RECOMMENT_FAILURE';
 
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
@@ -342,6 +356,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.commentList[action.data.postId][commentIndex].reComment = [];
       }
       draft.commentList[action.data.postId][commentIndex].reComment.push(action.data.reComment);
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.reComment.id);
+      if (draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers === null){
+        draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers = [];
+      }
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
@@ -473,6 +491,41 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UNLIKE_COMMENT_FAILURE:
       draft.unlikeCommentLoading = false;
       draft.unlikeCommentsError = action.error;
+      break;
+    case LIKE_RECOMMENT_REQUEST:
+      draft.likeReCommentLoading = true;
+      draft.likeReCommentDone = false;
+      draft.likeReCommentError = null;
+      break;
+    case LIKE_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+      const reCommnetIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.commentId);
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommnetIndex].likers.push({ id: action.data.like.user.id });
+      draft.likeReCommentLoading = false;
+      draft.likeReCommentDone = true;
+      break;
+    }
+    case LIKE_RECOMMENT_FAILURE:
+      draft.likeReCommentLoading = false;
+      draft.likeReCommentsError = action.error;
+      break;
+    case UNLIKE_RECOMMENT_REQUEST:
+      draft.unlikeReCommentLoading = true;
+      draft.unlikeReCommentDone = false;
+      draft.unlikeReCommentError = null;
+      break;
+    case UNLIKE_RECOMMENT_SUCCESS: {
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.commentId);
+      const likeIndex = draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers.findIndex((v) => v.id === action.data.userId);
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers.splice(likeIndex, 1);
+      draft.unlikeReCommentLoading = false;
+      draft.unlikeReCommentDone = true;
+      break;
+    }
+    case UNLIKE_RECOMMENT_FAILURE:
+      draft.unlikeReCommentLoading = false;
+      draft.unlikeReCommentsError = action.error;
       break;
     case LOAD_COMMENTS_REQUEST:
       draft.loadCommentsLoading = true;
