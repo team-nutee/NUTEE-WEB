@@ -383,6 +383,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case EDIT_COMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.comment.id);
       draft.commentList[action.data.postId][commentIndex] = action.data.comment;
+      if (draft.commentList[action.data.postId][commentIndex].likers === null){
+        draft.commentList[action.data.postId][commentIndex].likers = [];
+      }
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
@@ -400,6 +403,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
       const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
       draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex] = action.data.comment;
+      if (draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers === null){
+        draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex].likers = [];
+      }
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;

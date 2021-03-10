@@ -90,7 +90,7 @@ const Comments = ({ item, post }) => {
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
-  // const liked = item.likers.find((v) => v.id === id);
+  const liked = item.likers.find((v) => v.id === id);
 
   const EllipsisContent = (
     <>
@@ -113,7 +113,7 @@ const Comments = ({ item, post }) => {
         style={listWrapper}
         actions={!edit ? [
           <div>
-            {item.likers.find((v) => v.id === id)
+            {liked
               ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
               : <HeartOutlined key="heart" onClick={onLike} />
             }
