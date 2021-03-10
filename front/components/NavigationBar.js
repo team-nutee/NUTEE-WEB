@@ -2,39 +2,22 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Input, Row, Popover } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import Router from 'next/router';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutRequestAction } from '../reducers/user';
-import useInput from '../hooks/useInput';
+import Search from './Search';
 
 const NavigationBar = ({ me }) => {
-  const [searchInput, onChangeSearchInput] = useInput('');
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
 
-  const onSearch = useCallback(() => {
-    if (searchInput) {
-      Router.push(`/search/${searchInput}`);
-    }
-  }, [searchInput]);
+  const onOpenSearch = useCallback(() => { setShowSearch(true); }, []);
+  const onCloseSearch = useCallback(() => { setShowSearch(false); }, []);
 
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
   }, []);
-
-  useEffect(function onSearchWidth() {
-    if ((window.innerWidth || document.body.clientWidth) > 700) {
-      setShowSearch(true);
-    } else {
-      setShowSearch(false);
-    }
-    window.addEventListener('resize', onSearchWidth);
-    return () => {
-      window.removeEventListener('resize', onSearchWidth);
-    };
-  });
 
   const wrapper = useMemo(() => ({ background: '#fff', boxShadow: '0 5px 10px rgba(0,0,0,0.19), 0 1px 3px rgba(0,0,0,0.23)', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1050', width: '100%' }), []);
   /* 로고 */
@@ -46,23 +29,11 @@ const NavigationBar = ({ me }) => {
   const nuteeAWrapper = useMemo(() => ({ fontFamily: 'Do Hyeon', color: '#13c276', fontSize: '40px' }), []);
 
   /* 검색 */
-  const searchWrapper = useMemo(() => ({ float: 'left', margin: '0 5px 0 20px', width: '200px' }), []);
   const showSearchWrapper = useMemo(() => ({ fontSize: '30px', color: '#13c276', marginTop: '2px' }), []);
 
   /* 로그아웃 */
   const logoutWrapper = useMemo(() => ({ float: 'right', marginRight: '7vw' }), []);
   const logoutButtonWrapper = useMemo(() => ({ background: '#13c276', marginRight: '10px', borderColor: '#fff', color: 'white' }), []);
-
-  const content = (
-    <>
-      <Input
-        placeholder="검색어를 입력하세요."
-        allowClear
-        style={searchWrapper}
-      />
-      <SearchOutlined style={showSearchWrapper} onClick={onSearch} />
-    </>
-  );
 
   return (
     <Row style={wrapper}>
@@ -85,23 +56,10 @@ const NavigationBar = ({ me }) => {
           <>
             {showSearch
               ? (
-                <>
-                  <Input
-                    placeholder="검색어를 입력하세요."
-                    allowClear
-                    value={searchInput}
-                    style={searchWrapper}
-                    onChange={onChangeSearchInput}
-                  />
-                  <SearchOutlined style={showSearchWrapper} onClick={onSearch} />
-                </>
+                <Search onCloseSearch={onCloseSearch} />
               )
               : (
-                <>
-                  <Popover placement="bottom" content={content} trigger="click">
-                    <SearchOutlined style={showSearchWrapper} />
-                  </Popover>
-                </>
+                <SearchOutlined style={showSearchWrapper} onClick={onOpenSearch} />
               )}
             <div style={logoutWrapper}>
               <Button

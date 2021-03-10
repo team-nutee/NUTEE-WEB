@@ -10,17 +10,15 @@ import UserContents from '../components/contents/UserContents';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
 
+/* myCommentPosts, myLikePosts, */
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const { myPosts, hasMorePost } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   useEffect(() => {
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
     dispatch({
       type: LOAD_MY_POSTS_REQUEST,
     });
@@ -29,6 +27,9 @@ const Profile = () => {
     });
     dispatch({
       type: LOAD_MY_LIKE_REQUEST,
+    });
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
     });
   }, []);
 
@@ -42,7 +43,11 @@ const Profile = () => {
           </Col>
           {/* 게시글 */}
           <Col span={17}>
-            <UserContents me={me} hasMorePost={hasMorePost} mainPosts={mainPosts} />
+            <UserContents
+              me={me}
+              hasMorePost={hasMorePost}
+              myPosts={myPosts}
+            />
           </Col>
         </Row>
       </AppLayout>

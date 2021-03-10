@@ -28,7 +28,6 @@ const PostCard = ({ post }) => {
 
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
-  const loadMoreDivWrapper = useMemo(() => ({ margin: '0px 0px 10px 30px', textAlign: 'center' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
   const aWrapper = useMemo(() => ({ margin: '0px 10px' }), []);
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
@@ -65,19 +64,6 @@ const PostCard = ({ post }) => {
       setlastId(lastId + 5);
     }
   }, [loadPostDone]);
-
-  /*
-  const onLoadMoreComments = () => {
-    dispatch({
-      type: LOAD_COMMENTS_REQUEST,
-      data: {
-        postId: post.id,
-        lastId,
-      },
-    });
-    setlastId(lastId + 5);
-  };
-  */
 
   const onLike = useCallback(() => {
     if (!me.id) {
@@ -144,13 +130,13 @@ const PostCard = ({ post }) => {
     const postCreatedAt = moment(postCreatedAtHours).format('YYYY.MM.DD');
     const todayBetweenTime = moment(date);
     const postCreateAtBetweenTime = moment(postCreatedAtHours).subtract(-0.7, 'minute');
-    const betweenTime = moment.duration(todayBetweenTime.diff(postCreateAtBetweenTime)).asMinutes();
+    const betweenTime = moment.duration(todayBetweenTime.diff(postCreatedAtHours)).asMinutes();
 
     return (
       <>
         {today === postCreatedAt && (betweenTime <= 59) ? (
           <>
-            <span style={momentWrapper}>{moment(postCreateAtBetweenTime).startOf('minute').fromNow()}</span>
+            <span style={momentWrapper}>{moment(postCreatedAtHours).startOf('minute').fromNow()}</span>
           </>
         ) : (
           <>
@@ -161,19 +147,6 @@ const PostCard = ({ post }) => {
       </>
     );
   };
-
-  /*
-  const loadMore = (
-    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments !== 0
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments % 5 === 0
-      ? (
-        <div style={loadMoreDivWrapper}>
-          <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
-        </div>
-      ) : null
-  );
-  */
 
   return (
     <div style={postCardWrapper}>
@@ -290,7 +263,6 @@ const PostCard = ({ post }) => {
               <List
                 itemLayout="horizontal"
                 style={listWrapper}
-                // loadMore={loadMore}
                 dataSource={commentList[post.id] || []}
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
