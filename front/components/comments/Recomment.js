@@ -15,7 +15,7 @@ import EditRecommentForm from './EditRecommentForm';
 
 moment.locale('ko');
 
-const Recomment = ({ item, post, parentId }) => {
+const Recomment = ({ item, post, parentId, userId }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const { me } = useSelector((state) => state.user);
@@ -33,6 +33,7 @@ const Recomment = ({ item, post, parentId }) => {
       data: {
         commentId: item.id,
         postId: post.id,
+        userId,
         parentId,
       }
     })
@@ -140,6 +141,7 @@ Recomment.propTypes = {
       nickname: PropTypes.string,
       image: PropTypes.string,
     }),
+  userId: PropTypes.number,
   }).isRequired,
 };
 

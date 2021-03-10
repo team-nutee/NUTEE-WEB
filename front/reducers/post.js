@@ -471,7 +471,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LIKE_COMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
       console.log(commentIndex);
-      draft.commentList[action.data.postId][commentIndex].likers.push( {id: action.data.like.user.id});
+      draft.commentList[action.data.postId][commentIndex].likers.push( {id: action.data.userId});
       draft.likeCommentLoading = false;
       draft.likeCommentDone = true;
       break;
@@ -505,7 +505,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LIKE_RECOMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
       const reCommnetIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.commentId);
-      draft.commentList[action.data.postId][commentIndex].reComment[reCommnetIndex].likers.push({ id: action.data.like.user.id });
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommnetIndex].likers.push({ id: action.data.userId });
       draft.likeReCommentLoading = false;
       draft.likeReCommentDone = true;
       break;

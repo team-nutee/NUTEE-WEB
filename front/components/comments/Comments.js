@@ -41,6 +41,7 @@ const Comments = ({ item, post }) => {
       data: {
         commentId: item.id,
         postId: post.id,
+        userId: id,
       }
     })
   }, [id]);
@@ -89,7 +90,7 @@ const Comments = ({ item, post }) => {
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
-  const liked = item.likers.find((v) => v.id === id);
+  // const liked = item.likers.find((v) => v.id === id);
 
   const EllipsisContent = (
     <>
@@ -112,7 +113,7 @@ const Comments = ({ item, post }) => {
         style={listWrapper}
         actions={!edit ? [
           <div>
-            {liked
+            {item.likers.find((v) => v.id === id)
               ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
               : <HeartOutlined key="heart" onClick={onLike} />
             }
@@ -181,6 +182,7 @@ const Comments = ({ item, post }) => {
         post={post}
         onReply = {onReply}
         parentId = {item.id}
+        userId = {id}
       />
       <Modal
         title={(

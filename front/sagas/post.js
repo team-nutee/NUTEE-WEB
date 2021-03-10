@@ -611,6 +611,7 @@ function* likeComment(action) {
       data: {
         postId: action.data.postId,
         commentId: action.data.commentId,
+        userId: action.data.userId,
         like: result.data.body,
       },
     });
@@ -661,6 +662,7 @@ function* likeReComment(action) {
         postId: action.data.postId,
         commentId: action.data.commentId,
         parentId: action.data.parentId,
+        userId: action.data.userId,
         like: result.data.body,
       },
     });
