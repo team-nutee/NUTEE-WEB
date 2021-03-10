@@ -5,15 +5,16 @@
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { List } from 'antd';
+import { List, Popover, Button, Modal } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
-import { DeleteFilled, EditOutlined, MessageOutlined, HeartTwoTone, HeartOutlined } from '@ant-design/icons';
+import { MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined, AlertOutlined } from '@ant-design/icons';
 import { REMOVE_COMMENT_REQUEST, LIKE_COMMENT_REQUEST, UNLIKE_COMMENT_REQUEST } from '../../reducers/post';
 import EditCommentForm from './EditCommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import ReCommentForm from './ReCommentForm';
 import RecommentBox from './RecommentBox';
+import ReportComment from '../ReportComment';
 
 moment.locale('ko');
 
@@ -21,6 +22,7 @@ const Comments = ({ item, post }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const [reply, setReply] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
   const { me } = useSelector((state) => state.user);
   const id =useSelector((state) => state.user.me?.id);
 
@@ -71,6 +73,10 @@ const Comments = ({ item, post }) => {
     });
   });
 
+  const onReport = useCallback(() => {
+    setReportVisible(true);
+  });
+
   const listWrapper = useMemo(() => ({ fontFamily: 'NanumBarunGothic', marginLeft: '-15px', marginBottom: '-15px', border: 'none' }), []);
   const contentWrapper = useMemo(() => ({ marginRight: '-30px', marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
   const nicknameWrapper = useMemo(() => ({ marginRight: '10px', fontWeight: 'bold', color: '#005000' }), []);
@@ -78,9 +84,26 @@ const Comments = ({ item, post }) => {
   const momentWrapper = useMemo(() => ({ fontSize: '12px', marginBottom: '5px' }), []);
   const commentWrapper = useMemo(() => ({ fontFamily: 'Nanum Barun Gothic' }), []);
   const editWrapper = useMemo(() => ({ }), []);
+  const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
 
+  const reportOk = useCallback(() => { setReportVisible(false); }, []);
+  const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
   const liked = item.likers.find((v) => v.id === id);
+
+  const EllipsisContent = (
+    <>
+      {me.id === item.user.id
+        ? (
+          <>
+            <Button onClick={onEdit}>수정</Button>
+            <Button type="danger" onClick={onRemove}>삭제</Button>
+          </>
+        )
+        : <Button onClick={onReport}>신고</Button>}
+
+    </>
+  );
   
 
   return (
@@ -97,7 +120,13 @@ const Comments = ({ item, post }) => {
           </div>,
           <div style={editWrapper}>
             <a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>
-            {me.id === item.user.id
+            <Popover
+              content={EllipsisContent}
+              trigger = "click"
+            >
+              <EllipsisOutlined />
+            </Popover>
+            {/* {me.id === item.user.id
               ? (
                 <>
                   <a key="edit" onClick={onEdit}>
@@ -108,7 +137,7 @@ const Comments = ({ item, post }) => {
                   </a>
                 </>
               )
-              : <></>}
+              : <></>} */}
           </div>,
         ] : <></>}
       >
@@ -153,6 +182,20 @@ const Comments = ({ item, post }) => {
         onReply = {onReply}
         parentId = {item.id}
       />
+      <Modal
+        title={(
+          <span>
+            <AlertOutlined style={prefixWrapper} />
+            댓글 신고
+          </span>
+        )}
+        visible={reportVisible}
+        onOk={reportOk}
+        onCancel={reportCancel}
+        footer={null}
+        >
+          <ReportComment setReportVisible={setReportVisible} item={item} post={post} />
+      </Modal>
       <style jsx>
         {
           `div { 

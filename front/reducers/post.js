@@ -73,6 +73,9 @@ export const initialState = {
   unlikeReCommentLoading: false, // 답글 좋아요 취소
   unlikeReCommentDone: false,
   unlikeReCommentError: null,
+  reportCommentLoading: false, // 댓글 신고
+  reportCommentDone: false,
+  reportCommentError: null,
 
   /* major&category data */
   majorsData: [],
@@ -166,6 +169,10 @@ export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
 export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
 export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
+export const REPORT_COMMENT_REQUEST = 'REPORT_COMMENT_REQUEST';
+export const REPORT_COMMENT_SUCCESS = 'REPORT_COMMENT_SUCCESS';
+export const REPORT_COMMENT_FAILURE = 'REPORT_COMMENT_FAILURE';
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -407,10 +414,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
-      const commentIndex = draft.commentList[action.data.postId].findIndex(
-        (v) => v.id === action.data.commentId,
-      );
-      draft.commentList[action.data.postId].splice(commentIndex, 1);
+      draft.commentList[action.data.postId] = draft.commentList[action.data.postId].filter((v) => v.id !== action.data.commentId);
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
@@ -431,7 +435,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
         (v) => v.id === action.data.commentId,
       )
-      draft.commentList[action.data.postId][commentIndex].reComment.splice(reCommentIndex, 1);
+      draft.commentList[action.data.postId][commentIndex].reComment.replice(reCommentIndex, 1);
       draft.removeReCommnetLoading = false;
       draft.removeReCommnetDone = true;
       break;
@@ -466,6 +470,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LIKE_COMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.commentId);
+      console.log(commentIndex);
       draft.commentList[action.data.postId][commentIndex].likers.push( {id: action.data.like.user.id});
       draft.likeCommentLoading = false;
       draft.likeCommentDone = true;
@@ -699,6 +704,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case REPORT_FAILURE:
       break;
+    case REPORT_COMMENT_REQUEST:
+      draft.reportCommentLoading = true;
+      draft.reportCommentDone = false;
+      draft.reportCommentError = null;
+      break;
+    case REPORT_COMMENT_SUCCESS: {
+      
+      draft.reportCommentLoading = false;
+      draft.reportCommentDone = true;
+      break;
+    }
+    case REPORT_COMMENT_FAILURE:
+      draft.reportCommentLoading = false;
+      draft.reportCommentsError = action.error;
     case REMOVE_POST_REQUEST:
       break;
     case REMOVE_POST_SUCCESS: {

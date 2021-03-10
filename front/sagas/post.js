@@ -100,6 +100,9 @@ import {
   UNLIKE_RECOMMENT_REQUEST,
   UNLIKE_RECOMMENT_SUCCESS,
   UNLIKE_RECOMMENT_FAILURE,
+  REPORT_COMMENT_REQUEST,
+  REPORT_COMMENT_SUCCESS,
+  REPORT_COMMENT_FAILURE,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 import { INDEX_URL } from '../static';
@@ -263,6 +266,25 @@ function* report(action) {
   } catch (err) {
     yield put({
       type: REPORT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function reportCommentAPI(data) {
+  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/report`, data);
+}
+
+function* reportComment(action) {
+  try {
+    const result = yield call(reportCommentAPI, action.data);
+    yield put({
+      type: REPORT_COMMENT_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: REPORT_COMMENT_FAILURE,
       error: err,
     });
   }
@@ -954,6 +976,10 @@ function* watchReport() {
   yield takeLatest(REPORT_REQUEST, report);
 }
 
+function* watchReportComment() {
+  yield takeLatest(REPORT_COMMENT_REQUEST, reportComment);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadMainPosts),
@@ -989,5 +1015,6 @@ export default function* postSaga() {
     fork(watchUnlikeComment),
     fork(watchLikeReComment),
     fork(watchUnlikeReComment),
+    fork(watchReportComment),
   ]);
 }
