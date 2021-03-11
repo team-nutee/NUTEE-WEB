@@ -556,7 +556,7 @@ function removeReCommentAPI(postId, commentId) {
 
 function* removeReComment(action) {
   try {
-    const result = yield call(removeReCommentAPI, action.postId, action.commentId, action.parentId);
+    const result = yield call(removeReCommentAPI, action.postId, action.commentId);
     yield put({
       type: REMOVE_RECOMMENT_SUCCESS,
       data: {
@@ -599,19 +599,19 @@ function* addReComment(action) {
   }
 }
 
-function likeCommentAPI(data) {
-  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/like`, data);
+function likeCommentAPI(postId, commentId) {
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, { data: {} });
 }
 
 function* likeComment(action) {
   try {
-    const result = yield call(likeCommentAPI, action.data);
+    const result = yield call(likeCommentAPI, action.postId, action.commentId);
     yield put({
       type: LIKE_COMMENT_SUCCESS,
       data: {
-        postId: action.data.postId,
-        commentId: action.data.commentId,
-        userId: action.data.userId,
+        postId: action.postId,
+        commentId: action.commentId,
+        userId: action.userId,
         like: result.data.body,
       },
     });
@@ -649,20 +649,20 @@ function* unlikeComment(action) {
   }
 }
 
-function likeReCommentAPI(data) {
-  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/like`, data);
+function likeReCommentAPI(postId, commentId) {
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, {data: {} });
 }
 
 function* likeReComment(action) {
   try {
-    const result = yield call(likeReCommentAPI, action.data);
+    const result = yield call(likeReCommentAPI, action.postId, action.commentId);
     yield put({
       type: LIKE_RECOMMENT_SUCCESS,
       data: {
-        postId: action.data.postId,
-        commentId: action.data.commentId,
-        parentId: action.data.parentId,
-        userId: action.data.userId,
+        postId: action.postId,
+        commentId: action.commentId,
+        parentId: action.parentId,
+        userId: action.userId,
         like: result.data.body,
       },
     });

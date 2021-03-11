@@ -32,14 +32,12 @@ const Recomment = ({ item, post, parentId, userId }) => {
     }
     dispatch({
       type: LIKE_RECOMMENT_REQUEST,
-      data: {
-        commentId: item.id,
-        postId: post.id,
-        userId,
-        parentId,
-      }
+      postId: post.id,
+      commentId: item.id,
+      parentId,
+      userId,
     })
-  }, [id]);
+  });
   const onUnlike = useCallback(() => {
     if (!id) {
       return alert('로그인이 필요합니다.');
@@ -53,7 +51,7 @@ const Recomment = ({ item, post, parentId, userId }) => {
         parentId,
       }
     })
-  }, [id]);
+  });
 
   const onRemove = useCallback(() => {
     const result = confirm('정말로 삭제하시겠습니까?');

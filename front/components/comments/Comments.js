@@ -38,13 +38,11 @@ const Comments = ({ item, post }) => {
     }
     dispatch({
       type: LIKE_COMMENT_REQUEST,
-      data: {
-        commentId: item.id,
-        postId: post.id,
-        userId: id,
-      }
+      postId: post.id,
+      commentId: item.id,
+      userId: id,
     })
-  }, [id]);
+  });
   const onUnlike = useCallback(() => {
     if (!id) {
       return alert('로그인이 필요합니다.');
@@ -57,7 +55,7 @@ const Comments = ({ item, post }) => {
         userId: id,
       }
     })
-  }, [id]);
+  });
   const cancelReply = () => {
     setReply(false);
   };
