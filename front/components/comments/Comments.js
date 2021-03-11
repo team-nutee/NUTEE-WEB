@@ -127,18 +127,6 @@ const Comments = ({ item, post }) => {
             >
               <EllipsisOutlined />
             </Popover>
-            {/* {me.id === item.user.id
-              ? (
-                <>
-                  <a key="edit" onClick={onEdit}>
-                    <EditOutlined style={iconWrapper} />
-                  </a>
-                  <a key="delete" onClick={onRemove}>
-                    <DeleteFilled style={iconWrapper} />
-                  </a>
-                </>
-              )
-              : <></>} */}
           </div>,
         ] : <></>}
       >

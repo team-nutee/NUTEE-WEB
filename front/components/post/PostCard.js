@@ -162,7 +162,7 @@ const PostCard = ({ post }) => {
     );
   };
 
-  /*
+  
   const loadMore = (
     mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments
       && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments !== 0
@@ -173,7 +173,7 @@ const PostCard = ({ post }) => {
         </div>
       ) : null
   );
-  */
+  
 
   return (
     <div style={postCardWrapper}>

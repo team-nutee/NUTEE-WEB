@@ -441,7 +441,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
         (v) => v.id === action.data.commentId,
       )
-      draft.commentList[action.data.postId][commentIndex].reComment.replice(reCommentIndex, 1);
+      // draft.commentList[action.data.postId][commentIndex].reComment.replice(reCommentIndex, 1);
+      draft.commentList[action.data.postId][commentIndex].reComment = draft.commentList[action.data.postId][commentIndex].reComment.filter(
+        (v) => v.id !== action.data.commentId
+        );
       draft.removeReCommnetLoading = false;
       draft.removeReCommnetDone = true;
       break;

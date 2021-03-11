@@ -4,14 +4,15 @@
 /* eslint-disable no-restricted-globals */
 import React, { useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List } from 'antd';
+import { List, Popover, Button, Modal } from 'antd';
 import Link from 'next/link';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { EditOutlined, DeleteFilled, HeartTwoTone, HeartOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteFilled, HeartTwoTone, HeartOutlined, EllipsisOutlined, AlertOutlined } from '@ant-design/icons';
 import { REMOVE_RECOMMENT_REQUEST, LIKE_RECOMMENT_REQUEST, UNLIKE_RECOMMENT_REQUEST } from '../../reducers/post';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import EditRecommentForm from './EditRecommentForm';
+import ReportComment from '../ReportComment';
 
 moment.locale('ko');
 
@@ -20,6 +21,7 @@ const Recomment = ({ item, post, parentId, userId }) => {
   const [edit, setEdit] = useState(false);
   const { me } = useSelector((state) => state.user);
   const id = useSelector((state) => state.user.me?.id);
+  const [reportVisible, setReportVisible] = useState(false);
   const onEdit = () => {
     setEdit(true);
   };
@@ -66,12 +68,35 @@ const Recomment = ({ item, post, parentId, userId }) => {
     });
   });
 
+  const onReport = useCallback(() => {
+    setReportVisible(true);
+  });
+
   const listWrapper = useMemo(() => ({ border: 'none', marginBottom: '-10px', paddingLeft: '10px' }), []);
   const contentWrapper = useMemo(() => ({ marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
   const nicknameWrapper = useMemo(() => ({ marginRight: '10px' }), []);
   const momentWrapper = useMemo(() => ({ float: 'right' }), []);
+  const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
+
+  const reportOk = useCallback(() => { setReportVisible(false); }, []);
+  const reportCancel = useCallback(() => { setReportVisible(false); }, []);
+
 
   const liked = item.likers.find((v) => v.id === id);
+
+  const EllipsisContent = (
+    <>
+      {me.id === item.user.id
+        ? (
+          <>
+            <Button onClick={onEdit}>수정</Button>
+            <Button type="danger" onClick={onRemove}>삭제</Button>
+          </>
+        )
+        : <Button onClick={onReport}>신고</Button>}
+
+    </>
+  );
 
   return (
     <List.Item
@@ -85,14 +110,20 @@ const Recomment = ({ item, post, parentId, userId }) => {
           {item.likers.length}
         </div>,
         <div>
-        <a key="edit" onClick={onEdit}><EditOutlined /></a>,
+          <Popover
+            content={EllipsisContent}
+            trigger="click"
+          >
+            <EllipsisOutlined />
+          </Popover>
+        {/* <a key="edit" onClick={onEdit}><EditOutlined /></a>,
         {me.id === item.user.id 
           ? (
             <>
               <a key="delete" onClick={onRemove}><DeleteFilled /></a> 
             </> 
           ) 
-          : <></>}
+          : <></>} */}
         </div>,
         ] : <></>}
     >
@@ -122,6 +153,20 @@ const Recomment = ({ item, post, parentId, userId }) => {
               )}
           />
         )}
+        <Modal
+          title={(
+            <span>
+              <AlertOutlined style={prefixWrapper} />
+              댓글 신고
+            </span>
+          )}
+          visible={reportVisible}
+          onOk={reportOk}
+          onCancel={reportCancel}
+          footer={null}
+          >
+          <ReportComment setReportVisible={setReportVisible} item={item} post={post} />
+      </Modal>
       <style jsx>
         { `
           div { font-family: "Nanum Barun Gothic", sans-serif, ; font-weight: 200; }
