@@ -291,7 +291,7 @@ const PostCard = ({ post }) => {
                 itemLayout="horizontal"
                 style={listWrapper}
                 // loadMore={loadMore}
-                dataSource={commentList[post.id] || []}
+                dataSource={commentList[mainPosts.findIndex((v) => v.id === post.id)] || []}
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
             )
