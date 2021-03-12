@@ -412,6 +412,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === action.data.parentId);
       const reCommentIndex = draft.commentList[postIndex][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
       draft.commentList[postIndex][commentIndex].reComment[reCommentIndex] = action.data.comment;
+      if (draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers === null){
+        draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers = [];
+      }
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;

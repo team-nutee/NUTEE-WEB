@@ -77,12 +77,12 @@ const Comments = ({ item, post }) => {
   });
 
   const listWrapper = useMemo(() => ({ fontFamily: 'NanumBarunGothic', marginLeft: '-15px', marginBottom: '-15px', border: 'none' }), []);
-  const contentWrapper = useMemo(() => ({ marginRight: '-30px', marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
+  const contentWrapper = useMemo(() => ({ marginRight: '-30px', marginTop: '2px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
   const nicknameWrapper = useMemo(() => ({ marginRight: '10px', fontWeight: 'bold', color: '#005000' }), []);
-  const iconWrapper = useMemo(() => ({ color: '#005000' }), []);
+  const iconWrapper = useMemo(() => ({ color: '#005000', marginRight: '7px', fontSize: '15px' }), []);
   const momentWrapper = useMemo(() => ({ fontSize: '12px', marginBottom: '5px' }), []);
   const commentWrapper = useMemo(() => ({ fontFamily: 'Nanum Barun Gothic' }), []);
-  const editWrapper = useMemo(() => ({ }), []);
+  const editWrapper = useMemo(() => ({ marginRight: '2px' }), []);
   const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
 
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
@@ -112,8 +112,8 @@ const Comments = ({ item, post }) => {
         actions={!edit ? [
           <div>
             {liked
-              ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
-              : <HeartOutlined key="heart" onClick={onLike} />
+              ? <HeartTwoTone style={iconWrapper} twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
+              : <HeartOutlined style={iconWrapper} key="heart" onClick={onLike} />
             }
             {item.likers.length}
           </div>,
@@ -123,7 +123,7 @@ const Comments = ({ item, post }) => {
               content={EllipsisContent}
               trigger = "click"
             >
-              <EllipsisOutlined />
+              <EllipsisOutlined style={iconWrapper} />
             </Popover>
           </div>,
         ] : <></>}

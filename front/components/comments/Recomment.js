@@ -71,10 +71,11 @@ const Recomment = ({ item, post, parentId, userId }) => {
   });
 
   const listWrapper = useMemo(() => ({ border: 'none', marginBottom: '-10px', paddingLeft: '10px' }), []);
-  const contentWrapper = useMemo(() => ({ marginTop: '5px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
-  const nicknameWrapper = useMemo(() => ({ marginRight: '10px' }), []);
-  const momentWrapper = useMemo(() => ({ float: 'right' }), []);
+  const contentWrapper = useMemo(() => ({ marginTop: '2px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
+  const nicknameWrapper = useMemo(() => ({ marginRight: '10px', fontWeight: 'bold' }), []);
+  const momentWrapper = useMemo(() => ({ fontSize: '12px' }), []);
   const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
+  const iconWrapper = useMemo(() => ({ color: '#005000', marginRight: '7px', fontSize: '15px' }), []);
 
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
@@ -102,8 +103,8 @@ const Recomment = ({ item, post, parentId, userId }) => {
       actions={!edit ? [
         <div>
           {liked
-            ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike}/>
-            : <HeartOutlined key="heart" onClick={onLike} />
+            ? <HeartTwoTone style={iconWrapper} twoToneColor="#eb2f96" key="heart" onClick={onUnlike}/>
+            : <HeartOutlined style={iconWrapper} key="heart" onClick={onLike} />
           }
           {item.likers.length}
         </div>,
@@ -112,16 +113,8 @@ const Recomment = ({ item, post, parentId, userId }) => {
             content={EllipsisContent}
             trigger="click"
           >
-            <EllipsisOutlined />
+            <EllipsisOutlined style={iconWrapper} />
           </Popover>
-        {/* <a key="edit" onClick={onEdit}><EditOutlined /></a>,
-        {me.id === item.user.id 
-          ? (
-            <>
-              <a key="delete" onClick={onRemove}><DeleteFilled /></a> 
-            </> 
-          ) 
-          : <></>} */}
         </div>,
         ] : <></>}
     >
@@ -136,7 +129,7 @@ const Recomment = ({ item, post, parentId, userId }) => {
                     : <ProfileAvatar />}
                 </a>
               </Link>
-                )}
+            )}
             description={edit
               ? <EditRecommentForm comment={item} edit={edit} setEdit={setEdit} postId={post.id} parentId={parentId} />
               : (
@@ -145,7 +138,13 @@ const Recomment = ({ item, post, parentId, userId }) => {
 
                     <a style={nicknameWrapper}>{item.user.nickname}</a>
                   </Link>
-                  <div style={momentWrapper}>{moment(item.createdAt).format('YYYY.MM.DD')}</div>
+                  <div style={momentWrapper}>
+                      {moment(item.createdAt).format('YYYY.MM.DDTHH:mm:ss') === moment(item.updatedAt).format('YYYY.MM.DDTHH:mm:ss')
+                      ? 
+                      moment(item.createdAt).format('YYYY.MM.DD')
+                      : 
+                      moment(item.updatedAt).format('YYYY.MM.DD'+' (수정됨)')}
+                  </div>
                   {item.content}
                 </pre>
               )}

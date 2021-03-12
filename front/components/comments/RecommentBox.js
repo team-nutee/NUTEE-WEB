@@ -10,15 +10,20 @@ const RecommentBox = ({ reComment, post, onReply, parentId, userId }) => {
   const [show, setShow] = useState(false);
 
   const onRecomment = () => {
-    setShow(true);
-    onReply();
+    setShow((prev) => !prev);
+    if (!show){
+      onReply();
+    }
   };
 
-  const reCommentWrapper = useMemo(() => ({ marginLeft: '35px' }), []);
+  const reCommentWrapper = useMemo(() => ({ marginLeft: '35px', fontWeight: 'bold' }), []);
 
   return (show
-    ? reComment.map((data) => <Recomment item={data} post={post} parentId={parentId} userId={userId} />)
-    : (reComment.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글보기</a> : <></>)
+    ? <> 
+      <a style={reCommentWrapper} onClick={onRecomment}>답글 숨기기</a>
+      {reComment.map((data) => <Recomment item={data} post={post} parentId={parentId} userId={userId} />)} 
+      </>
+    : (reComment.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글 보기</a> : <></>)
   );
 };
 
