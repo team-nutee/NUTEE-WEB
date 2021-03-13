@@ -6,25 +6,36 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Recomment from './Recomment';
 
-const RecommentBox = ({ reComment, post, onReply, parentId }) => {
+const RecommentBox = ({ reComment, post, onReply, cancelReply, parentId, userId }) => {
   const [show, setShow] = useState(false);
 
   const onRecomment = () => {
-    setShow(true);
-    onReply();
+    setShow((prev) => !prev);
+    if (!show){
+      onReply();
+    }
   };
 
-  const reCommentWrapper = useMemo(() => ({ marginLeft: '35px' }), []);
+  const cancelRecomment = () => {
+    setShow((prev) => !prev);
+    cancelReply();
+  };
+
+  const reCommentWrapper = useMemo(() => ({ marginLeft: '35px', fontWeight: 'bold' }), []);
 
   return (show
-    ? reComment.map((data) => <Recomment item={data} post={post} parentId={parentId} />)
-    : (reComment.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글보기</a> : <></>)
+    ? <> 
+      <a style={reCommentWrapper} onClick={cancelRecomment}>답글 숨기기</a>
+      {reComment.map((data) => <Recomment item={data} post={post} parentId={parentId} userId={userId} />)} 
+      </>
+    : (reComment.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글 보기</a> : <></>)
   );
 };
 
 RecommentBox.propTypes = {
   reComment: PropTypes.object,
   post: PropTypes.object,
+  userId: PropTypes.number,
   onReply: PropTypes.func,
 }.isRequired;
 

@@ -91,6 +91,21 @@ import {
   LOAD_SEARCH_POSTS_SUCCESS,
   LOAD_SEARCH_POSTS_FAILURE,
   LOAD_SEARCH_POSTS_REQUEST,
+  LIKE_COMMENT_REQUEST,
+  LIKE_COMMENT_SUCCESS,
+  LIKE_COMMENT_FAILURE,
+  UNLIKE_COMMENT_REQUEST,
+  UNLIKE_COMMENT_SUCCESS,
+  UNLIKE_COMMENT_FAILURE,
+  LIKE_RECOMMENT_REQUEST,
+  LIKE_RECOMMENT_SUCCESS,
+  LIKE_RECOMMENT_FAILURE,
+  UNLIKE_RECOMMENT_REQUEST,
+  UNLIKE_RECOMMENT_SUCCESS,
+  UNLIKE_RECOMMENT_FAILURE,
+  REPORT_COMMENT_REQUEST,
+  REPORT_COMMENT_SUCCESS,
+  REPORT_COMMENT_FAILURE,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 import { INDEX_URL } from '../static';
@@ -316,6 +331,25 @@ function* report(action) {
   } catch (err) {
     yield put({
       type: REPORT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function reportCommentAPI(data) {
+  return axios.post(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/report`, data);
+}
+
+function* reportComment(action) {
+  try {
+    const result = yield call(reportCommentAPI, action.data);
+    yield put({
+      type: REPORT_COMMENT_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: REPORT_COMMENT_FAILURE,
       error: err,
     });
   }
@@ -547,7 +581,7 @@ function removeReCommentAPI(postId, commentId) {
 
 function* removeReComment(action) {
   try {
-    const result = yield call(removeReCommentAPI, action.postId, action.commentId, action.parentId);
+    const result = yield call(removeReCommentAPI, action.postId, action.commentId);
     yield put({
       type: REMOVE_RECOMMENT_SUCCESS,
       data: {
@@ -586,6 +620,108 @@ function* addReComment(action) {
     yield put({
       type: ADD_RECOMMENT_FAILURE,
       error: err,
+    });
+  }
+}
+
+function likeCommentAPI(postId, commentId) {
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, { data: {} });
+}
+
+function* likeComment(action) {
+  try {
+    const result = yield call(likeCommentAPI, action.postId, action.commentId);
+    yield put({
+      type: LIKE_COMMENT_SUCCESS,
+      data: {
+        postId: action.postId,
+        commentId: action.commentId,
+        userId: action.userId,
+        like: result.data.body,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LIKE_COMMENT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function unlikeCommentAPI(data) {
+  return axios.delete(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/unlike`, { data: {} });
+}
+
+function* unlikeComment(action) {
+  try {
+    const result = yield call(unlikeCommentAPI, action.data);
+    yield put({
+      type: UNLIKE_COMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        commentId: action.data.commentId,
+        userId: action.data.userId,
+        unlike: result.data.body,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: UNLIKE_COMMENT_FAILURE,
+      error: e,
+    });
+  }
+}
+
+function likeReCommentAPI(postId, commentId) {
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, {data: {} });
+}
+
+function* likeReComment(action) {
+  try {
+    const result = yield call(likeReCommentAPI, action.postId, action.commentId);
+    yield put({
+      type: LIKE_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.postId,
+        commentId: action.commentId,
+        parentId: action.parentId,
+        userId: action.userId,
+        like: result.data.body,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LIKE_RECOMMENT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function unlikeReCommentAPI(data) {
+  return axios.delete(`${INDEX_URL}/sns/post/${data.postId}/comment/${data.commentId}/unlike`, { data: {} });
+}
+
+function* unlikeReComment(action) {
+  try {
+    const result = yield call(unlikeReCommentAPI, action.data);
+    yield put({
+      type: UNLIKE_RECOMMENT_SUCCESS,
+      data: {
+        postId: action.data.postId,
+        commentId: action.data.commentId,
+        userId: action.data.userId,
+        parentId: action.data.parentId,
+        unlike: result.data.body,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: UNLIKE_RECOMMENT_FAILURE,
+      error: e,
     });
   }
 }
@@ -823,6 +959,22 @@ function* watchLoadComments() {
   yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
 }
 
+function* watchLikeComment() {
+  yield takeLatest(LIKE_COMMENT_REQUEST, likeComment);
+}
+
+function* watchUnlikeComment() {
+  yield takeLatest(UNLIKE_COMMENT_REQUEST, unlikeComment);
+}
+
+function* watchLikeReComment() {
+  yield takeLatest(LIKE_RECOMMENT_REQUEST, likeReComment);
+}
+
+function* watchUnlikeReComment() {
+  yield takeLatest(UNLIKE_RECOMMENT_REQUEST, unlikeReComment);
+}
+
 function* watchUpload() {
   yield takeLatest(UPLOAD_REQUEST, upload);
 }
@@ -853,6 +1005,10 @@ function* watchLoadPost() {
 
 function* watchReport() {
   yield takeLatest(REPORT_REQUEST, report);
+}
+
+function* watchReportComment() {
+  yield takeLatest(REPORT_COMMENT_REQUEST, reportComment);
 }
 
 export default function* postSaga() {
@@ -887,5 +1043,10 @@ export default function* postSaga() {
     fork(watchAddReComment),
     fork(watchMajorsData),
     fork(watchCategoryData),
+    fork(watchLikeComment),
+    fork(watchUnlikeComment),
+    fork(watchLikeReComment),
+    fork(watchUnlikeReComment),
+    fork(watchReportComment),
   ]);
 }
