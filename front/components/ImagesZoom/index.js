@@ -14,11 +14,7 @@ const ImagesZoom = ({ images, onClose }) => {
           <CloseOutlined onClick={onClose} />
         </CloseBtn>
         <div>
-          <Indicator>
-            <div>{`${currentSlide + 1} / ${images.length}`}</div>
-          </Indicator>
           <Slider
-            dots
             initialSlide={0}
             infinite
             beforeChange={(slide) => setCurrentSlide(slide)}
@@ -31,6 +27,9 @@ const ImagesZoom = ({ images, onClose }) => {
               </ImgWrapper>
             ))}
           </Slider>
+          <Indicator>
+            <div>{`${currentSlide + 1} / ${images.length}`}</div>
+          </Indicator>
         </div>
       </ImagesContent>
     </Modal>
