@@ -9,10 +9,12 @@ export const initialState = {
 
   /* post */
   mainPosts: [], // 전체 포스트들
-  commentList: [], // 댓글들
-  categoryPosts: [], // 화면에 보일 카테고리 포스트들
-  majorPosts: [], // 화면에 보일 전공 포스트들
-  favoritePosts: [],
+  categoryPosts: [], // 카테고리 포스트들
+  majorPosts: [], // 전공 포스트들
+  favoritePosts: [], // 즐겨찾기 포스트들
+  myPosts: [], // 나의 전체 포스트들
+  myCommentPosts: [], // 나의 댓글 포스트들
+  myLikePosts: [], // 나의 좋아요 포스트들
   imagePaths: [], // 미리보기 이미지 경로
   singlePost: null,
   editImagePaths: [], // 글 수정 미리보기 이미지 경로
@@ -40,6 +42,7 @@ export const initialState = {
   removePostError: null,
 
   /* comment */
+  commentList: [], // 댓글들
   loadCommentsLoading: false, // 댓글 로드
   loadCommentsDone: false,
   loadCommentsError: null,
@@ -88,6 +91,10 @@ export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 export const LOAD_FAVORITE_POSTS_REQUEST = 'LOAD_FAVORITE_POSTS_REQUEST';
 export const LOAD_FAVORITE_POSTS_SUCCESS = 'LOAD_FAVORITE_POSTS_SUCCESS';
 export const LOAD_FAVORITE_POSTS_FAILURE = 'LOAD_FAVORITE_POSTS_FAILURE';
+
+export const LOAD_MAJOR_POSTS_REQUEST = 'LOAD_MAJOR_POSTS_REQUEST';
+export const LOAD_MAJOR_POSTS_SUCCESS = 'LOAD_MAJOR_POSTS_SUCCESS';
+export const LOAD_MAJOR_POSTS_FAILURE = 'LOAD_MAJOR_POSTS_FAILURE';
 
 export const LOAD_CATEGORY_POSTS_REQUEST = 'LOAD_CATEGORY_POSTS_REQUEST';
 export const LOAD_CATEGORY_POSTS_SUCCESS = 'LOAD_CATEGORY_POSTS_SUCCESS';
@@ -236,9 +243,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UPLOAD_SUCCESS:
       draft.imagePaths = draft.imagePaths.concat(action.data);
       console.log('UPLOAD_SUCCESS', draft.imagePaths);
-      /*       action.data.forEach((p) => {
-        draft.imagePaths.push(p);
-      }); */
+      /*       action.data.forEach((p) => { draft.imagePaths.push(p); }); */
       draft.uploadLoading = false;
       draft.uploadDone = true;
       break;
@@ -270,9 +275,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     }
     case REMOVE_EDIT_IMAGE: {
-      /*  const index = draft.editImagePaths.findIndex(
-          (v, i) => i === action.index
-        );
+      /*  const index = draft.editImagePaths.findIndex((v, i) => i === action.index);
         draft.editImagePaths.splice(index, 1); */
       draft.editImagePaths = draft.editImagePaths.filter((v, i) => i !== action.data);
       break;
@@ -283,7 +286,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addPostError = null;
       break;
     case ADD_POST_SUCCESS:
-      draft.mainPosts.unshift(action.data);
+      // draft.mainPosts.unshift(action.data);
+      console.log('ADD_POST_SUCCESS action.data', action.data);
       draft.imagePaths = [];
       draft.addPostLoading = false;
       draft.addPostDone = true;
@@ -298,8 +302,21 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editPostError = null;
       break;
     case EDIT_POST_SUCCESS: {
-      const index = draft.mainPosts.findIndex((v) => v.id === action.data.id);
-      draft.mainPosts[index] = action.data;
+      const mainPostsIndex = draft.mainPosts.findIndex((v) => v.id === action.data.id);
+      const favoritePostsIndex = draft.favoritePosts.findIndex((v) => v.id === action.data.id);
+      const majorPostsIndex = draft.majorPosts.findIndex((v) => v.id === action.data.id);
+      if (mainPostsIndex) {
+        draft.mainPosts[mainPostsIndex] = action.data;
+        console.log('EDIT_POST_SUCCESS  mainPostsIndex    action.data.id', mainPostsIndex, action.data.id, action.data);
+      }
+      if (favoritePostsIndex) {
+        draft.favoritePosts[favoritePostsIndex] = action.data;
+        console.log('EDIT_POST_SUCCESSfavoritePostsIndex       action.data.id', favoritePostsIndex, action.data.id, action.data);
+      }
+      if (majorPostsIndex) {
+        draft.favoritePosts[majorPostsIndex] = action.data;
+        console.log('EDIT_POST_SUCCESSfavoritePostsIndex       action.data.id', majorPostsIndex, action.data.id, action.data);
+      }
       draft.EditImagePaths = [];
       draft.editPostLoading = false;
       draft.editPostDone = true;
@@ -308,6 +325,25 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case EDIT_POST_FAILURE:
       draft.editPostLoading = false;
       draft.editPostError = action.error;
+      break;
+    case REPORT_REQUEST:
+      break;
+    case REPORT_SUCCESS:
+      if (action.data.isBlocked) {
+        const index = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
+        draft.mainPosts[index] = action.data;
+      }
+      break;
+    case REPORT_FAILURE:
+      break;
+    case REMOVE_POST_REQUEST:
+      break;
+    case REMOVE_POST_SUCCESS: {
+      const index = draft.mainPosts.findIndex((v) => v.id === action.data);
+      draft.mainPosts.splice(index, 1);
+      break;
+    }
+    case REMOVE_POST_FAILURE:
       break;
     case EDIT_POST_IMAGES:
       draft.editImagePaths = action.data;
@@ -324,7 +360,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_RECOMMENT_SUCCESS: {
       const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
 
-      if (draft.commentList[action.data.postId][commentIndex].reComment === null){
+      if (draft.commentList[action.data.postId][commentIndex].reComment === null) {
         draft.commentList[action.data.postId][commentIndex].reComment = [];
       }
       draft.commentList[action.data.postId][commentIndex].reComment.push(action.data.reComment);
@@ -398,7 +434,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       );
       const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
         (v) => v.id === action.data.commentId,
-      )
+      );
       draft.commentList[action.data.postId][commentIndex].reComment.splice(reCommentIndex, 1);
       draft.removeReCommnetLoading = false;
       draft.removeReCommnetDone = true;
@@ -470,7 +506,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadCategoryPostsError = action.error;
       break;
     case LOAD_FAVORITE_POSTS_REQUEST:
-      draft.categoryPosts = !action.lastId ? [] : draft.favoritePosts;
+      draft.favoritePosts = !action.lastId ? [] : draft.favoritePosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       draft.loadFavoritePostsLoading = true;
       draft.loadFavoritePostsDone = false;
@@ -488,27 +524,76 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadFavoritePostsLoading = false;
       draft.loadFavoritePostsDone = true;
       break;
+
+    case LOAD_MAJOR_POSTS_REQUEST:
+      draft.majorPosts = !action.lastId ? [] : draft.majorPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadMajorPostsLoading = true;
+      draft.loadMajorPostsDone = false;
+      draft.loadMajorPostsError = null;
+      break;
+    case LOAD_MAJOR_POSTS_SUCCESS:
+      action.data.forEach((data) => {
+        draft.majorPosts.push(data);
+      });
+      draft.loadMajorPostsLoading = false;
+      draft.loadMajorPostsDone = true;
+      break;
+    case LOAD_MAJOR_POSTS_FAILURE:
+      draft.loadMajorPostsLoading = false;
+      // draft.loadMajorPostsError = action.error;
+      break;
+
+    case LOAD_MY_POSTS_REQUEST:
+      draft.myPosts = !action.lastId ? [] : draft.myPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      break;
+    case LOAD_MY_POSTS_SUCCESS:
+      action.data.forEach((data) => {
+        draft.myPosts.push(data);
+      });
+      draft.hasMorePost = action.data.length === 10;
+      break;
+    case LOAD_MY_POSTS_FAILURE:
+      break;
+    case LOAD_MY_COMMENTS_REQUEST:
+      draft.myCommentPosts = !action.lastId ? [] : draft.myCommentPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      break;
+    case LOAD_MY_COMMENTS_SUCCESS:
+      action.data.forEach((data) => {
+        draft.myCommentPosts.push(data);
+      });
+      draft.hasMorePost = action.data.length === 10;
+      break;
+    case LOAD_MY_COMMENTS_FAILURE:
+      break;
+    case LOAD_MY_LIKE_REQUEST:
+      draft.myLikePosts = !action.lastId ? [] : draft.myLikePosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      break;
+    case LOAD_MY_LIKE_SUCCESS:
+      action.data.forEach((data) => {
+        draft.myLikePosts.push(data);
+      });
+      draft.hasMorePost = action.data.length === 10;
+      break;
+    case LOAD_MY_LIKE_FAILURE:
+      break;
     case LOAD_SEARCH_POSTS_REQUEST:
     case LOAD_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST:
-    case LOAD_MY_POSTS_REQUEST:
-    case LOAD_MY_COMMENTS_REQUEST:
-    case LOAD_MY_LIKE_REQUEST:
       draft.mainPosts = !action.lastId ? [] : draft.mainPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       draft.loadPostsLoading = true;
       draft.loadPostsDone = false;
       draft.loadPostsError = null;
       break;
-
     case LOAD_SEARCH_POSTS_SUCCESS:
     case LOAD_POSTS_SUCCESS:
     case LOAD_HASHTAG_POSTS_SUCCESS:
     case LOAD_USER_POSTS_SUCCESS:
-    case LOAD_MY_POSTS_SUCCESS:
-    case LOAD_MY_COMMENTS_SUCCESS:
-    case LOAD_MY_LIKE_SUCCESS:
       action.data.forEach((data) => {
         draft.mainPosts.push(data);
       });
@@ -520,9 +605,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_POSTS_FAILURE:
     case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_USER_POSTS_FAILURE:
-    case LOAD_MY_POSTS_FAILURE:
-    case LOAD_MY_COMMENTS_FAILURE:
-    case LOAD_MY_LIKE_FAILURE:
       draft.loadPostsLoading = false;
       // draft.loadPostError = action.error;
       break;
@@ -557,8 +639,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LIKE_POST_REQUEST:
       break;
     case LIKE_POST_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
-      draft.mainPosts[postIndex].likers.push({ id: action.data.userId });
+      const { postId } = action.data;
+      draft.mainPosts[postId].likers.unshift({ id: action.data.userId });
       break;
     }
     case LIKE_POST_FAILURE:
@@ -566,11 +648,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case UNLIKE_POST_REQUEST:
       break;
     case UNLIKE_POST_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
+      const { postId } = action.data;
       const likeIndex = (
-        draft.mainPosts[postIndex].likers.findIndex((v) => v.id === action.data.userId)
+        draft.mainPosts[postId].likers.findIndex((v) => v.id === action.data.userId)
       );
-      draft.mainPosts[postIndex].likers.splice(likeIndex, 1);
+      draft.mainPosts[postId].likers.splice(likeIndex, 1);
       break;
     }
     case UNLIKE_POST_FAILURE:
@@ -581,28 +663,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.mainPosts.unshift(action.data);
       break;
     case RETWEET_FAILURE:
-      break;
-    case REPORT_REQUEST:
-      break;
-    case REPORT_SUCCESS:
-      if (action.data.isBlocked) {
-        const index = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
-        draft.mainPosts[index] = action.data;
-      }
-      break;
-    case REPORT_FAILURE:
-      break;
-    case REMOVE_POST_REQUEST:
-      break;
-    case REMOVE_POST_SUCCESS: {
-      const index = draft.mainPosts.findIndex((v) => v.id === action.data);
-      draft.mainPosts.splice(index, 1);
-      console.log('index', index);
-      console.log('action.data', action.data);
-      console.log('reducer: REMOVE_POST_SUCCESS');
-      break;
-    }
-    case REMOVE_POST_FAILURE:
       break;
     case LOAD_POST_REQUEST:
       draft.loadPostLoading = true;

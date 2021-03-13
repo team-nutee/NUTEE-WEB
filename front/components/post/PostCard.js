@@ -22,6 +22,7 @@ const PostCard = ({ post }) => {
   const { me } = useSelector((state) => state.user);
   const { commentList } = useSelector((state) => state.post);
   const [reportVisible, setReportVisible] = useState(false);
+  const [popoverVisible, setPopoverVisible] = useState(false);
   const [lastId, setlastId] = useState(0);
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const [editMode, setEditMode] = useState(false);
@@ -33,7 +34,6 @@ const PostCard = ({ post }) => {
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
   const heartWrapper = useMemo(() => ({ color: '#eb2f96', fontSize: '20px' }), []);
-  const badge1Wrapper = useMemo(() => ({ background: '#f50', size: 'small', zIndex: '0' }), []);
   const badge2Wrapper = useMemo(() => ({ background: '#87d068', size: 'small', zIndex: '0' }), []);
   const badge3Wrapper = useMemo(() => ({ background: '#005000', size: 'small', zIndex: '0' }), []);
   const listWrapper = useMemo(() => ({ background: '#f0faf5', paddingBottom: '0px', height: 'auto' }), []);
@@ -48,7 +48,7 @@ const PostCard = ({ post }) => {
 
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
-  const onClickEdit = useCallback(() => { setEditMode(true); }, []);
+  const onClickEdit = useCallback(() => { setPopoverVisible(false); setEditMode(true); }, []);
   const onCancelEdit = useCallback(() => { setEditMode(false); }, []);
 
   const onToggleComment = useCallback(() => {
@@ -68,6 +68,9 @@ const PostCard = ({ post }) => {
   const onLike = useCallback(() => {
     if (!me.id) {
       return alert('로그인이 필요합니다.');
+    }
+    if (me.id === post.user.id) {
+      return alert('자신의 글은 좋아요를 누를 수 없습니다.');
     }
     return dispatch({
       type: LIKE_POST_REQUEST,
@@ -96,6 +99,7 @@ const PostCard = ({ post }) => {
   }, [me && me.id, post && post.id]);
 
   const onRemovePost = useCallback(() => {
+    setPopoverVisible(false);
     const result = confirm('정말로 삭제하시겠습니까?');
     if (!result) {
       return;
@@ -107,6 +111,7 @@ const PostCard = ({ post }) => {
   });
 
   const onReport = useCallback(() => {
+    setPopoverVisible(false);
     setReportVisible(true);
   });
 
@@ -129,21 +134,14 @@ const PostCard = ({ post }) => {
     const postCreatedAtHours = moment(postCreateAt).add(9, 'hours');
     const postCreatedAt = moment(postCreatedAtHours).format('YYYY.MM.DD');
     const todayBetweenTime = moment(date);
-    const postCreateAtBetweenTime = moment(postCreatedAtHours).subtract(-0.7, 'minute');
     const betweenTime = moment.duration(todayBetweenTime.diff(postCreatedAtHours)).asMinutes();
 
     return (
       <>
         {today === postCreatedAt && (betweenTime <= 59) ? (
-          <>
-            <span style={momentWrapper}>{moment(postCreatedAtHours).startOf('minute').fromNow()}</span>
-          </>
-        ) : (
-          <>
-            <span style={momentWrapper}>{moment(postCreatedAtHours).format('LLLL')}</span>
-          </>
-        )}
-        {post.updatedAt === post.createdAt ? <></> : <small> (수정)</small>}
+          <><span style={momentWrapper}>{moment(postCreatedAtHours).startOf('minute').fromNow()}</span></>
+        ) : (<><span style={momentWrapper}>{moment(postCreatedAtHours).format('LLLL')}</span></>)}
+        {post.updatedAt === post.createdAt ? <></> : <small> (수정됨)</small>}
       </>
     );
   };
@@ -155,9 +153,7 @@ const PostCard = ({ post }) => {
           <Card
             cover={post.images && post.images[0] ? <PostImages images={post.images} /> : <></>}
             actions={[
-              <Badge count={0} onClick={onRetweet} size="small" style={badge1Wrapper}>
-                <RetweetOutlined style={iconWrapper} />
-              </Badge>,
+              <RetweetOutlined style={iconWrapper} onClick={onRetweet} />,
               <Badge count={post.likers ? post.likers.length : 0} size="small" style={badge2Wrapper}>
                 {liked ? <HeartTwoTone style={heartWrapper} onClick={onUnLike} />
                   : <HeartOutlined style={iconWrapper} onClick={onLike} />}
@@ -168,6 +164,8 @@ const PostCard = ({ post }) => {
               <Popover
                 content={EllipsisContent}
                 trigger="click"
+                visible={popoverVisible}
+                onVisibleChange={(visible) => setPopoverVisible(visible)}
               >
                 <EllipsisOutlined />
               </Popover>,

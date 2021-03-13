@@ -18,16 +18,6 @@ const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
   const preWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
 
   const Like = useCallback((likers ? likers.length : 0), []);
-  const hashTagRegExp = useCallback((
-    <>
-      {content.split(/(#[^\s]+)/g).map((v) => {
-        if (v.match(/#[^\s]+/)) {
-          return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
-        }
-        return v;
-      })}
-    </>
-  ), []);
 
   // url 입력 시 링크로 생성(수정 해야 함)
   const urlReg = /(?:(http(s)?:\/\/|[\s\t\r\n\[\]\`\<\>\"\'])((?:[\w$\-_\.+!*\'\(\),]|%[0-9a-f][0-9a-f])*\:(?:[\w$\-_\.+!*\'\(\),;\?&=]|%[0-9a-f][0-9a-f])+\@)?(?:((?:(?:[a-z0-9\-가-힣]+\.)+[a-z0-9\-]{2,})|(?:[\d]{1,3}\.){3}[\d]{1,3})|localhost)(?:\:([0-9]+))?((?:\/(?:[\w$\-_\.+!*\'\(\),;:@&=ㄱ-ㅎㅏ-ㅣ가-힣]|%[0-9a-f][0-9a-f])+)*)(?:\/([^\s\/\?\.:<>|#]*(?:\.[^\s\/\?:<>|#]+)*))?(\/?[\?;](?:[a-z0-9\-]+(?:=[^\s:&<>]*)?\&)*[a-z0-9\-]+(?:=[^\s:&<>]*)?)?(#[\w\-]+)?)/;
@@ -60,7 +50,12 @@ const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
               : (
                 <>
                   <Divider orientation="left">{title}</Divider>
-                  {hashTagRegExp}
+                  {content.split(/(#[^\s]+)/g).map((v) => {
+                    if (v.match(/#[^\s]+/)) {
+                      return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
+                    }
+                    return v;
+                  })}
                   {urlRegExp}
                 </>
               )}
@@ -84,7 +79,12 @@ const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
             {!showMore
               ? (
                 <>
-                  {hashTagRegExp}
+                  {content.split(/(#[^\s]+)/g).map((v) => {
+                    if (v.match(/#[^\s]+/)) {
+                      return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
+                    }
+                    return v;
+                  })}
                   {urlRegExp}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}
@@ -93,7 +93,12 @@ const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
               )
               : (
                 <pre style={preWrapper}>
-                  {hashTagRegExp}
+                  {content.split(/(#[^\s]+)/g).map((v) => {
+                    if (v.match(/#[^\s]+/)) {
+                      return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
+                    }
+                    return v;
+                  })}
                   {urlRegExp}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}

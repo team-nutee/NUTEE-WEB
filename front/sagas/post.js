@@ -25,6 +25,9 @@ import {
   LOAD_CATEGORY_POSTS_REQUEST,
   LOAD_CATEGORY_POSTS_SUCCESS,
   LOAD_CATEGORY_POSTS_FAILURE,
+  LOAD_MAJOR_POSTS_REQUEST,
+  LOAD_MAJOR_POSTS_SUCCESS,
+  LOAD_MAJOR_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_REQUEST,
   LOAD_HASHTAG_POSTS_SUCCESS,
@@ -99,7 +102,7 @@ function loadMainPostsAPI(lastId) {
 function* loadMainPosts(action) {
   try {
     const result = yield call(loadMainPostsAPI, action.lastId);
-    console.log(result.data.body);
+    console.log('loadMainPosts', result.data.body);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data.body,
@@ -120,6 +123,7 @@ function loadFavoritePostsAPI(lastId = 0) {
 function* loadFavoritePosts(action) {
   try {
     const result = yield call(loadFavoritePostsAPI, action.lastId);
+    console.log('loadFavoritePosts', result.data.body);
     yield put({
       type: LOAD_FAVORITE_POSTS_SUCCESS,
       data: result.data.body,
@@ -139,6 +143,7 @@ function loadCategoryPostsAPI(data, lastId) {
 function* loadCategoryPosts(action) {
   try {
     const result = yield call(loadCategoryPostsAPI, action.data, action.lastId);
+    console.log('loadCategoryPosts', result.data.body);
     yield put({
       type: LOAD_CATEGORY_POSTS_SUCCESS,
       data: result.data.body,
@@ -146,6 +151,25 @@ function* loadCategoryPosts(action) {
   } catch (err) {
     yield put({
       type: LOAD_CATEGORY_POSTS_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function loadMajorPostsAPI(data, lastId) {
+  return axios.get(`${INDEX_URL}/sns/post/major?lastId=${lastId || 0}&limit=10`, { data: {} });
+}
+
+function* loadMajorPosts(action) {
+  try {
+    const result = yield call(loadMajorPostsAPI, action.data, action.lastId);
+    yield put({
+      type: LOAD_MAJOR_POSTS_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_MAJOR_POSTS_FAILURE,
       error: err,
     });
   }
@@ -220,11 +244,12 @@ function* addPost(action) {
     const result = yield call(addPostAPI, action.data);
     yield put({ // post reducer
       type: ADD_POST_SUCCESS,
-      data: result.data.body,
+      data: result.data,
     });
     yield put({ // user reducer
       type: ADD_POST_TO_ME,
-      data: result.data.body.id,
+      data: action.data.id,
+      // data: result.data.body.id,
     });
   } catch (err) {
     yield put({
@@ -243,7 +268,7 @@ function* editPost(action) {
     const result = yield call(editPostAPI, action.data, action.postId);
     yield put({
       type: EDIT_POST_SUCCESS,
-      data: result.data,
+      data: result.data.body,
     });
   } catch (err) {
     yield put({
@@ -652,7 +677,7 @@ function* unlikePost(action) {
 }
 
 function retweetAPI(postId) {
-  return axios.post(`${INDEX_URL}/sns/post/${postId}/retweet`);
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/retweet`, { data: {} });
 }
 
 function* retweet(action) {
@@ -736,6 +761,10 @@ function* watchLoadFavoritePosts() {
 
 function* watchLoadCategoryPosts() {
   yield takeLatest(LOAD_CATEGORY_POSTS_REQUEST, loadCategoryPosts);
+}
+
+function* watchLoadMajorPosts() {
+  yield takeLatest(LOAD_MAJOR_POSTS_REQUEST, loadMajorPosts);
 }
 
 function* watchLoadHashtagPosts() {
@@ -831,6 +860,7 @@ export default function* postSaga() {
     fork(watchLoadMainPosts),
     fork(watchLoadFavoritePosts),
     fork(watchLoadCategoryPosts),
+    fork(watchLoadMajorPosts),
     fork(watchAddPost),
     fork(watchAddComment),
     fork(watchLoadComments),
