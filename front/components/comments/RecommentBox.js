@@ -6,7 +6,7 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Recomment from './Recomment';
 
-const RecommentBox = ({ reComment, post, onReply, parentId, userId }) => {
+const RecommentBox = ({ reComment, post, onReply, cancelReply, parentId, userId }) => {
   const [show, setShow] = useState(false);
 
   const onRecomment = () => {
@@ -16,11 +16,16 @@ const RecommentBox = ({ reComment, post, onReply, parentId, userId }) => {
     }
   };
 
+  const cancelRecomment = () => {
+    setShow((prev) => !prev);
+    cancelReply();
+  };
+
   const reCommentWrapper = useMemo(() => ({ marginLeft: '35px', fontWeight: 'bold' }), []);
 
   return (show
     ? <> 
-      <a style={reCommentWrapper} onClick={onRecomment}>답글 숨기기</a>
+      <a style={reCommentWrapper} onClick={cancelRecomment}>답글 숨기기</a>
       {reComment.map((data) => <Recomment item={data} post={post} parentId={parentId} userId={userId} />)} 
       </>
     : (reComment.length !== 0 ? <a style={reCommentWrapper} onClick={onRecomment}>답글 보기</a> : <></>)

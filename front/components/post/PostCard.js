@@ -174,6 +174,15 @@ const PostCard = ({ post }) => {
       ) : null
   );
   
+  let locale = {
+    emptyText: (
+      <div style={{paddingTop: '50px', paddingBottom: '50px'}}>
+        <p>
+          댓글이 없습니다.
+        </p>
+      </div>
+    )
+  };
 
   return (
     <div style={postCardWrapper}>
@@ -288,6 +297,7 @@ const PostCard = ({ post }) => {
             && mainPosts[mainPosts.findIndex((v) => v.id === post.id)]
             ? (
               <List
+                locale={locale}
                 itemLayout="horizontal"
                 style={listWrapper}
                 // loadMore={loadMore}

@@ -103,7 +103,6 @@ const Comments = ({ item, post }) => {
 
     </>
   );
-  
 
   return (
     <div style={commentWrapper}>
@@ -167,6 +166,7 @@ const Comments = ({ item, post }) => {
         reComment = {item.reComment || []}
         post={post}
         onReply = {onReply}
+        cancelReply={cancelReply}
         parentId = {item.id}
         userId = {id}
       />
