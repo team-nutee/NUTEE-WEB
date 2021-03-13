@@ -132,13 +132,13 @@ function* loadFavoritePosts(action) {
   }
 }
 
-function loadCategoryPostsAPI(lastId = 0, inter = 'INTER2') {
-  return axios.get(`${INDEX_URL}/sns/post/category/${inter}?lastId=${lastId}&limit=10`, { data: {} });
+function loadCategoryPostsAPI(data, lastId) {
+  return axios.get(`${INDEX_URL}/sns/post/category/${data.inter}?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadCategoryPosts(action) {
   try {
-    const result = yield call(loadCategoryPostsAPI, action.lastId, action.inter);
+    const result = yield call(loadCategoryPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_CATEGORY_POSTS_SUCCESS,
       data: result.data.body,
@@ -146,6 +146,46 @@ function* loadCategoryPosts(action) {
   } catch (err) {
     yield put({
       type: LOAD_CATEGORY_POSTS_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function loadHashtagPostsAPI(tag, lastId) {
+  return axios.get(`${INDEX_URL}/sns/hashtag/${encodeURIComponent(tag)}?lastId=${lastId || 0}&limit=10`, { data: {} });
+}
+
+function* loadHashtagPosts(action) {
+  try {
+    console.log('loadHashtag console');
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
+    yield put({
+      type: LOAD_HASHTAG_POSTS_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_HASHTAG_POSTS_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function loadSearchPostsAPI(text, lastId) {
+  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`, { data: {} });
+}
+
+function* loadSearchPosts(action) {
+  try {
+    const result = yield call(loadSearchPostsAPI, action.data, action.lastId);
+    yield put({
+      type: LOAD_SEARCH_POSTS_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    console.log('LOAD_SEARCH_POSTS_FAILURE', err);
+    yield put({
+      type: LOAD_SEARCH_POSTS_FAILURE,
       error: err,
     });
   }
@@ -251,46 +291,6 @@ function* report(action) {
   } catch (err) {
     yield put({
       type: REPORT_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function loadHashtagPostsAPI(tag, lastId) {
-  return axios.get(`${INDEX_URL}/sns/hashtag/${encodeURIComponent(tag)}?lastId=${lastId || 0}&limit=10`, { data: {} });
-}
-
-function* loadHashtagPosts(action) {
-  try {
-    console.log('loadHashtag console');
-    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
-    yield put({
-      type: LOAD_HASHTAG_POSTS_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: LOAD_HASHTAG_POSTS_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function loadSearchPostsAPI(text, lastId) {
-  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`, { data: {} });
-}
-
-function* loadSearchPosts(action) {
-  try {
-    const result = yield call(loadSearchPostsAPI, action.data, action.lastId);
-    yield put({
-      type: LOAD_SEARCH_POSTS_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    console.log('LOAD_SEARCH_POSTS_FAILURE', err);
-    yield put({
-      type: LOAD_SEARCH_POSTS_FAILURE,
       error: err,
     });
   }

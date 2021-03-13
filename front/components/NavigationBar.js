@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Input, Row, Popover } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Button, Row } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutRequestAction } from '../reducers/user';
-import Search from './Search';
+import Search from './Search/Search';
 
 const NavigationBar = ({ me }) => {
   const [showSearch, setShowSearch] = useState(false);
@@ -13,7 +13,6 @@ const NavigationBar = ({ me }) => {
 
   const onOpenSearch = useCallback(() => { setShowSearch(true); }, []);
   const onCloseSearch = useCallback(() => { setShowSearch(false); }, []);
-
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
@@ -59,17 +58,19 @@ const NavigationBar = ({ me }) => {
                 <Search onCloseSearch={onCloseSearch} />
               )
               : (
-                <SearchOutlined style={showSearchWrapper} onClick={onOpenSearch} />
+                <>
+                  <SearchOutlined style={showSearchWrapper} onClick={onOpenSearch} />
+                  <div style={logoutWrapper}>
+                    <Button
+                      style={logoutButtonWrapper}
+                      shape="round"
+                      onClick={onLogOut}
+                    >
+                      <b>로그아웃</b>
+                    </Button>
+                  </div>
+                </>
               )}
-            <div style={logoutWrapper}>
-              <Button
-                style={logoutButtonWrapper}
-                shape="round"
-                onClick={onLogOut}
-              >
-                <b>로그아웃</b>
-              </Button>
-            </div>
           </>
         )
         : <></>}

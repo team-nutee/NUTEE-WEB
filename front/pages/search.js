@@ -1,19 +1,30 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col } from 'antd';
+import { Col, Row } from 'antd';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import { LOAD_SEARCH_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import PostCard from '../components/post/PostCard';
 import LeftContents from '../components/contents/LeftContents';
+import AppLayout from '../components/AppLayout';
 import wrapper from '../store/configureStore';
 
 const Search = ({ text }) => {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const { me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_SEARCH_POSTS_REQUEST,
+      data: text,
+    });
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -34,15 +45,20 @@ const Search = ({ text }) => {
     };
   }, [mainPosts.length, hasMorePost]);
 
-  const colWrapper = useMemo(() => ({ minWidth: '560px' }), []);
+  const colWrapper = useMemo(() => ({ marginTop: '10px' }), []);
+  const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   return (
-    <>
-      <LeftContents me={me} span={5} />
-      <Col span={10} style={colWrapper}>
-        {mainPosts.map((c) => <PostCard key={c.id} post={c} />)}
-      </Col>
-    </>
+    <AppLayout>
+      <Row gutter={10} style={pageWrapper}>
+        <Col span={7}>
+          <LeftContents me={me} />
+        </Col>
+        <Col span={17} style={colWrapper}>
+          {mainPosts.map((c) => <PostCard key={c.id} post={c} />)}
+        </Col>
+      </Row>
+    </AppLayout>
   );
 };
 
