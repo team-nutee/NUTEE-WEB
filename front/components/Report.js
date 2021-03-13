@@ -6,7 +6,7 @@ import { REPORT_REQUEST } from '../reducers/post';
 
 const { TextArea } = Input;
 
-const Report = (postId, setReportVisible) => {
+const Report = ({ postId, setReportVisible }) => {
   const [report, setReport] = useState('');
   const dispatch = useDispatch();
 

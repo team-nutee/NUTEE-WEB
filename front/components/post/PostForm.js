@@ -6,17 +6,17 @@ import { Form, Button, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_REQUEST, ADD_POST_SUCCESS } from '../../reducers/post';
 import useInput from '../../hooks/useInput';
 
-const PostForm = (me) => {
+const PostForm = ({ me }) => {
   const dispatch = useDispatch();
   const [title, onChangeTitle, setTitle] = useInput('');
   const [text, onChangeText, setText] = useInput('');
   const [category, setCategory] = useState();
   const { categoryData, imagePaths, addPostLoading, addPostDone,
   } = useSelector((state) => state.post);
-  const { majors } = me.me;
   const imageInput = useRef();
 
   const postCategoryList = (m, i) => {
@@ -102,7 +102,7 @@ const PostForm = (me) => {
           placeholder="카테고리"
           name="categoty"
           onChange={onSelectCategory}
-          options={postCategoryList(majors, categoryData)}
+          options={postCategoryList(me.majors, categoryData)}
           styles={customStyles}
           menuPlacement="auto"
           maxMenuHeight={150}
@@ -150,6 +150,12 @@ const PostForm = (me) => {
       </div>
     </Form>
   );
+};
+
+PostForm.propTypes = {
+  me: PropTypes.shape({
+    majors: PropTypes.array,
+  }).isRequired,
 };
 
 export default PostForm;

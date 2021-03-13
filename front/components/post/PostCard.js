@@ -145,18 +145,7 @@ const PostCard = ({ post }) => {
       </>
     );
   };
-  
-  const loadMore = (
-    mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments !== 0
-      && mainPosts[mainPosts.findIndex((v) => v.id === post.id)].comments % 5 === 0
-      ? (
-        <div style={loadMoreDivWrapper}>
-          <Tag color="cyan" onClick={onLoadMoreComments}>더보기</Tag>
-        </div>
-      ) : null
-  );
-  
+
   let locale = {
     emptyText: (
       <div style={{paddingTop: '50px', paddingBottom: '50px'}}>
@@ -283,12 +272,7 @@ const PostCard = ({ post }) => {
                 locale={locale}
                 itemLayout="horizontal"
                 style={listWrapper}
-<<<<<<< HEAD
-                dataSource={commentList[post.id] || []}
-=======
-                // loadMore={loadMore}
                 dataSource={commentList[mainPosts.findIndex((v) => v.id === post.id)] || []}
->>>>>>> 7aa799ad8d248ad18be7f8e386f7dcae0e7ca0b5
                 renderItem={(item) => <Comments item={item} post={post} />}
               />
             )

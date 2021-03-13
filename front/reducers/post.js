@@ -321,7 +321,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addPostError = null;
       break;
     case ADD_POST_SUCCESS:
-      // draft.mainPosts.unshift(action.data);
+      draft.mainPosts.unshift(action.data);
       console.log('ADD_POST_SUCCESS action.data', action.data);
       draft.imagePaths = [];
       draft.addPostLoading = false;
@@ -393,24 +393,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addReCommentError = null;
       break;
     case ADD_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === action.data.parentId);
-      if (draft.commentList[postIndex][commentIndex].reComment === null){
-        draft.commentList[postIndex][commentIndex].reComment = [];
-      }
-      draft.commentList[postIndex][commentIndex].reComment.push(action.data.reComment);
-
-<<<<<<< HEAD
-      if (draft.commentList[action.data.postId][commentIndex].reComment === null) {
-        draft.commentList[action.data.postId][commentIndex].reComment = [];
-=======
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
       const reCommentIndex = draft.commentList[postIndex][commentIndex].reComment.findIndex((v) => v.id === action.data.reComment.id);
       if (draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers === null){
         draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers = [];
->>>>>>> 7aa799ad8d248ad18be7f8e386f7dcae0e7ca0b5
       }
+      draft.commentList[action.data.postId][commentIndex].reComment.push(action.data.reComment);
       draft.addReCommentLoading = false;
       draft.addReCommentDone = true;
       break;
@@ -425,14 +413,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === action.data.comment.id);
-      draft.commentList[postIndex][commentIndex] = action.data.comment;
-      if (draft.commentList[postIndex][commentIndex].likers === null){
-        draft.commentList[postIndex][commentIndex].likers = [];
-      }
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
@@ -447,15 +429,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === action.data.parentId);
-      const reCommentIndex = draft.commentList[postIndex][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
-      draft.commentList[postIndex][commentIndex].reComment[reCommentIndex] = action.data.comment;
-      if (draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers === null){
-        draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers = [];
-      }
+      const commentIndex = draft.commentList[action.data.postId].findIndex((v) => v.id === action.data.parentId);
+      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex((v) => v.id === action.data.comment.id);
+      draft.commentList[action.data.postId][commentIndex].reComment[reCommentIndex] = action.data.comment;
       draft.editCommentLoading = false;
       draft.editCommentDone = true;
       break;
@@ -470,10 +446,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      draft.commentList[postIndex] = draft.commentList[postIndex].filter((v) => v.id !== action.data.commentId);
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
+        (v) => v.id === action.data.commentId,
+      );
+      draft.commentList[action.data.postId].splice(commentIndex, 1);
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
@@ -488,22 +464,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeReCommentError = null;
       break;
     case REMOVE_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      const commentIndex = draft.commentList[postIndex].findIndex(
+      const commentIndex = draft.commentList[action.data.postId].findIndex(
         (v) => v.id === action.data.parentId,
       );
-<<<<<<< HEAD
-      const reCommentIndex = draft.commentList[action.data.postId][commentIndex].reComment.findIndex(
-        (v) => v.id === action.data.commentId,
-      );
-      draft.commentList[action.data.postId][commentIndex].reComment.splice(reCommentIndex, 1);
-=======
       draft.commentList[postIndex][commentIndex].reComment = draft.commentList[postIndex][commentIndex].reComment.filter(
         (v) => v.id !== action.data.commentId
         );
->>>>>>> 7aa799ad8d248ad18be7f8e386f7dcae0e7ca0b5
       draft.removeReCommnetLoading = false;
       draft.removeReCommnetDone = true;
       break;
@@ -518,14 +484,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId
-      )
-      draft.commentList[postIndex].push(action.data.comment);
-      const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === action.data.comment.id);
-      if (draft.commentList[postIndex][commentIndex].likers === null) {
-        draft.commentList[postIndex][commentIndex].likers = [];
-      }
+      const commentIndex = action.data.postId;
+      draft.commentList[commentIndex].push(action.data.comment);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -623,8 +583,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const postIndex = draft.mainPosts.findIndex(
         (v) => v.id === action.data.postId,
       );
+      const commentIndex = action.data.postId;
       if (action.data.comments !== null) {
-        draft.commentList[postIndex] = action.data.comments;
+        draft.commentList[commentIndex] = action.data.comments;
         if (action.data.offset === 0) {
           draft.mainPosts[postIndex].commentNum = action.data.comments.length;
         } else {
@@ -633,14 +594,14 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           ].commentNum.concat(action.data.comments);
         }
       } else {
-        draft.commentList[postIndex] = [];
+        draft.commentList[commentIndex] = [];
       }
       draft.loadCommentsLoading = false;
       draft.loadCommentsDone = true;
       break;
     }
     case LOAD_COMMENTS_FAILURE:
-      draft.loadCommentLoading = false;
+      draft.addCommentLoading = false;
       draft.loadCommentsError = action.error;
       break;
     case LOAD_CATEGORY_POSTS_REQUEST:
@@ -821,8 +782,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case RETWEET_FAILURE:
       break;
-<<<<<<< HEAD
-=======
     case REPORT_REQUEST:
       break;
     case REPORT_SUCCESS:
@@ -859,7 +818,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     }
     case REMOVE_POST_FAILURE:
       break;
->>>>>>> 7aa799ad8d248ad18be7f8e386f7dcae0e7ca0b5
     case LOAD_POST_REQUEST:
       draft.loadPostLoading = true;
       draft.loadPostDone = false;

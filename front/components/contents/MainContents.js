@@ -8,7 +8,7 @@ import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
 
-const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts }) => {
+const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPosts }) => {
   const { me } = useSelector((state) => state.user);
   const { loadPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
@@ -50,15 +50,15 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts }) => {
         </TabPane>
         <TabPane tab="전체 게시글" key="2" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {mainPosts.map((post) => (
-            <PostCard key={post.id} post={post} />
+          {mainPosts.map((p) => (
+            <PostCard key={p.id} post={p} />
           ))}
         </TabPane>
         <TabPane tab="전공" key="3" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {/* {majorPosts.map((c) => (
+          {majorPosts.map((c) => (
             <PostCard key={c.id} post={c} />
-          ))} */}
+          ))}
         </TabPane>
       </Tabs>
     </>
