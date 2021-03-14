@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
 import { AlertOutlined, RetweetOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import moment from 'moment';
 import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
@@ -13,8 +12,7 @@ import Comments from '../comments/Comments';
 import CommentForm from '../comments/CommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import Report from '../Report';
-
-moment.locale('ko');
+import PostTime from '../PostTime';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -39,7 +37,6 @@ const PostCard = ({ post }) => {
   const listWrapper = useMemo(() => ({ background: '#f0faf5', paddingBottom: '0px', height: 'auto' }), []);
   const commentWrapper = useMemo(() => ({ background: '#f0faf5', border: '2px solid #fff', height: 'auto', justiceContent: 'center' }), []);
   const commentFormWrapper = useMemo(() => ({ background: '#f0faf5', height: 'auto', margin: '10px 15px' }), []);
-  const momentWrapper = useMemo(() => ({ fontSize: '14px' }), []);
   const nicknameWrapper = useMemo(() => ({ fontSize: '18px', margin: '0' }), []);
   const iconWrapper = useMemo(() => ({ fontSize: '20px' }), []);
   const tagWrapper = useMemo(() => ({ marginBottom: '15px' }), []);
@@ -66,12 +63,8 @@ const PostCard = ({ post }) => {
   }, [loadPostDone]);
 
   const onLike = useCallback(() => {
-    if (!me.id) {
-      return alert('로그인이 필요합니다.');
-    }
-    if (me.id === post.user.id) {
-      return alert('자신의 글은 좋아요를 누를 수 없습니다.');
-    }
+    if (!me.id) return alert('로그인이 필요합니다.');
+    if (me.id === post.user.id) return alert('자신의 글은 좋아요를 누를 수 없습니다.');
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
@@ -79,9 +72,7 @@ const PostCard = ({ post }) => {
   }, [me && me.id]);
 
   const onUnLike = useCallback(() => {
-    if (!me.id) {
-      return alert('로그인이 필요합니다.');
-    }
+    if (!me.id) return alert('로그인이 필요합니다.');
     return dispatch({
       type: UNLIKE_POST_REQUEST,
       data: post.id,
@@ -89,9 +80,7 @@ const PostCard = ({ post }) => {
   }, [me && me.id]);
 
   const onRetweet = useCallback(() => {
-    if (!me) {
-      return alert('로그인이 필요합니다.');
-    }
+    if (!me) return alert('로그인이 필요합니다.');
     return dispatch({
       type: RETWEET_REQUEST,
       data: post.id,
@@ -127,33 +116,14 @@ const PostCard = ({ post }) => {
     </>
   );
 
-  const time = () => {
-    const date = new Date();
-    const postCreateAt = new Date(post.createdAt);
-    const today = moment(date).format('YYYY.MM.DD');
-    const postCreatedAtHours = moment(postCreateAt).add(9, 'hours');
-    const postCreatedAt = moment(postCreatedAtHours).format('YYYY.MM.DD');
-    const todayBetweenTime = moment(date);
-    const betweenTime = moment.duration(todayBetweenTime.diff(postCreatedAtHours)).asMinutes();
-
-    return (
-      <>
-        {today === postCreatedAt && (betweenTime <= 59) ? (
-          <><span style={momentWrapper}>{moment(postCreatedAtHours).startOf('minute').fromNow()}</span></>
-        ) : (<><span style={momentWrapper}>{moment(postCreatedAtHours).format('LLLL')}</span></>)}
-        {post.updatedAt === post.createdAt ? <></> : <small> (수정됨)</small>}
-      </>
-    );
-  };
-
-  let locale = {
+  const locale = {
     emptyText: (
-      <div style={{paddingTop: '50px', paddingBottom: '50px'}}>
+      <div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
         <p>
           댓글이 없습니다.
         </p>
       </div>
-    )
+    ),
   };
 
   return (
@@ -209,7 +179,7 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.retweet.user.nickname}</p>
-                        {time()}
+                        <PostTime post={post} />
                       </>
                     )}
                     description={(
@@ -244,7 +214,7 @@ const PostCard = ({ post }) => {
                     title={(
                       <>
                         <p style={nicknameWrapper}>{post.user.nickname}</p>
-                        {editMode ? <></> : <>{time()}</>}
+                        {editMode ? <></> : (<><PostTime post={post} /></>)}
                       </>
                     )}
                     description={(
@@ -257,7 +227,7 @@ const PostCard = ({ post }) => {
                         />
                       </>
                     )}
-                    loading
+                    /* loading */
                   />
                 </div>
               )}
