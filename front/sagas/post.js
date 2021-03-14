@@ -256,10 +256,12 @@ function addPostAPI(postData) {
 
 function* addPost(action) {
   try {
-    const result = yield call(addPostAPI, action.data);
+    const result = yield call(addPostAPI, action.data, action.major);
     yield put({ // post reducer
       type: ADD_POST_SUCCESS,
-      data: result.data,
+      data: result.data.body,
+      major: action.major,
+      category: result.data.body.category,
     });
     yield put({ // user reducer
       type: ADD_POST_TO_ME,
@@ -302,7 +304,7 @@ function* removePost(action) {
     const result = yield call(removePostAPI, action.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
-      data: result.data,
+      data: result.data.body.id,
     });
     yield put({
       type: REMOVE_POST_OF_ME,
@@ -772,13 +774,12 @@ function likePostAPI(postId) {
 
 function* likePost(action) {
   try {
-    const result = yield call(likePostAPI, action.data);
+    const result = yield call(likePostAPI, action.data, action.user);
     yield put({
       type: LIKE_POST_SUCCESS,
-      data: {
-        postId: action.data,
-        userId: result.data.body.user.id,
-      },
+      postId: action.data,
+      user: action.user,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);
@@ -795,13 +796,12 @@ function unlikePostAPI(postId) {
 
 function* unlikePost(action) {
   try {
-    const result = yield call(unlikePostAPI, action.data);
+    const result = yield call(unlikePostAPI, action.postId, action.userId);
     yield put({
       type: UNLIKE_POST_SUCCESS,
-      data: {
-        postId: action.data,
-        userId: result.data.body.user.id,
-      },
+      postId: action.postId,
+      userId: action.userId,
+      data: result.data.body,
     });
   } catch (err) {
     console.error(err);

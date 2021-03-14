@@ -38,7 +38,7 @@ const PostCard = ({ post }) => {
   const commentWrapper = useMemo(() => ({ background: '#f0faf5', border: '2px solid #fff', height: 'auto', justiceContent: 'center' }), []);
   const commentFormWrapper = useMemo(() => ({ background: '#f0faf5', height: 'auto', margin: '10px 15px' }), []);
   const nicknameWrapper = useMemo(() => ({ fontSize: '18px', margin: '0' }), []);
-  const iconWrapper = useMemo(() => ({ fontSize: '20px' }), []);
+  const iconWrapper = useMemo(() => ({ fontSize: '23px' }), []);
   const tagWrapper = useMemo(() => ({ marginBottom: '15px' }), []);
   const postWrapperTest = useMemo(() => ({ margin: '0', padding: '0' }), []);
   const prefixWrapper = useMemo(() => ({ marginRight: '10px' }), []);
@@ -68,6 +68,11 @@ const PostCard = ({ post }) => {
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
+      user: {
+        id: me.id,
+        nickname: me.nickname,
+        image: me.image,
+      },
     });
   }, [me && me.id]);
 
@@ -75,7 +80,8 @@ const PostCard = ({ post }) => {
     if (!me.id) return alert('로그인이 필요합니다.');
     return dispatch({
       type: UNLIKE_POST_REQUEST,
-      data: post.id,
+      postId: post.id,
+      userId: me.id,
     });
   }, [me && me.id]);
 
@@ -135,7 +141,7 @@ const PostCard = ({ post }) => {
             actions={[
               <RetweetOutlined style={iconWrapper} onClick={onRetweet} />,
               <Badge count={post.likers ? post.likers.length : 0} size="small" style={badge2Wrapper}>
-                {liked ? <HeartTwoTone style={heartWrapper} onClick={onUnLike} />
+                {liked ? <HeartTwoTone twoToneColor="#eb2f96" style={heartWrapper} onClick={onUnLike} />
                   : <HeartOutlined style={iconWrapper} onClick={onLike} />}
               </Badge>,
               <Badge count={post.commentNum || 0} onClick={onToggleComment} size="small" style={badge3Wrapper}>

@@ -50,6 +50,7 @@ const PostForm = ({ me }) => {
           images: imagePaths,
           category,
         },
+        major: me.majors,
       })
     );
   }, [title, text, imagePaths, category]);
