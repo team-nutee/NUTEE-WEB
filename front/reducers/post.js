@@ -310,15 +310,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadEditImagesError = action.error;
       break;
     case REMOVE_IMAGE: {
-      /* const index = draft.imagePaths.findIndex((v, i) => i === action.index);
-        draft.imagePaths.splice(index, 1); */
-      draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      draft.imagePaths.splice(action.index, 1);
       break;
     }
     case REMOVE_EDIT_IMAGE: {
-      /*  const index = draft.editImagePaths.findIndex((v, i) => i === action.index);
-        draft.editImagePaths.splice(index, 1); */
-      draft.editImagePaths = draft.editImagePaths.filter((v, i) => i !== action.data);
+      draft.editImagePaths.splice(action.index, 1);
       break;
     }
     case ADD_POST_REQUEST:

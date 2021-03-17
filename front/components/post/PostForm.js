@@ -70,10 +70,10 @@ const PostForm = ({ me }) => {
     imageInput.current.click();
   }, [imageInput.current]);
 
-  const onRemoveImage = useCallback((index) => () => {
+  const onRemoveImage = useCallback((i) => () => {
     dispatch({
       type: REMOVE_IMAGE,
-      index,
+      index: i,
     });
   }, []);
 

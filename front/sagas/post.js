@@ -677,7 +677,7 @@ function* unlikeComment(action) {
 }
 
 function likeReCommentAPI(postId, commentId) {
-  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, {data: {} });
+  return axios.post(`${INDEX_URL}/sns/post/${postId}/comment/${commentId}/like`, { data: {} });
 }
 
 function* likeReComment(action) {
