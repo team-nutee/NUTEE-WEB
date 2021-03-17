@@ -50,9 +50,9 @@ import {
   CHECK_DUPLICATE_EMAIL_REQUEST,
   CHECK_DUPLICATE_EMAIL_SUCCESS,
   CHECK_DUPLICATE_EMAIL_FAILURE,
-  FIND_EMAIL_REQUEST,
-  FIND_EMAIL_SUCCESS,
-  FIND_EMAIL_FAILURE,
+  FIND_ID_REQUEST,
+  FIND_ID_SUCCESS,
+  FIND_ID_FAILURE,
   FIND_PASSWORD_REQUEST,
   FIND_PASSWORD_SUCCESS,
   FIND_PASSWORD_FAILURE,
@@ -71,9 +71,9 @@ import {
   EDIT_PASSWORD_REQUEST,
   EDIT_PASSWORD_SUCCESS,
   EDIT_PASSWORD_FAILURE,
-  UPLOAD_PROFILE_IMAGE_REQUEST,
-  UPLOAD_PROFILE_IMAGE_SUCCESS,
-  UPLOAD_PROFILE_IMAGE_FAILURE,
+  EDIT_PROFILE_IMAGE_REQUEST,
+  EDIT_PROFILE_IMAGE_SUCCESS,
+  EDIT_PROFILE_IMAGE_FAILURE,
 } from '../reducers/user';
 
 function loadMyInfoAPI() {
@@ -297,46 +297,47 @@ function* checkNickname(action) {
   }
 }
 
-function uploadProfileImgAPI(formData) {
-  return axios.post(`${AUTH_URL}/auth/profile`, formData);
+function editProfileImgAPI(formData) {
+  return axios.patch(`${AUTH_URL}/auth/user/profile`, formData);
 }
 
-function* uploadProfileImg(action) {
+function* editProfileImg(action) {
   try {
-    const result = yield call(uploadProfileImgAPI, action.data);
+    const result = yield call(editProfileImgAPI, action.data);
     yield put({
-      type: UPLOAD_PROFILE_IMAGE_SUCCESS,
+      type: EDIT_PROFILE_IMAGE_SUCCESS,
       data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
-      type: UPLOAD_PROFILE_IMAGE_FAILURE,
+      type: EDIT_PROFILE_IMAGE_FAILURE,
       error: err,
     });
   }
 }
 
-function findEmailAPI(schoolEmail) { // api X
-  return axios.post('/user/findid', schoolEmail);
+function findIdAPI(schoolEmail) {
+  return axios.patch(`${AUTH_URL}/auth/user-id`, schoolEmail);
 }
 
-function* findEmail(action) {
+function* findId(action) {
   try {
-    yield call(findEmailAPI, action.data);
+    const result = yield call(findIdAPI, action.data);
     yield put({
-      type: FIND_EMAIL_SUCCESS,
+      type: FIND_ID_SUCCESS,
+      data: result.data.body,
     });
   } catch (err) {
     yield put({
-      type: FIND_EMAIL_FAILURE,
+      type: FIND_ID_FAILURE,
       error: err,
     });
   }
 }
 
-function findPasswordAPI(data) { // api X
-  return axios.post('/user/reissuance', data);
+function findPasswordAPI(data) {
+  return axios.patch(`${AUTH_URL}/auth/password`, data);
 }
 
 function* findPassword(action) {
@@ -600,12 +601,12 @@ function* watchEditPassword() {
   yield takeLatest(EDIT_PASSWORD_REQUEST, editPassword);
 }
 
-function* watchUploadProfileImg() {
-  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImg);
+function* watchEditProfileImg() {
+  yield takeLatest(EDIT_PROFILE_IMAGE_REQUEST, editProfileImg);
 }
 
-function* watchFindEmail() {
-  yield takeLatest(FIND_EMAIL_REQUEST, findEmail);
+function* watchFindId() {
+  yield takeLatest(FIND_ID_REQUEST, findId);
 }
 
 function* watchFindPassword() {
@@ -669,10 +670,10 @@ export default function* userSaga() {
     fork(watchOtpCheck),
     fork(watchSendOtp),
     fork(watchCheckDuplicateEmail),
-    fork(watchFindEmail),
+    fork(watchFindId),
     fork(watchFindPassword),
     fork(watchEditPassword),
     fork(watchCheckPassword),
-    fork(watchUploadProfileImg),
+    fork(watchEditProfileImg),
   ]);
 }

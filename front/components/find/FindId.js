@@ -4,23 +4,23 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { FIND_EMAIL_REQUEST } from '../../reducers/user';
+import { FIND_ID_REQUEST } from '../../reducers/user';
 
 const FindId = ({ setIdVisible }) => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
 
   const dispatch = useDispatch();
-  const { findEmailCheck } = useSelector((state) => state.user);
+  const { findIdDone, findId } = useSelector((state) => state.user);
 
   const onChangeEmailCheck = useCallback((e) => {
     setEmailError(!e.target.value.includes('@office.skhu.ac.kr'));
     setEmail(e.target.value);
   }, [email]);
 
-  const onEmailFind = () => {
+  const onFindId = () => {
     dispatch({
-      type: FIND_EMAIL_REQUEST,
+      type: FIND_ID_REQUEST,
       data: {
         schoolEmail: email,
       },
@@ -28,11 +28,12 @@ const FindId = ({ setIdVisible }) => {
   };
 
   useEffect(() => {
-    if (findEmailCheck) {
+    if (findIdDone) {
       setIdVisible(false);
-      alert('작성하신 이메일로 아이디를 전송하였습니다.');
+      alert(`아이디 : ${findId}`);
+      setEmail('');
     }
-  }, [findEmailCheck]);
+  }, [findIdDone]);
 
   const formWrapper = useMemo(() => ({ marginBottom: '40px' }), []);
   const formDivWrapper = useMemo(() => ({ width: '100%', margin: '0 auto' }), []);
@@ -57,7 +58,7 @@ const FindId = ({ setIdVisible }) => {
             {emailError && <div style={emailErrorWrapper}>올바른 이메일의 형태가 아닙니다.</div>}
           </Col>
           <Col span={6}>
-            <Button type="primary" style={buttonWrapper} onClick={onEmailFind}>전송</Button>
+            <Button type="primary" style={buttonWrapper} onClick={onFindId}>전송</Button>
           </Col>
         </Row>
       </div>

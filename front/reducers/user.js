@@ -52,6 +52,15 @@ export const initialState = {
   editMajorLoading: false, // 전공 변경
   editMajorDone: false,
   editMajorError: null,
+  editProfileImageLoading: false, // 프로필 이미지 변경
+  editProfileImageDone: false,
+  editProfileImageError: null,
+  editPasswordLoading: false, // 비밀번호 변경
+  editPasswordDone: false,
+  editPasswordError: null,
+  checkedPasswordLoading: false, // 비밀번호 확인 여부 (비번 변경 시)
+  checkedPasswordDone: false,
+  checkedPasswordError: null,
 
   /* follow */
   followingList: [], // 팔로잉 리스트
@@ -75,15 +84,13 @@ export const initialState = {
   removeFollowerError: null,
 
   /* find */
-  checkedFindEmailLoading: false, // 이메일 찾기
-  checkedFindEmailDone: false,
-  checkedFindEmailError: null,
+  findId: null, // 찾은 아이디
+  findIdLoading: false, // 아이디 찾기
+  findIdDone: false,
+  findIdError: null,
   findPasswordLoading: false, // 비밀번호 찾기
   findPasswordDone: false,
   findPasswordError: null,
-  checkedPasswordLoading: false, // 비밀번호 확인 여부 (비번 변경 시)
-  checkedPasswordDone: false,
-  checkedPasswordError: null,
 };
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
@@ -132,9 +139,9 @@ export const CHECK_OTP_REQUEST = 'CHECK_OTP_REQUEST';
 export const CHECK_OTP_SUCCESS = 'CHECK_OTP_SUCCESS';
 export const CHECK_OTP_FAILURE = 'CHECK_OTP_FAILURE';
 
-export const FIND_EMAIL_REQUEST = 'FIND_EMAIL_REQUEST';
-export const FIND_EMAIL_SUCCESS = 'FIND_EMAIL_SUCCESS';
-export const FIND_EMAIL_FAILURE = 'FIND_EMAIL_FAILURE';
+export const FIND_ID_REQUEST = 'FIND_ID_REQUEST';
+export const FIND_ID_SUCCESS = 'FIND_ID_SUCCESS';
+export const FIND_ID_FAILURE = 'FIND_ID_FAILURE';
 
 export const FIND_PASSWORD_REQUEST = 'FIND_PASSWORD_REQUEST';
 export const FIND_PASSWORD_SUCCESS = 'FIND_PASSWORD_SUCCESS';
@@ -160,9 +167,9 @@ export const EDIT_PASSWORD_REQUEST = 'EDIT_PASSWORD_REQUEST';
 export const EDIT_PASSWORD_SUCCESS = 'EDIT_PASSWORD_SUCCESS';
 export const EDIT_PASSWORD_FAILURE = 'EDIT_PASSWORD_FAILURE';
 
-export const UPLOAD_PROFILE_IMAGE_REQUEST = 'UPLOAD_PROFILE_IMAGE_REQUEST';
-export const UPLOAD_PROFILE_IMAGE_SUCCESS = 'UPLOAD_PROFILE_IMAGE_SUCCESS';
-export const UPLOAD_PROFILE_IMAGE_FAILURE = 'UPLOAD_PROFILE_IMAGE_FAILURE';
+export const EDIT_PROFILE_IMAGE_REQUEST = 'EDIT_PROFILE_IMAGE_REQUEST';
+export const EDIT_PROFILE_IMAGE_SUCCESS = 'EDIT_PROFILE_IMAGE_SUCCESS';
+export const EDIT_PROFILE_IMAGE_FAILURE = 'EDIT_PROFILE_IMAGE_FAILURE';
 
 export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
 export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
@@ -401,18 +408,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.checkedPasswordLoading = false;
       draft.checkedPasswordError = action.error;
       break;
-    case FIND_EMAIL_REQUEST:
-      draft.checkedFindEmailLoading = true;
-      draft.checkedFindEmailDone = false;
-      draft.checkedFindEmailError = null;
+    case FIND_ID_REQUEST:
+      draft.findIdLoading = true;
+      draft.findIdDone = false;
+      draft.findIdError = null;
       break;
-    case FIND_EMAIL_SUCCESS:
-      draft.checkedFindEmailLoading = false;
-      draft.checkedFindEmailDone = true;
+    case FIND_ID_SUCCESS:
+      draft.findId = action.data;
+      draft.findIdLoading = false;
+      draft.findIdDone = true;
       break;
-    case FIND_EMAIL_FAILURE:
-      draft.checkedFindEmailLoading = true;
-      draft.checkedFindEmailError = action.error;
+    case FIND_ID_FAILURE:
+      draft.findIdLoading = true;
+      draft.findIdError = action.error;
       break;
     case FIND_PASSWORD_REQUEST:
       draft.findPasswordLoading = true;
@@ -428,10 +436,17 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.findPasswordError = action.error;
       break;
     case EDIT_PASSWORD_REQUEST:
+      draft.editPasswordLoading = true;
+      draft.editPasswordDone = false;
+      draft.editPasswordError = null;
       break;
     case EDIT_PASSWORD_SUCCESS:
+      draft.editPasswordLoading = false;
+      draft.editPasswordDone = true;
       break;
     case EDIT_PASSWORD_FAILURE:
+      draft.editPasswordLoading = false;
+      draft.editPasswordError = action.error;
       break;
     case SIGN_UP_RESET:
       draft.isSignedUp = false;
@@ -494,15 +509,22 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     }
     case REMOVE_FOLLOWER_FAILURE:
       break;
-    case UPLOAD_PROFILE_IMAGE_REQUEST:
+    case EDIT_PROFILE_IMAGE_REQUEST:
+      draft.editProfileImageLoading = true;
+      draft.editProfileImageDone = false;
+      draft.editProfileImageError = null;
       break;
-    case UPLOAD_PROFILE_IMAGE_SUCCESS:
+    case EDIT_PROFILE_IMAGE_SUCCESS:
       draft.profileImagePath = action.data;
-      if (draft.me.profileUrl) {
-        draft.me.profileUrl = action.data;
+      if (draft.me.image) {
+        draft.me.image = action.data;
       }
+      draft.editProfileImageLoading = false;
+      draft.editProfileImageDone = true;
       break;
-    case UPLOAD_PROFILE_IMAGE_FAILURE:
+    case EDIT_PROFILE_IMAGE_FAILURE:
+      draft.editProfileImageLoading = false;
+      draft.editProfileImageError = action.error;
       break;
     default:
       break;

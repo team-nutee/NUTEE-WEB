@@ -1,5 +1,6 @@
+/* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { IdcardOutlined, MailOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -10,29 +11,34 @@ const FindPassword = ({ setPwVisible }) => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const dispatch = useDispatch();
-  const { findPwCheck } = useSelector((state) => state.user);
+  const { findPasswordDone } = useSelector((state) => state.user);
+
   const onChangeEmailCheck = useCallback((e) => {
     setEmailError(!e.target.value.includes('@office.skhu.ac.kr'));
     setEmail(e.target.value);
   }, [email]);
+
   const onChangeId = useCallback((e) => {
     setId(e.target.value);
   }, [id]);
+
   const onEmailFind = () => {
     dispatch({
       type: FIND_PASSWORD_REQUEST,
       data: {
-        schoolEmail: email,
         userId: id,
+        schoolEmail: email,
       },
     });
   };
   useEffect(() => {
-    if (findPwCheck) {
+    if (findPasswordDone) {
       setPwVisible(false);
-      message.success('작성하신 이메일로 변경된 비밀번호를 전송하였습니다.');
+      setId('');
+      setEmail('');
+      alert('작성하신 이메일로 변경된 비밀번호를 전송하였습니다.');
     }
-  }, [findPwCheck]);
+  }, [findPasswordDone]);
 
   const formDivWrapper = useMemo(() => ({ width: '100%', margin: '0 auto' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
