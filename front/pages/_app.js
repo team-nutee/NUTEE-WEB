@@ -17,7 +17,6 @@ const Nutee = ({ Component }) => (
       <meta property="og:type" content="website" />
       <meta property="og:image" content="localhost:80/favicon.ico" />
       <link rel="icon" type="image/png" href="favicon.ico" />
-      <link rel="stylesheet" href="https://fonts.gstatic.com" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
