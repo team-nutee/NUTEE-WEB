@@ -284,8 +284,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case UPLOAD_SUCCESS:
       draft.imagePaths = draft.imagePaths.concat(action.data);
-      console.log('UPLOAD_SUCCESS', draft.imagePaths);
-      /*       action.data.forEach((p) => { draft.imagePaths.push(p); }); */
       draft.uploadLoading = false;
       draft.uploadDone = true;
       break;
@@ -298,12 +296,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadEditImagesDone = false;
       draft.uploadEditImagesError = null;
       break;
-    case UPLOAD_EDIT_SUCCESS: {
+    case UPLOAD_EDIT_SUCCESS:
       draft.editImagePaths = draft.editImagePaths.concat(action.data);
       draft.uploadEditImagesLoading = false;
       draft.uploadEditImagesDone = true;
       break;
-    }
     case UPLOAD_EDIT_FAILURE:
       draft.uploadEditImagesLoading = false;
       draft.uploadEditImagesError = action.error;
@@ -311,33 +308,28 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_EDIT_IMAGE:
       draft.editImagePaths = action.imageData;
       break;
-    case REMOVE_IMAGE: {
+    case REMOVE_IMAGE:
       draft.imagePaths.splice(action.index, 1);
       break;
-    }
-    case REMOVE_EDIT_IMAGE: {
+    case REMOVE_EDIT_IMAGE:
       draft.editImagePaths.splice(action.index, 1);
       break;
-    }
     case ADD_POST_REQUEST:
       draft.addPostLoading = true;
       draft.addPostDone = false;
       draft.addPostError = null;
       break;
     case ADD_POST_SUCCESS:
-      console.log('category____major', action.category, action.major);
-      console.log('draft.categoryData.find', draft.categoryData.find((data) => data === action.category));
-      /* 주석 처리 부분 오류(수정예정) */
       if (draft.categoryData.find((c) => c === action.category) !== undefined
-      /* || action.major.find((m) => m === action.category) !== undefined */) {
+      || draft.majorsData.find((m) => m === action.category) !== undefined) {
         draft.mainPosts.unshift(action.data);
       }
       if ((draft.categoryData.find((c) => c === action.category)) !== undefined) {
         draft.favoritePosts.unshift(action.data);
       }
-      /* if ((action.major.find((m) => m === action.category)) !== undefined) {
+      if ((draft.majorsData.find((m) => m === action.category)) !== undefined) {
         draft.majorPosts.unshift(action.data);
-      } */
+      }
       draft.imagePaths = [];
       draft.addPostLoading = false;
       draft.addPostDone = true;
@@ -620,12 +612,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const reCommentIndex = draft.commentList[postIndex][commentIndex].reComment.findIndex(
         (v) => v.id === action.data.commentId,
       );
-      // eslint-disable-next-line max-len
-      const likeIndex = draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers.findIndex(
-        (v) => v.id === action.data.userId,
-      );
-      // eslint-disable-next-line max-len
-      draft.commentList[postIndex][commentIndex].reComment[reCommentIndex].likers.splice(likeIndex, 1);
+      const likeIndex = draft.commentList[postIndex][commentIndex].reComment[
+        reCommentIndex].likers.findIndex((v) => v.id === action.data.userId);
+      draft.commentList[postIndex][commentIndex].reComment[
+        reCommentIndex].likers.splice(likeIndex, 1);
       draft.unlikeReCommentLoading = false;
       draft.unlikeReCommentDone = true;
       break;
@@ -648,8 +638,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         if (action.data.offset === 0) {
           draft.mainPosts[postIndex].commentNum = action.data.comments.length;
         } else {
-          draft.mainPosts[postIndex].commentNum = draft.mainPosts[
-            postIndex
+          draft.mainPosts[postIndex].commentNum = draft.mainPosts[postIndex
           ].commentNum.concat(action.data.comments);
         }
       } else {
@@ -690,9 +679,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadFavoritePostsError = null;
       break;
     case LOAD_FAVORITE_POSTS_SUCCESS:
-      action.data.forEach((data) => {
-        draft.favoritePosts.push(data);
-      });
+      action.data.forEach((data) => { draft.favoritePosts.push(data); });
       draft.hasMorePost = action.data.length === 10;
       draft.loadFavoritePostsLoading = false;
       draft.loadFavoritePostsDone = true;

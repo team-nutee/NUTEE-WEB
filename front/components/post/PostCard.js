@@ -1,11 +1,11 @@
-/* eslint-disable no-restricted-globals */ /* eslint-disable no-alert */
+/* eslint-disable no-restricted-globals */
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
-import { AlertOutlined, RetweetOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { AlertOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
+import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import Comments from '../comments/Comments';
@@ -25,6 +25,7 @@ const PostCard = ({ post }) => {
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const [editMode, setEditMode] = useState(false);
 
+  const postImage = post.images && post.images[0] ? <PostImages images={post.images} /> : <></>;
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
@@ -85,14 +86,6 @@ const PostCard = ({ post }) => {
     });
   }, [me && me.id]);
 
-  const onRetweet = useCallback(() => {
-    if (!me) return alert('로그인이 필요합니다.');
-    return dispatch({
-      type: RETWEET_REQUEST,
-      data: post.id,
-    });
-  }, [me && me.id, post && post.id]);
-
   const onRemovePost = useCallback(() => {
     setPopoverVisible(false);
     const result = confirm('정말로 삭제하시겠습니까?');
@@ -124,10 +117,8 @@ const PostCard = ({ post }) => {
 
   const locale = {
     emptyText: (
-      <div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-        <p>
-          댓글이 없습니다.
-        </p>
+      <div style={{ paddingTop: '20px', paddingBottom: '10px' }}>
+        <p>댓글이 없습니다.</p>
       </div>
     ),
   };
@@ -137,15 +128,14 @@ const PostCard = ({ post }) => {
       {post.blocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card>
         : (
           <Card
-            cover={post.images && post.images[0] ? <PostImages images={post.images} /> : <></>}
+            cover={editMode ? <></> : postImage}
             actions={[
-              <RetweetOutlined style={iconWrapper} onClick={onRetweet} />,
+              <Badge count={post.commentNum || 0} onClick={onToggleComment} size="small" style={badge3Wrapper}>
+                <MessageOutlined style={iconWrapper} />
+              </Badge>,
               <Badge count={post.likers ? post.likers.length : 0} size="small" style={badge2Wrapper}>
                 {liked ? <HeartTwoTone twoToneColor="#eb2f96" style={heartWrapper} onClick={onUnLike} />
                   : <HeartOutlined style={iconWrapper} onClick={onLike} />}
-              </Badge>,
-              <Badge count={post.commentNum || 0} onClick={onToggleComment} size="small" style={badge3Wrapper}>
-                <MessageOutlined style={iconWrapper} />
               </Badge>,
               <Popover
                 content={EllipsisContent}
@@ -233,7 +223,6 @@ const PostCard = ({ post }) => {
                         />
                       </>
                     )}
-                    /* loading */
                   />
                 </div>
               )}

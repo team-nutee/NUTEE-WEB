@@ -117,13 +117,11 @@ function loadMainPostsAPI(lastId) {
 function* loadMainPosts(action) {
   try {
     const result = yield call(loadMainPostsAPI, action.lastId);
-    console.log('loadMainPosts', result.data.body);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data.body,
     });
   } catch (err) {
-    console.log(err);
     yield put({
       type: LOAD_POSTS_FAILURE,
       error: err,
@@ -138,7 +136,6 @@ function loadFavoritePostsAPI(lastId = 0) {
 function* loadFavoritePosts(action) {
   try {
     const result = yield call(loadFavoritePostsAPI, action.lastId);
-    console.log('loadFavoritePosts', result.data.body);
     yield put({
       type: LOAD_FAVORITE_POSTS_SUCCESS,
       data: result.data.body,
@@ -158,7 +155,6 @@ function loadCategoryPostsAPI(data, lastId) {
 function* loadCategoryPosts(action) {
   try {
     const result = yield call(loadCategoryPostsAPI, action.data, action.lastId);
-    console.log('loadCategoryPosts', result.data.body);
     yield put({
       type: LOAD_CATEGORY_POSTS_SUCCESS,
       data: result.data.body,
@@ -171,13 +167,13 @@ function* loadCategoryPosts(action) {
   }
 }
 
-function loadMajorPostsAPI(data, lastId) {
+function loadMajorPostsAPI(lastId) {
   return axios.get(`${INDEX_URL}/sns/post/major?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMajorPosts(action) {
   try {
-    const result = yield call(loadMajorPostsAPI, action.data, action.lastId);
+    const result = yield call(loadMajorPostsAPI, action.lastId);
     yield put({
       type: LOAD_MAJOR_POSTS_SUCCESS,
       data: result.data.body,
@@ -196,7 +192,6 @@ function loadHashtagPostsAPI(tag, lastId) {
 
 function* loadHashtagPosts(action) {
   try {
-    console.log('loadHashtag console');
     const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
@@ -222,7 +217,6 @@ function* loadSearchPosts(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_SEARCH_POSTS_FAILURE', err);
     yield put({
       type: LOAD_SEARCH_POSTS_FAILURE,
       error: err,
@@ -242,7 +236,6 @@ function* loadPost(action) {
       data: result.data,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_POST_FAILURE,
       error: err,
@@ -260,13 +253,11 @@ function* addPost(action) {
     yield put({ // post reducer
       type: ADD_POST_SUCCESS,
       data: result.data.body,
-      major: action.major,
       category: result.data.body.category,
     });
     yield put({ // user reducer
       type: ADD_POST_TO_ME,
       data: action.data.id,
-      // data: result.data.body.id,
     });
   } catch (err) {
     yield put({
@@ -369,7 +360,6 @@ function* loadUserInfo(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_USER_INFO_FAILURE', err);
     yield put({
       type: LOAD_USER_INFO_FAILURE,
       error: err,
@@ -389,7 +379,6 @@ function* loadUserPosts(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_USER_POSTS_FAILURE', err);
     yield put({
       type: LOAD_USER_POSTS_FAILURE,
       error: err,
@@ -409,7 +398,6 @@ function* loadMyPosts(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_USER_POSTS_FAILURE', err);
     yield put({
       type: LOAD_MY_POSTS_FAILURE,
       error: err,
@@ -429,7 +417,6 @@ function* loadMyComments(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_MY_COMMENTS_FAILURE', err);
     yield put({
       type: LOAD_MY_COMMENTS_FAILURE,
       error: err,
@@ -449,7 +436,6 @@ function* loadMyLike(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.log('LOAD_MY_LIKE_FAILURE', err);
     yield put({
       type: LOAD_MY_LIKE_FAILURE,
       error: err,
@@ -520,7 +506,6 @@ function* editComment(action) {
     });
   } catch (err) {
     console.error(err);
-    console.log(err);
     yield put({
       type: EDIT_COMMENT_FAILURE,
       error: err,
@@ -545,7 +530,6 @@ function* editReComment(action) {
     });
   } catch (err) {
     console.error(err);
-    console.log(err);
     yield put({
       type: EDIT_RECOMMENT_FAILURE,
       error: err,
