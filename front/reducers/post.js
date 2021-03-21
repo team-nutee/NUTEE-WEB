@@ -16,8 +16,8 @@ export const initialState = {
   myCommentPosts: [], // 나의 댓글 포스트들
   myLikePosts: [], // 나의 좋아요 포스트들
   imagePaths: [], // 미리보기 이미지 경로
+  editImagePaths: [], // 수정 미리보기 이미지 경로
   singlePost: null,
-  editImagePaths: [], // 글 수정 미리보기 이미지 경로
   hasMorePosts: true,
   loadPostsLoading: false, // 모든 포스트 로드
   loadPostsDone: false,
@@ -161,9 +161,9 @@ export const UPLOAD_REQUEST = 'UPLOAD_REQUEST';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 
-export const UPLOAD_EDIT_IMAGES_REQUEST = 'UPLOAD_EDIT_IMAGES_REQUEST';
-export const UPLOAD_EDIT_IMAGES_SUCCESS = 'UPLOAD_EDIT_IMAGES_SUCCESS';
-export const UPLOAD_EDIT_IMAGES_FAILURE = 'UPLOAD_EDIT_IMAGES_FAILURE';
+export const UPLOAD_EDIT_REQUEST = 'UPLOAD_EDIT_REQUEST';
+export const UPLOAD_EDIT_SUCCESS = 'UPLOAD_EDIT_SUCCESS';
+export const UPLOAD_EDIT_FAILURE = 'UPLOAD_EDIT_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -249,6 +249,7 @@ export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 export const REMOVE_EDIT_IMAGE = 'REMOVE_EDIT_IMAGE';
+export const LOAD_EDIT_IMAGE = 'LOAD_EDIT_IMAGE';
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
@@ -292,22 +293,23 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadLoading = false;
       draft.uploadError = action.error;
       break;
-    case UPLOAD_EDIT_IMAGES_REQUEST:
+    case UPLOAD_EDIT_REQUEST:
       draft.uploadEditImagesLoading = true;
       draft.uploadEditImagesDone = false;
       draft.uploadEditImagesError = null;
       break;
-    case UPLOAD_EDIT_IMAGES_SUCCESS: {
-      action.data.forEach((p) => {
-        draft.editImagePaths.push(p);
-      });
+    case UPLOAD_EDIT_SUCCESS: {
+      draft.editImagePaths = draft.editImagePaths.concat(action.data);
       draft.uploadEditImagesLoading = false;
       draft.uploadEditImagesDone = true;
       break;
     }
-    case UPLOAD_EDIT_IMAGES_FAILURE:
+    case UPLOAD_EDIT_FAILURE:
       draft.uploadEditImagesLoading = false;
       draft.uploadEditImagesError = action.error;
+      break;
+    case LOAD_EDIT_IMAGE:
+      draft.editImagePaths = action.imageData;
       break;
     case REMOVE_IMAGE: {
       draft.imagePaths.splice(action.index, 1);
@@ -381,7 +383,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const mainPostsIndex = draft.mainPosts.findIndex((v) => v.id === action.data);
       const favoritePostsIndex = draft.favoritePosts.findIndex((v) => v.id === action.data);
       const majorPostsIndex = draft.majorPosts.findIndex((v) => v.id === action.data);
-      console.log('index ', mainPostsIndex, favoritePostsIndex, majorPostsIndex);
       if (mainPostsIndex !== -1) draft.mainPosts.splice(mainPostsIndex, 1);
       if (favoritePostsIndex !== -1) draft.favoritePosts.splice(favoritePostsIndex, 1);
       if (majorPostsIndex !== -1) draft.majorPosts.splice(majorPostsIndex, 1);

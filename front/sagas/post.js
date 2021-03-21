@@ -67,9 +67,9 @@ import {
   EDIT_POST_SUCCESS,
   EDIT_POST_FAILURE,
   EDIT_POST_REQUEST,
-  UPLOAD_EDIT_IMAGES_SUCCESS,
-  UPLOAD_EDIT_IMAGES_FAILURE,
-  UPLOAD_EDIT_IMAGES_REQUEST,
+  UPLOAD_EDIT_SUCCESS,
+  UPLOAD_EDIT_FAILURE,
+  UPLOAD_EDIT_REQUEST,
   EDIT_COMMENT_SUCCESS,
   EDIT_COMMENT_FAILURE,
   EDIT_COMMENT_REQUEST,
@@ -729,7 +729,7 @@ function* unlikeReComment(action) {
 }
 
 function uploadAPI(formData) {
-  return axios.post(`${INDEX_URL}/sns/upload`, formData); // '/post/images'
+  return axios.post(`${INDEX_URL}/sns/upload`, formData);
 }
 
 function* upload(action) {
@@ -748,21 +748,21 @@ function* upload(action) {
   }
 }
 
-function editImagesAPI(formData) { // upload 유무 파악중
-  return axios.post('/post/images', formData);
+function uploadEditAPI(formData) {
+  return axios.post(`${INDEX_URL}/sns/upload`, formData);
 }
 
-function* editImages(action) {
+function* uploadEdit(action) {
   try {
-    const result = yield call(editImagesAPI, action.data);
+    const result = yield call(uploadEditAPI, action.data);
     yield put({
-      type: UPLOAD_EDIT_IMAGES_SUCCESS,
+      type: UPLOAD_EDIT_SUCCESS,
       data: result.data.body,
     });
   } catch (err) {
     console.error(err);
     yield put({
-      type: UPLOAD_EDIT_IMAGES_FAILURE,
+      type: UPLOAD_EDIT_FAILURE,
       error: err,
     });
   }
@@ -979,8 +979,8 @@ function* watchUpload() {
   yield takeLatest(UPLOAD_REQUEST, upload);
 }
 
-function* watchEditImages() {
-  yield takeLatest(UPLOAD_EDIT_IMAGES_REQUEST, editImages);
+function* watchUploadEdit() {
+  yield takeLatest(UPLOAD_EDIT_REQUEST, uploadEdit);
 }
 
 function* watchLikePost() {
@@ -1034,7 +1034,7 @@ export default function* postSaga() {
     fork(watchRemovePost),
     fork(watchLoadPost),
     fork(watchEditPost),
-    fork(watchEditImages),
+    fork(watchUploadEdit),
     fork(watchEditComment),
     fork(watchEditReComment),
     fork(watchRemoveComment),
