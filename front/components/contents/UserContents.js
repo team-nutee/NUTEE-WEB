@@ -7,7 +7,7 @@ import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
-/* , myCommentPosts, myLikePosts, */
+
 const UserContents = ({ me, myPosts, hasMorePost }) => {
   const dispatch = useDispatch();
   console.log(me);
