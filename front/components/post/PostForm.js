@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */ /* eslint-disable no-alert */
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
@@ -19,15 +19,6 @@ const PostForm = ({ me }) => {
   } = useSelector((state) => state.post);
   const imageInput = useRef();
 
-  const postCategoryList = (m, i) => {
-    const categoryList = [];
-    m.map((data) => (categoryList.push({ value: data, label: data })));
-    i.map((data) => (categoryList.push({ value: data, label: data })));
-    return categoryList;
-  };
-
-  const onSelectCategory = (s) => { setCategory(s.value); };
-
   useEffect(() => {
     if (addPostDone) {
       dispatch({
@@ -36,6 +27,15 @@ const PostForm = ({ me }) => {
       setTitle(''); setText(''); setCategory(null);
     }
   }, [addPostDone]);
+
+  const postCategoryList = (m, i) => {
+    const categoryList = [];
+    m.map((data) => (categoryList.push({ value: data, label: data })));
+    i.map((data) => (categoryList.push({ value: data, label: data })));
+    return categoryList;
+  };
+
+  const onSelectCategory = (s) => { setCategory(s.value); };
 
   const onSubmitForm = useCallback(() => {
     if (!category) return alert('카테고리를 선택해주세요.');
@@ -50,7 +50,6 @@ const PostForm = ({ me }) => {
           images: imagePaths,
           category,
         },
-        major: me.majors,
       })
     );
   }, [title, text, imagePaths, category]);
