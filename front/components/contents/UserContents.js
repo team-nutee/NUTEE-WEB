@@ -7,11 +7,11 @@ import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
-
-const UserContents = ({ me, mainPosts, hasMorePost }) => {
+/* , myCommentPosts, myLikePosts, */
+const UserContents = ({ me, myPosts, hasMorePost }) => {
   const dispatch = useDispatch();
   console.log(me);
-  console.log(mainPosts);
+  console.log(myPosts);
   useEffect(() => {
     function onScroll() {
       if (
@@ -19,7 +19,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
         > document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost) {
-          const lastId = mainPosts[mainPosts - 1]?.id;
+          const lastId = myPosts[myPosts - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
             lastId,
@@ -31,7 +31,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePost, mainPosts]);
+  }, [hasMorePost, myPosts]);
 
   const tabsWrapper = useMemo(() => ({ color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '15px', paddingBotton: '10px' }), []);
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
@@ -53,7 +53,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
           style={tabPaneWrapper}
         >
           {me && <PostForm me={me} />}
-          {mainPosts.map((post) => (<PostCard key={post.id} post={post} />))}
+          {myPosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
         <TabPane
           tab={(
@@ -66,6 +66,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
           style={tabPaneWrapper}
         >
           {me && <PostForm me={me} />}
+          {myPosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
         <TabPane
           tab={(
@@ -78,6 +79,7 @@ const UserContents = ({ me, mainPosts, hasMorePost }) => {
           style={tabPaneWrapper}
         >
           {me && <PostForm me={me} />}
+          {myPosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
       </Tabs>
     </>
