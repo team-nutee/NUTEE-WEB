@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tabs } from 'antd';
-import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST } from '../../reducers/post';
+import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_MAJOR_POSTS_REQUEST } from '../../reducers/post';
 import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
@@ -27,6 +27,10 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPost
             type: LOAD_FAVORITE_POSTS_REQUEST,
             lastId,
           });
+          dispatch({
+            type: LOAD_MAJOR_POSTS_REQUEST,
+            lastId,
+          });
         }
       }
     }
@@ -41,7 +45,7 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPost
 
   return (
     <>
-      <Tabs defaultActiveKey="1" style={tabsWrapper}>
+      <Tabs defaultActiveKey="2" style={tabsWrapper}>
         <TabPane tab="즐겨찾기" key="1" style={tabPaneWrapper}>
           {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
           {favoritePosts.map((f) => (

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Col, Row } from 'antd';
 import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import { LOAD_NOTICE_REQUEST } from '../reducers/notice';
 import LeftContents from '../components/contents/LeftContents';
 import wrapper from '../store/configureStore';
 import MainContents from '../components/contents/MainContents';
@@ -22,15 +23,10 @@ const Home = () => {
     dispatch({
       type: LOAD_FAVORITE_POSTS_REQUEST,
     });
-    dispatch({
-      type: LOAD_CATEGORY_DATA_REQUEST,
-    });
+    /*
     dispatch({
       type: LOAD_MAJOR_POSTS_REQUEST,
-    });
-    dispatch({
-      type: LOAD_POSTS_REQUEST,
-    });
+    }); */
   }, []);
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
@@ -62,7 +58,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   axios.defaults.headers.Cookie = '';
   console.log('index', cookie);
   console.log('index', context);
-  console.log('getServerSideProps start_index');
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
@@ -73,16 +68,18 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_POSTS_REQUEST,
   });
   context.store.dispatch({
+    type: LOAD_CATEGORY_DATA_REQUEST,
+  });
+  context.store.dispatch({
     type: LOAD_FAVORITE_POSTS_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_MAJOR_POSTS_REQUEST,
   });
   context.store.dispatch({
-    type: LOAD_CATEGORY_DATA_REQUEST,
+    type: LOAD_NOTICE_REQUEST,
   });
   context.store.dispatch(END);
-  console.log('getServerSideProps start_index');
   await context.store.sagaTask.toPromise();
 });
 

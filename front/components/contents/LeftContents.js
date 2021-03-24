@@ -1,20 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useMemo } from 'react';
 import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
-import { LOAD_NOTICE_REQUEST } from '../../reducers/notice';
 import MyProfile from '../profiles/MyProfile';
 import Notice from '../Notice';
 import LinkContents from '../LinkContents';
 
 const LeftContents = ({ me }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch({
-      type: LOAD_NOTICE_REQUEST,
-    });
-  }, []);
-
   const wrapper = useMemo(() => ({ marginTop: '15px' }), []);
 
   return (
