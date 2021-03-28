@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */ /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */ /* eslint-disable no-alert */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +25,7 @@ const Signup = () => {
   const [term, setTerm] = useState(false);
   const [termError, setTermError] = useState(false);
   const [password, onChangePassword, setPassword] = useInput('');
+  const [checkPasswordError, setCheckPasswordError] = useState(false);
   const [checkPassword, setCheckPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [schoolEmail, setSchoolEmail] = useState('');
@@ -134,6 +135,7 @@ const Signup = () => {
   };
 
   const onCheckId = () => {
+    if (id.length < 4) return alert('아이디는 최소 3글자 이상입니다.');
     dispatch({
       type: CHECK_ID_REQUEST,
       data: { userId: id },
@@ -147,6 +149,16 @@ const Signup = () => {
       data: { nickname },
     });
   };
+
+  const onCheckPassword = useCallback(() => {
+    const regex = /^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^&*_+-=]).{7,15}/;
+    if (!regex.test(password)) {
+      alert('특수문자(!@#$%^&*_+-=)포함 7~15글자로 수정해주세요.');
+      setCheckPasswordError(true);
+    }
+    setCheckPasswordError(false);
+    alert('비밀번호 확인 완료');
+  }, [password]);
 
   const onChangeCheckPassword = useCallback((e) => {
     setCheckPassword(e.target.value);
@@ -244,17 +256,23 @@ const Signup = () => {
           </Row>
           <br />
           {/* 비밀번호 */}
-          <Row>
-            <Input
-              prefix={<LockOutlined style={prefixWrapper} />}
-              name="user-password"
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              required
-              onChange={onChangePassword}
-            />
+          <Row gutter={8}>
+            <Col span={15}>
+              <Input
+                prefix={<LockOutlined style={prefixWrapper} />}
+                name="user-password"
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                required
+                onChange={onChangePassword}
+              />
+            </Col>
+            <Col span={9}>
+              <Button style={buttonWrapper} onClick={onCheckPassword}>비밀번호 확인</Button>
+            </Col>
           </Row>
+          {checkPasswordError && <div style={failureWrapper}>특수문자(!@#$%^&*_+-=)포함 7~15글자</div>}
           <br />
           <Row>
             <Input
