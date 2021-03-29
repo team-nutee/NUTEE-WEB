@@ -50,7 +50,7 @@ const NavigationBar = ({ me }) => {
           </a>
         </Link>
       </div>
-      {me
+      {me || me !== null
         ? (
           <>
             {showSearch
@@ -78,8 +78,8 @@ const NavigationBar = ({ me }) => {
   );
 };
 
-NavigationBar.propTypes = {
-  me: PropTypes.object.isRequired,
+NavigationBar.defaultProps = {
+  me: PropTypes.object,
 };
 
 export default NavigationBar;

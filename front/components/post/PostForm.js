@@ -17,6 +17,7 @@ const PostForm = ({ me }) => {
   const [category, setCategory] = useState();
   const { categoryData, imagePaths, addPostLoading, addPostDone,
   } = useSelector((state) => state.post);
+  const { myMajorInfo } = useSelector((state) => state.user);
   const imageInput = useRef();
 
   useEffect(() => {
@@ -30,8 +31,8 @@ const PostForm = ({ me }) => {
 
   const postCategoryList = (m, i) => {
     const categoryList = [];
-    m.map((data) => (categoryList.push({ value: data, label: data })));
-    i.map((data) => (categoryList.push({ value: data, label: data })));
+    if (myMajorInfo) m.map((data) => (categoryList.push({ value: data, label: data })));
+    if (categoryData) i.map((data) => (categoryList.push({ value: data, label: data })));
     return categoryList;
   };
 
@@ -102,7 +103,7 @@ const PostForm = ({ me }) => {
           placeholder="카테고리"
           name="categoty"
           onChange={onSelectCategory}
-          options={postCategoryList(me.majors, categoryData)}
+          options={postCategoryList(myMajorInfo, categoryData)}
           styles={customStyles}
           menuPlacement="auto"
           maxMenuHeight={150}

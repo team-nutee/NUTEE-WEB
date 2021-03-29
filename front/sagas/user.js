@@ -87,12 +87,12 @@ function* loadMyInfo() {
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data.body,
+      majors: result.data.body.majors,
     });
   } catch (err) {
-    console.log('LOAD_MY_INFO_FAILURE', err);
     yield put({
       type: LOAD_MY_INFO_FAILURE,
-      error: err.name,
+      error: err.response.data,
     });
   }
 }
@@ -148,12 +148,9 @@ function* logIn(action) {
     const result = yield call(logInAPI, action.data);
     const { accessToken, refreshToken } = result.data.body;
     if (accessToken) {
-      console.log('saga-user login token ok');
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    } else {
-      console.log('saga-user login token null');
     }
     yield put({
       type: LOG_IN_SUCCESS,
@@ -234,7 +231,7 @@ function* sendOtp(action) {
     yield put({
       type: SEND_OPT_SUCCESS,
     });
-  } catch (err) { // 이메일 인증 실패
+  } catch (err) {
     yield put({
       type: SEND_OPT_FAILURE,
       error: err,

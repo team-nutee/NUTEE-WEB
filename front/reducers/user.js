@@ -91,6 +91,9 @@ export const initialState = {
   findPasswordLoading: false, // 비밀번호 찾기
   findPasswordDone: false,
   findPasswordError: null,
+
+  /* 기타 */
+  myMajorInfo: [], // 사용자 전공 정보
 };
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
@@ -227,9 +230,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.isLogOutDone = false;
       break;
     case LOG_OUT_SUCCESS:
-      draft.isLogOutLoading = false;
-      draft.isLogOutDone = true;
       draft.me = null;
+      draft.isLoadMyInfoError = null;
+      draft.isLogOutDone = true;
+      draft.isLogOutLoading = false;
       break;
     case LOG_OUT_FAILURE:
       draft.isLogOutLoading = false;
@@ -335,12 +339,13 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LOAD_MY_INFO_REQUEST:
       draft.isLoadMyInfoLoading = true;
-      draft.isLoadMyInfoError = null;
       draft.isLoadMyInfoDone = false;
+      draft.isLoadMyInfoError = null;
       break;
     case LOAD_MY_INFO_SUCCESS:
-      draft.isLoadMyInfoLoading = false;
       draft.me = action.data;
+      draft.myMajorInfo = action.majors;
+      draft.isLoadMyInfoLoading = false;
       draft.isLoadMyInfoDone = true;
       break;
     case LOAD_MY_INFO_FAILURE:

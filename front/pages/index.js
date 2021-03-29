@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
-import axios from 'axios';
 import { Col, Row } from 'antd';
 import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
@@ -12,7 +11,7 @@ import MainContents from '../components/contents/MainContents';
 import AppLayout from '../components/AppLayout';
 
 const Home = () => {
-  const { me } = useSelector((state) => state.user);
+  const { me, isLogInDone } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost, favoritePosts, majorPosts } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
@@ -23,11 +22,24 @@ const Home = () => {
     dispatch({
       type: LOAD_FAVORITE_POSTS_REQUEST,
     });
-    /*
     dispatch({
       type: LOAD_MAJOR_POSTS_REQUEST,
-    }); */
+    });
   }, []);
+
+  useEffect(() => {
+    if (isLogInDone) {
+      dispatch({
+        type: LOAD_MY_INFO_REQUEST,
+      });
+      dispatch({
+        type: LOAD_FAVORITE_POSTS_REQUEST,
+      });
+      dispatch({
+        type: LOAD_MAJOR_POSTS_REQUEST,
+      });
+    }
+  }, [isLogInDone]);
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
@@ -54,21 +66,11 @@ const Home = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  console.log('index', cookie);
-  console.log('index', context);
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_FAVORITE_POSTS_REQUEST,
@@ -78,6 +80,9 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch({
     type: LOAD_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
