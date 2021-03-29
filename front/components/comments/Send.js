@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-// import { Icon } from 'semantic-ui-react'
 import { SendOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 

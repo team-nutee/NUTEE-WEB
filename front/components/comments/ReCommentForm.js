@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useState, useMemo } from 'react';
@@ -12,9 +11,7 @@ import { ADD_RECOMMENT_REQUEST } from '../../reducers/post';
 const ReCommentForm = ({ post, commentId, cancelReply }) => {
   const dispatch = useDispatch();
   const [commentText, setCommentText] = useState('');
-  const { addCommentLoading } = useSelector(
-    (state) => state.post,
-  );
+  const { addCommentLoading } = useSelector((state) => state.post);
   const { me } = useSelector((state) => state.user);
 
   const onSubmitComment = useCallback((e) => {

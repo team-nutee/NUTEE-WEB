@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
@@ -16,9 +15,12 @@ const EditCommentForm = ({ comment, setEdit, postId }) => {
   const { me } = useSelector((state) => state.user);
   const { editCommentLoading } = useSelector((state) => state.post);
 
-  const cancelEdit = () => {
-    setEdit(false);
-  };
+  useEffect(() => {
+    setCommentText(comment.content);
+    if (editComment) setEdit(false);
+  }, [editComment]);
+
+  const cancelEdit = () => { setEdit(false); };
 
   const onSubmitComment = useCallback((e) => {
     e.preventDefault();
@@ -36,14 +38,6 @@ const EditCommentForm = ({ comment, setEdit, postId }) => {
     });
     setEditComment(true);
   }, [me && me.id, commentText, editComment]);
-
-  useEffect(() => {
-    setCommentText(comment.content);
-    if (editComment) {
-      setEdit(false);
-      
-    }
-  }, [editComment]);
 
   const onChangeCommentText = useCallback((e) => {
     setCommentText(e.target.value);

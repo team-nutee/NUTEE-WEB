@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
@@ -24,57 +23,48 @@ const Comments = ({ item, post }) => {
   const [reply, setReply] = useState(false);
   const [reportVisible, setReportVisible] = useState(false);
   const { me } = useSelector((state) => state.user);
-  const id =useSelector((state) => state.user.me?.id);
+  const id = useSelector((state) => state.user.me?.id);
 
-  const onEdit = () => {
-    setEdit(true);
-  };
-  const onReply = () => {
-    setReply(true);
-  };
+  const onEdit = () => { setEdit(true); };
+  const onReply = () => { setReply(true); };
+  const cancelReply = () => { setReply(false); };
+  const onReport = useCallback(() => { setReportVisible(true); });
+
   const onLike = useCallback(() => {
-    if (!id) {
-      return alert('로그인이 필요합니다.');
-    }
-    dispatch({
-      type: LIKE_COMMENT_REQUEST,
-      postId: post.id,
-      commentId: item.id,
-      userId: id,
-    })
-  });
-  const onUnlike = useCallback(() => {
-    if (!id) {
-      return alert('로그인이 필요합니다.');
-    }
-    dispatch({
-      type: UNLIKE_COMMENT_REQUEST,
-      data: {
-        commentId: item.id,
+    if (!id) return alert('로그인이 필요합니다.');
+    return (
+      dispatch({
+        type: LIKE_COMMENT_REQUEST,
         postId: post.id,
+        commentId: item.id,
         userId: id,
-      }
-    })
-  });
-  const cancelReply = () => {
-    setReply(false);
-  };
+      })
+    );
+  }, []);
+
+  const onUnlike = useCallback(() => {
+    if (!id) return alert('로그인이 필요합니다.');
+    return (
+      dispatch({
+        type: UNLIKE_COMMENT_REQUEST,
+        data: {
+          commentId: item.id,
+          postId: post.id,
+          userId: id,
+        },
+      })
+    );
+  }, []);
 
   const onRemove = useCallback(() => {
     const result = confirm('정말로 삭제하시겠습니까?');
-    if (!result) {
-      return;
-    }
+    if (!result) return;
     dispatch({
       type: REMOVE_COMMENT_REQUEST,
       commentId: item.id,
       postId: post.id,
     });
-  });
-
-  const onReport = useCallback(() => {
-    setReportVisible(true);
-  });
+  }, []);
 
   const listWrapper = useMemo(() => ({ fontFamily: 'NanumBarunGothic', marginLeft: '-15px', marginBottom: '-15px', border: 'none' }), []);
   const contentWrapper = useMemo(() => ({ marginRight: '-30px', marginTop: '2px', wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }), []);
@@ -88,7 +78,7 @@ const Comments = ({ item, post }) => {
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
-  const liked = item.likers.find((v) => v.id === id);
+  const liked = item.likers && item.likers.find((v) => v.id === id);
 
   const EllipsisContent = (
     <>
@@ -112,15 +102,14 @@ const Comments = ({ item, post }) => {
           <div>
             {liked
               ? <HeartTwoTone style={iconWrapper} twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
-              : <HeartOutlined style={iconWrapper} key="heart" onClick={onLike} />
-            }
+              : <HeartOutlined style={iconWrapper} key="heart" onClick={onLike} />}
             {item.likers.length}
           </div>,
           <div style={editWrapper}>
             <a key="reComment" onClick={onReply}><MessageOutlined style={iconWrapper} /></a>
             <Popover
               content={EllipsisContent}
-              trigger = "click"
+              trigger="click"
             >
               <EllipsisOutlined style={iconWrapper} />
             </Popover>
@@ -148,10 +137,7 @@ const Comments = ({ item, post }) => {
                     </Link>
                     <div style={momentWrapper}>
                       {moment(item.createdAt).format('YYYY.MM.DDTHH:mm:ss') === moment(item.updatedAt).format('YYYY.MM.DDTHH:mm:ss')
-                      ? 
-                      moment(item.createdAt).format('YYYY.MM.DD')
-                      : 
-                      moment(item.updatedAt).format('YYYY.MM.DD'+' (수정됨)')}
+                        ? moment(item.createdAt).format('YYYY.MM.DD') : moment(item.updatedAt).format('YYYY.MM.DD', ' (수정됨)')}
                     </div>
                     {item.content}
                   </pre>
@@ -162,13 +148,13 @@ const Comments = ({ item, post }) => {
       {reply
         ? <ReCommentForm cancelReply={cancelReply} post={post} commentId={item.id} />
         : <></>}
-      <RecommentBox 
-        reComment = {item.reComment || []}
+      <RecommentBox
+        reComment={item.reComment || []}
         post={post}
-        onReply = {onReply}
+        onReply={onReply}
         cancelReply={cancelReply}
-        parentId = {item.id}
-        userId = {id}
+        parentId={item.id}
+        userId={id}
       />
       <Modal
         title={(
@@ -181,8 +167,8 @@ const Comments = ({ item, post }) => {
         onOk={reportOk}
         onCancel={reportCancel}
         footer={null}
-        >
-          <ReportComment setReportVisible={setReportVisible} item={item} post={post} />
+      >
+        <ReportComment setReportVisible={setReportVisible} item={item} post={post} />
       </Modal>
       <style jsx>
         {
@@ -200,6 +186,11 @@ Comments.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,
+    createdAt: PropTypes.string,
+    updatedAt: PropTypes.string,
+    likers: PropTypes.shape({
+      length: PropTypes.string,
+    }),
     user: PropTypes.shape({
       id: PropTypes.number,
       nickname: PropTypes.string,
