@@ -660,9 +660,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadCategoryPostsError = null;
       break;
     case LOAD_CATEGORY_POSTS_SUCCESS:
-      action.data.forEach((data) => {
-        draft.categoryPosts.push(data);
-      });
+      action.data.forEach((data) => { draft.categoryPosts.push(data); });
       draft.hasMorePost = action.data.length === 10;
       draft.loadCategoryPostsLoading = false;
       draft.loadCategoryPostsDone = true;
@@ -821,9 +819,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_POSTS_SUCCESS:
     case LOAD_HASHTAG_POSTS_SUCCESS:
     case LOAD_USER_POSTS_SUCCESS:
-      action.data.forEach((data) => {
-        draft.mainPosts.push(data);
-      });
+      action.data.forEach((data) => { draft.mainPosts.push(data); });
       draft.hasMorePost = action.data.length === 10;
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
@@ -7,7 +8,7 @@ import LoginForm from './LoginForm';
 import Footer from './Footer';
 
 const AppLayout = ({ children }) => {
-  const { me } = useSelector((state) => state.user);
+  const { me, isLoadMyInfoError } = useSelector((state) => state.user);
   const wrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', minHeight: '1000px' }), []);
 
   return (
@@ -21,7 +22,10 @@ const AppLayout = ({ children }) => {
             <Col style={wrapper}>{children}</Col>
             <Footer />
           </Row>
-        ) : <LoginForm />}
+        )
+          : isLoadMyInfoError
+            ? <LoginForm />
+            : <></>}
       </div>
     </>
   );
