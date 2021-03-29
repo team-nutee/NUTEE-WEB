@@ -134,8 +134,8 @@ const PostCard = ({ post }) => {
                 <MessageOutlined style={iconWrapper} />
               </Badge>,
               <Badge count={post.likers ? post.likers.length : 0} size="small" style={badge2Wrapper}>
-                {liked ? <HeartTwoTone twoToneColor="#eb2f96" style={heartWrapper} onClick={onUnLike} />
-                  : <HeartOutlined style={iconWrapper} onClick={onLike} />}
+                {liked ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" style={heartWrapper} onClick={onUnLike} />
+                  : <HeartOutlined style={iconWrapper} key="heart" onClick={onLike} />}
               </Badge>,
               <Popover
                 content={EllipsisContent}

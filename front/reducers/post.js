@@ -553,9 +553,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikeCommentError = null;
       break;
     case UNLIKE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId,);
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.commentId,
       );
@@ -753,20 +751,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       if (mainPostsIndex !== -1) {
         if (draft.mainPosts[mainPostsIndex].likers === null) {
           draft.mainPosts[mainPostsIndex].likers = [];
-          draft.mainPosts[mainPostsIndex].likers.unshift({ user });
-        } else draft.mainPosts[mainPostsIndex].likers.unshift({ user });
+          draft.mainPosts[mainPostsIndex].likers.push({ id: user.id });
+        } else draft.mainPosts[mainPostsIndex].likers.push({ id: user.id });
       }
       if (favoritePostsIndex !== -1) {
         if (draft.favoritePosts[favoritePostsIndex].likers === null) {
           draft.favoritePosts[favoritePostsIndex].likers = [];
-          draft.favoritePosts[favoritePostsIndex].likers.unshift({ user });
-        } else draft.favoritePosts[favoritePostsIndex].likers.unshift({ user });
+          draft.favoritePosts[favoritePostsIndex].likers.push({ id: user.id });
+        } else draft.favoritePosts[favoritePostsIndex].likers.push({ id: user.id });
       }
       if (majorPostsIndex !== -1) {
         if (draft.majorPosts[majorPostsIndex].likers === null) {
           draft.majorPosts[majorPostsIndex].likers = [];
-          draft.majorPosts[majorPostsIndex].likers.unshift({ user });
-        } else draft.majorPosts[majorPostsIndex].likers.unshift({ user });
+          draft.majorPosts[majorPostsIndex].likers.push({ id: user.id });
+        } else draft.majorPosts[majorPostsIndex].likers.push({ id: user.id });
       }
       draft.likePostLoading = false;
       draft.likePostDone = true;
@@ -786,16 +784,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const favoritePostsIndex = draft.favoritePosts.findIndex((v) => v.id === action.postId);
       const majorPostsIndex = draft.majorPosts.findIndex((v) => v.id === action.postId);
       if (mainPostsIndex !== -1) {
-        draft.mainPosts[mainPostsIndex].likers = draft.mainPosts[mainPostsIndex
-        ].likers.filter((v) => v.id !== action.userId);
+        const mainPostLikeIndex = draft.mainPosts[mainPostsIndex
+        ].likers.findIndex((v) => v.id !== action.userId);
+        draft.mainPosts[mainPostsIndex].likers.splice(mainPostLikeIndex, 1);
       }
       if (favoritePostsIndex !== -1) {
-        draft.favoritePosts[favoritePostsIndex].likers = draft.favoritePosts[favoritePostsIndex
-        ].likers.filter((v) => v.id !== action.userId);
+        const favoritePostLikeIndex = draft.mainPosts[favoritePostsIndex
+        ].likers.findIndex((v) => v.id !== action.userId);
+        draft.favoritePosts[favoritePostsIndex].likers.splice(favoritePostLikeIndex, 1);
       }
       if (majorPostsIndex !== -1) {
-        draft.majorPosts[majorPostsIndex].likers = draft.majorPosts[majorPostsIndex
-        ].likers.filter((v) => v.id !== action.userId);
+        const majorPostLikeIndex = draft.mainPosts[majorPostsIndex
+        ].likers.findIndex((v) => v.id !== action.userId);
+        draft.majorPosts[majorPostsIndex].likers.splice(majorPostLikeIndex, 1);
       }
       draft.unlikePostLoading = false;
       draft.unlikePostDone = true;
