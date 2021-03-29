@@ -16,7 +16,7 @@ import {
 import { LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_DATA_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
 import Terms from '../components/Terms';
-import NavigationBar from '../components/NavigationBar';
+import Footer from '../components/Footer';
 
 const Signup = () => {
   const [id, onChangeId, setId] = useInput('');
@@ -61,7 +61,7 @@ const Signup = () => {
   }, [isSignUpError]);
 
   const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
-  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', marginTop: '15vh' }), []);
+  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '10vh 0' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
   const failureWrapper = useMemo(() => ({ color: 'red', fontSize: '12px', marginLeft: '5px' }), []);
@@ -212,7 +212,6 @@ const Signup = () => {
 
   return (
     <div style={pageWrapper}>
-      <NavigationBar />
       <div style={paperWrapper}>
         <h1 style={h1Wrapper}>회원가입</h1>
         <h3 style={h1Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
@@ -389,6 +388,7 @@ const Signup = () => {
       >
         <Terms setTermsVisible={setTermsVisible} />
       </Modal>
+      <Footer />
     </div>
   );
 };
