@@ -2,52 +2,7 @@ import React, { useMemo } from 'react';
 import { List, Tabs, Divider } from 'antd';
 import { useSelector } from 'react-redux';
 import { NotificationOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-
-const NoticeTabs = styled(Tabs)`
-  
-  .ant-tabs-nav{
-      background: white;
-      width: 19.5vw;
-      min-width: 205px;
-      max-width: 280px;
-
-    .ant-tabs-nav-wrap {
-     
-      .ant-tabs-nav-list {
-          display: flex;
-          justify-content: space-between;
-          flex-direction: row;
-          align-items: center;
-
-          .ant-tabs-tab.ant-tabs-tab-active {
-            background: white;
-          }
-          
-          .ant-tabs-tab {
-            width: 5vw;
-            margin-right: 0vw;
-            padding: 0px;
-            text-align: center;
-            border: 1px solid #E6E6E6;
-            border-bottom-width: 0px;
-            height: 30px;
-            border-radius: 4px;
-            background: #FAFAFA;
-
-            .ant-tabs-tab-btn {
-              display: inline-block;
-              vertical-align: middle;
-              margin-top: 5px;
-              font-weight: bold;
-              
-            }
-            
-        }
-      }
-    }
-  }
-`;
+import NoticeTabs from './NoticeWrapper';
 
 const { TabPane } = Tabs;
 
