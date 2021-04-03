@@ -13,7 +13,7 @@ import FindPw from './find/FindPassword';
 const LoginForm = () => {
   const [userId, onChangeUserId] = useInput('');
   const [password, onChangePassword] = useInput('');
-  const { isLogInLoading, isLogInError, isLoadMyInfoError } = useSelector((state) => state.user);
+  const { isLogInLoading, isLogInError } = useSelector((state) => state.user);
   const [idVisible, setIdVisible] = useState(false);
   const [pwVisible, setPwVisible] = useState(false);
   const dispatch = useDispatch();
@@ -55,78 +55,74 @@ const LoginForm = () => {
 
   return (
     <>
-      {isLoadMyInfoError ? (
-        <>
-          <div style={paperWrapper}>
-            <Divider><h1 style={h1Wrapper}>로그인</h1></Divider>
-            <h3 style={h3Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
-            <Form onFinish={onSubmitForm}>
-              <Col>
-                <Row gutter={8}>
-                  <div style={formWrapper}>
-                    <Input
-                      prefix={<IdcardOutlined style={prefixWrapper} />}
-                      name="user-id"
-                      value={userId}
-                      placeholder="아이디"
-                      required
-                      onChange={onChangeUserId}
-                    />
-                  </div>
-                </Row>
-                <br />
-                <Row gutter={8}>
-                  <div style={formWrapper}>
-                    <Input
-                      prefix={<LockOutlined style={prefixWrapper} />}
-                      name="user-password"
-                      type="password"
-                      placeholder="비밀번호"
-                      value={password}
-                      required
-                      onChange={onChangePassword}
-                    />
-                  </div>
-                </Row>
-                {isLogInError && (
-                <div style={errorWrapper}>
-                  아이디 또는 비밀번호가 잘못된 정보입니다.
-                </div>
-                )}
-                <br />
-                <Row gutter={8}>
-                  <div style={loginWrapper}>
-                    <Button
-                      style={loginButtonWrapper}
-                      type="primary"
-                      htmlType="submit"
-                      loading={isLogInLoading}
-                    >
-                      로그인
-                    </Button>
-                  </div>
-                </Row>
-                <br />
-                <Row gutter={8} style={idpwWrapper}>
-                  <div>
-                    <a style={leftWrapper} onClick={setIdVisible}>아이디 찾기</a>
-                  </div>
-                  <div>
-                    <Link href="/signup">
-                      <a style={signupButtonWrapper}>회원가입</a>
-                    </Link>
-                  </div>
-                  <div>
-                    <a style={rightWrapper} onClick={setPwVisible}>
-                      비밀번호 찾기
-                    </a>
-                  </div>
-                </Row>
-              </Col>
-            </Form>
-          </div>
-        </>
-      ) : <h1>isLoadMyInfoError</h1>}
+      <div style={paperWrapper}>
+        <Divider><h1 style={h1Wrapper}>로그인</h1></Divider>
+        <h3 style={h3Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
+        <Form onFinish={onSubmitForm}>
+          <Col>
+            <Row gutter={8}>
+              <div style={formWrapper}>
+                <Input
+                  prefix={<IdcardOutlined style={prefixWrapper} />}
+                  name="user-id"
+                  value={userId}
+                  placeholder="아이디"
+                  required
+                  onChange={onChangeUserId}
+                />
+              </div>
+            </Row>
+            <br />
+            <Row gutter={8}>
+              <div style={formWrapper}>
+                <Input
+                  prefix={<LockOutlined style={prefixWrapper} />}
+                  name="user-password"
+                  type="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  required
+                  onChange={onChangePassword}
+                />
+              </div>
+            </Row>
+            {isLogInError && (
+            <div style={errorWrapper}>
+              아이디 또는 비밀번호가 잘못된 정보입니다.
+            </div>
+            )}
+            <br />
+            <Row gutter={8}>
+              <div style={loginWrapper}>
+                <Button
+                  style={loginButtonWrapper}
+                  type="primary"
+                  htmlType="submit"
+                  loading={isLogInLoading}
+                >
+                  로그인
+                </Button>
+              </div>
+            </Row>
+            <br />
+            <Row gutter={8} style={idpwWrapper}>
+              <div>
+                <a style={leftWrapper} onClick={setIdVisible}>아이디 찾기</a>
+              </div>
+              <div>
+                <Link href="/signup">
+                  <a style={signupButtonWrapper}>회원가입</a>
+                </Link>
+              </div>
+              <div>
+                <a style={rightWrapper} onClick={setPwVisible}>
+                  비밀번호 찾기
+                </a>
+              </div>
+            </Row>
+          </Col>
+        </Form>
+      </div>
 
       <Modal
         visible={idVisible}

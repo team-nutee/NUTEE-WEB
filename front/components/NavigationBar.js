@@ -78,8 +78,8 @@ const NavigationBar = ({ me }) => {
   );
 };
 
-NavigationBar.defaultProps = {
-  me: PropTypes.object,
+NavigationBar.propTypes = {
+  me: PropTypes.object.isRequired,
 };
 
 export default NavigationBar;

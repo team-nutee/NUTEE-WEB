@@ -172,6 +172,8 @@ function logOutAPI(accessToken) {
 function* logOut(action) {
   try {
     yield call(logOutAPI, action.data);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     yield put({
       type: LOG_OUT_SUCCESS,
     });
