@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { END } from 'redux-saga';
 import { Form, Input, Checkbox, Button, Row, Col, Modal } from 'antd';
 import { IdcardOutlined, LockOutlined, UserOutlined, MailOutlined, SafetyOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 import wrapper from '../store/configureStore';
 import {
   LOAD_MY_INFO_REQUEST, CHECK_ID_REQUEST, CHECK_NICKNAME_REQUEST, SEND_OPT_REQUEST,
@@ -61,17 +62,19 @@ const Signup = () => {
   }, [isSignUpError]);
 
   const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
-  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '10vh 0' }), []);
+  const paperWrapper = useMemo(() => ({ width: '35vw', minWidth: '340px', maxWidth: '450px', margin: '18vh 0 10vh 0' }), []);
+  const nuteeWrapper = useMemo(() => ({ textAlign: 'center', fontSize: '25px', color: '#050', textDecoration: 'underline' }), []);
+  const textWrapper = useMemo(() => ({ textAlign: 'center', fontSize: '30px', marginBottom: '-20px', fontWeight: 'bold' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0, 0, 0, .25)' }), []);
   const failureWrapper = useMemo(() => ({ color: 'red', fontSize: '12px', marginLeft: '5px' }), []);
   const successWrapper = useMemo(() => ({ color: 'green', fontSize: '12px', marginLeft: '5px' }), []);
   const majorButtonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white', height: '39px' }), []);
   const checkboxWrapper = useMemo(() => ({ margin: '0px 5px 5px 0px' }), []);
-  const termsWrapper = useMemo(() => ({ color: '#005000' }), []);
+  const termsWrapper = useMemo(() => ({ color: '#005000', textDecoration: 'underline' }), []);
   const selectWrapper = useMemo(() => ({ menu: (css) => ({ ...css, zIndex: 999 }) }), []);
   const buttonWrapper = useMemo(() => ({ color: 'white', background: '#13c276', width: '100%', border: '1px solid white' }), []);
-  const signupButtonWrapper = useMemo(() => ({ width: '100px', margin: '0 auto' }), []);
+  const signupButtonWrapper = useMemo(() => ({ width: '150px', margin: '0 auto' }), []);
 
   const onSubmit = useCallback(() => {
     if (!checkIdDone) return alert('아이디가 확인되지 않았습니다.');
@@ -211,171 +214,176 @@ const Signup = () => {
   };
 
   return (
-    <div style={pageWrapper}>
-      <div style={paperWrapper}>
-        <h1 style={h1Wrapper}>회원가입</h1>
-        <h3 style={h1Wrapper}>NUTEE에 오신것을 환영합니다!</h3>
-        <Form onFinish={onSubmit}>
-          {/* 아이디 */}
-          <Row gutter={8}>
-            <Col span={17}>
-              <Input
-                prefix={<IdcardOutlined style={prefixWrapper} />}
-                name="user-id"
-                value={id}
-                placeholder="아이디"
-                required
-                onChange={onChangeId}
-              />
-            </Col>
-            <Col span={7}>
-              <Button style={buttonWrapper} onClick={onCheckId}>ID 확인</Button>
-            </Col>
-          </Row>
-          {checkIdError && <div style={failureWrapper}>중복된 아이디입니다.</div>}
-          {checkIdDone && <div style={successWrapper}>사용 가능한 아이디입니다.</div>}
-          <br />
-          {/* 닉네임 */}
-          <Row gutter={8}>
-            <Col span={15}>
-              <Input
-                prefix={<UserOutlined style={prefixWrapper} />}
-                name="user-nick"
-                value={nickname}
-                placeholder="닉네임"
-                required
-                onChange={onChangeNickname}
-              />
-              {checkNicknameError && <div style={failureWrapper}>중복된 닉네임입니다.</div>}
-              {checkNicknameDone && <div style={successWrapper}>사용 가능한 닉네임입니다.</div>}
-            </Col>
-            <Col span={9}>
-              <Button style={buttonWrapper} onClick={onCheckNickname}>닉네임 확인</Button>
-            </Col>
-          </Row>
-          <br />
-          {/* 비밀번호 */}
-          <Row gutter={8}>
-            <Col span={15}>
+    <>
+      <div style={pageWrapper}>
+        <div style={paperWrapper}>
+          <p style={textWrapper}>회원가입</p>
+          <h3 style={h1Wrapper}>
+            <Link href="/index"><a style={nuteeWrapper}>NUTEE</a></Link>
+            에 오신것을 환영합니다!
+          </h3>
+          <Form onFinish={onSubmit}>
+            {/* 아이디 */}
+            <Row gutter={8}>
+              <Col span={17}>
+                <Input
+                  prefix={<IdcardOutlined style={prefixWrapper} />}
+                  name="user-id"
+                  value={id}
+                  placeholder="아이디"
+                  required
+                  onChange={onChangeId}
+                />
+              </Col>
+              <Col span={7}>
+                <Button style={buttonWrapper} onClick={onCheckId}>ID 확인</Button>
+              </Col>
+            </Row>
+            {checkIdError && <div style={failureWrapper}>중복된 아이디입니다.</div>}
+            {checkIdDone && <div style={successWrapper}>사용 가능한 아이디입니다.</div>}
+            <br />
+            {/* 닉네임 */}
+            <Row gutter={8}>
+              <Col span={15}>
+                <Input
+                  prefix={<UserOutlined style={prefixWrapper} />}
+                  name="user-nick"
+                  value={nickname}
+                  placeholder="닉네임"
+                  required
+                  onChange={onChangeNickname}
+                />
+                {checkNicknameError && <div style={failureWrapper}>중복된 닉네임입니다.</div>}
+                {checkNicknameDone && <div style={successWrapper}>사용 가능한 닉네임입니다.</div>}
+              </Col>
+              <Col span={9}>
+                <Button style={buttonWrapper} onClick={onCheckNickname}>닉네임 확인</Button>
+              </Col>
+            </Row>
+            <br />
+            {/* 비밀번호 */}
+            <Row gutter={8}>
+              <Col span={15}>
+                <Input
+                  prefix={<LockOutlined style={prefixWrapper} />}
+                  name="user-password"
+                  type="password"
+                  placeholder="비밀번호"
+                  value={password}
+                  required
+                  onChange={onChangePassword}
+                />
+              </Col>
+              <Col span={9}>
+                <Button style={buttonWrapper} onClick={onCheckPassword}>비밀번호 확인</Button>
+              </Col>
+            </Row>
+            {checkPasswordError && <div style={failureWrapper}>특수문자(!@#$%^&*_+-=)포함 7~15글자</div>}
+            <br />
+            <Row>
               <Input
                 prefix={<LockOutlined style={prefixWrapper} />}
-                name="user-password"
+                name="user-check-password"
                 type="password"
-                placeholder="비밀번호"
-                value={password}
+                placeholder="비밀번호 확인"
+                value={checkPassword}
                 required
-                onChange={onChangePassword}
+                onChange={onChangeCheckPassword}
               />
-            </Col>
-            <Col span={9}>
-              <Button style={buttonWrapper} onClick={onCheckPassword}>비밀번호 확인</Button>
-            </Col>
-          </Row>
-          {checkPasswordError && <div style={failureWrapper}>특수문자(!@#$%^&*_+-=)포함 7~15글자</div>}
-          <br />
-          <Row>
-            <Input
-              prefix={<LockOutlined style={prefixWrapper} />}
-              name="user-check-password"
-              type="password"
-              placeholder="비밀번호 확인"
-              value={checkPassword}
-              required
-              onChange={onChangeCheckPassword}
-            />
-          </Row>
-          {passwordError && <div style={failureWrapper}>비밀번호가 일치하지 않습니다.</div>}
-          <br />
-          {/* 이메일 */}
-          <Row gutter={8}>
-            <Col span={15}>
-              <Input
-                prefix={<MailOutlined style={prefixWrapper} />}
-                name="user-schoolEmail"
-                placeholder="이메일(@office.skhu.ac.kr)"
-                value={schoolEmail}
-                required
-                onChange={onChangeSchoolEmail}
-              />
-            </Col>
-            <Col span={9}>
-              <Button style={buttonWrapper} onClick={onCheckschoolEmail}>이메일 인증</Button>
-            </Col>
-          </Row>
-          {schoolEmailError && <div style={failureWrapper}>올바른 이메일의 형태가 아닙니다.</div>}
-          {checkDuplicateEmail && <div style={successWrapper}>확인 후 이메일로 OTP를 전송하였습니다.</div>}
-          <br />
-          {/* OTP */}
-          <Row gutter={8}>
-            <Col span={17}>
-              <Input
-                prefix={<SafetyOutlined style={prefixWrapper} />}
-                name="user-otp"
-                value={otp}
-                placeholder="otp"
-                required
-                onChange={onChangeOtp}
-              />
-            </Col>
-            <Col span={7}>
-              <Button style={buttonWrapper} onClick={onCheckOtp}>otp 확인</Button>
-            </Col>
-          </Row>
-          {checkOtp && <div style={successWrapper}>otp가 인증되었습니다.</div>}
-          <br />
-          {/* 전공 */}
-          <Row gutter={8}>
-            <Col span={18}>
-              <Select
-                isMulti
-                placeholder="학부 또는 전공을 선택해주세요."
-                name="user-major"
-                menuPlacement="top"
-                onChange={onSelectMajors}
-                options={selectOptions(majorsData)}
-                styles={selectWrapper}
-                required
-              />
-            </Col>
-            <Col span={6}>
-              <Button style={majorButtonWrapper} onClick={onChangeMajor}>확인</Button>
-            </Col>
-          </Row>
-          {majorError && <div style={failureWrapper}>학부 또는 전공을 선택하셔야 합니다.</div>}
-          <br />
-          {/* 카테고리 */}
-          <Row gutter={8}>
-            <Col span={18}>
-              <Select
-                isMulti
-                placeholder="카테고리를 선택해주세요."
-                name="user-interests"
-                menuPlacement="top"
-                onChange={onSelectInterests}
-                options={selectOptions(categoryData)}
-                styles={selectWrapper}
-                required
-              />
-            </Col>
-            <Col span={6}>
-              <Button style={majorButtonWrapper} onClick={onChangeInterests}>확인</Button>
-            </Col>
-          </Row>
-          {interestsError && <div style={failureWrapper}>카테고리를 선택하셔야 합니다.</div>}
-          <br />
-          {/* 약관 */}
-          <Checkbox style={checkboxWrapper} name="user-term" value={term} onChange={onChangeTerm} />
-          <a style={termsWrapper} onClick={setTermsVisible}><b>NUTEE 회원 약관</b></a>
-          에 동의합니다.
-          {termError && <div style={failureWrapper}>약관에 동의하셔야 합니다.</div>}
-          <br />
-          <br />
-          {/* 회원가입 버튼 */}
-          <div style={signupButtonWrapper}>
-            <Button style={buttonWrapper} type="primary" htmlType="submit" loading={isSignUpLoading}>회원가입</Button>
-          </div>
-          <br />
-        </Form>
+            </Row>
+            {passwordError && <div style={failureWrapper}>비밀번호가 일치하지 않습니다.</div>}
+            <br />
+            {/* 이메일 */}
+            <Row gutter={8}>
+              <Col span={15}>
+                <Input
+                  prefix={<MailOutlined style={prefixWrapper} />}
+                  name="user-schoolEmail"
+                  placeholder="이메일(@office.skhu.ac.kr)"
+                  value={schoolEmail}
+                  required
+                  onChange={onChangeSchoolEmail}
+                />
+              </Col>
+              <Col span={9}>
+                <Button style={buttonWrapper} onClick={onCheckschoolEmail}>이메일 인증</Button>
+              </Col>
+            </Row>
+            {schoolEmailError && <div style={failureWrapper}>올바른 이메일의 형태가 아닙니다.</div>}
+            {checkDuplicateEmail && <div style={successWrapper}>확인 후 이메일로 OTP를 전송하였습니다.</div>}
+            <br />
+            {/* OTP */}
+            <Row gutter={8}>
+              <Col span={17}>
+                <Input
+                  prefix={<SafetyOutlined style={prefixWrapper} />}
+                  name="user-otp"
+                  value={otp}
+                  placeholder="otp"
+                  required
+                  onChange={onChangeOtp}
+                />
+              </Col>
+              <Col span={7}>
+                <Button style={buttonWrapper} onClick={onCheckOtp}>otp 확인</Button>
+              </Col>
+            </Row>
+            {checkOtp && <div style={successWrapper}>otp가 인증되었습니다.</div>}
+            <br />
+            {/* 전공 */}
+            <Row gutter={8}>
+              <Col span={18}>
+                <Select
+                  isMulti
+                  placeholder="학부 또는 전공을 선택해주세요."
+                  name="user-major"
+                  menuPlacement="top"
+                  onChange={onSelectMajors}
+                  options={selectOptions(majorsData)}
+                  styles={selectWrapper}
+                  required
+                />
+              </Col>
+              <Col span={6}>
+                <Button style={majorButtonWrapper} onClick={onChangeMajor}>확인</Button>
+              </Col>
+            </Row>
+            {majorError && <div style={failureWrapper}>학부 또는 전공을 선택하셔야 합니다.</div>}
+            <br />
+            {/* 카테고리 */}
+            <Row gutter={8}>
+              <Col span={18}>
+                <Select
+                  isMulti
+                  placeholder="카테고리를 선택해주세요."
+                  name="user-interests"
+                  menuPlacement="top"
+                  onChange={onSelectInterests}
+                  options={selectOptions(categoryData)}
+                  styles={selectWrapper}
+                  required
+                />
+              </Col>
+              <Col span={6}>
+                <Button style={majorButtonWrapper} onClick={onChangeInterests}>확인</Button>
+              </Col>
+            </Row>
+            {interestsError && <div style={failureWrapper}>카테고리를 선택하셔야 합니다.</div>}
+            <br />
+            {/* 약관 */}
+            <Checkbox style={checkboxWrapper} name="user-term" value={term} onChange={onChangeTerm} />
+            <a style={termsWrapper} onClick={setTermsVisible}><b>NUTEE 회원 약관</b></a>
+            에 동의합니다.
+            {termError && <div style={failureWrapper}>약관에 동의하셔야 합니다.</div>}
+            <br />
+            <br />
+            {/* 회원가입 버튼 */}
+            <div style={signupButtonWrapper}>
+              <Button style={buttonWrapper} type="round" htmlType="submit" loading={isSignUpLoading}>회원가입</Button>
+            </div>
+            <br />
+          </Form>
+        </div>
       </div>
       <Modal
         visible={termsVisible}
@@ -389,7 +397,7 @@ const Signup = () => {
         <Terms setTermsVisible={setTermsVisible} />
       </Modal>
       <Footer />
-    </div>
+    </>
   );
 };
 

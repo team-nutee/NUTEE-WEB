@@ -18,20 +18,18 @@ const AppLayout = ({ children }) => {
   ) : <Empty />;
 
   return (
-    <>
-      <div style={wrapper}>
-        {me ? (
-          <>
-            <NavigationBar me={me} />
-            <Row>
-              <Col style={wrapper}>{children}</Col>
-              <Footer />
-            </Row>
-          </>
-        )
-          : page}
-      </div>
-    </>
+    <div style={wrapper}>
+      {me ? (
+        <>
+          <NavigationBar me={me} />
+          <Row>
+            <Col style={wrapper}>{children}</Col>
+            <Footer />
+          </Row>
+        </>
+      )
+        : page}
+    </div>
   );
 };
 

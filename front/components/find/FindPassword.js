@@ -23,14 +23,20 @@ const FindPassword = ({ setPwVisible }) => {
   }, [id]);
 
   const onEmailFind = () => {
-    dispatch({
-      type: FIND_PASSWORD_REQUEST,
-      data: {
-        userId: id,
-        schoolEmail: email,
-      },
-    });
+    if (!id || !email || id.length === 0 || email.length === 0) {
+      return alert('아이디와 이메일을 작성해주세요.');
+    }
+    return (
+      dispatch({
+        type: FIND_PASSWORD_REQUEST,
+        data: {
+          userId: id,
+          schoolEmail: email,
+        },
+      })
+    );
   };
+
   useEffect(() => {
     if (findPasswordDone) {
       setPwVisible(false);

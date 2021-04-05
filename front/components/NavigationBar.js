@@ -1,18 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Button, Row } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutRequestAction } from '../reducers/user';
-import Search from './Search/Search';
 
 const NavigationBar = ({ me }) => {
-  const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
 
-  const onOpenSearch = useCallback(() => { setShowSearch(true); }, []);
-  const onCloseSearch = useCallback(() => { setShowSearch(false); }, []);
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
@@ -27,9 +22,6 @@ const NavigationBar = ({ me }) => {
   const nuteeWrapper = useMemo(() => ({ float: 'left', margin: '10px 10px 0px 0px' }), []);
   const nuteeAWrapper = useMemo(() => ({ fontFamily: 'Do Hyeon', color: '#13c276', fontSize: '40px' }), []);
 
-  /* 검색 */
-  const showSearchWrapper = useMemo(() => ({ fontSize: '30px', color: '#13c276', marginTop: '2px' }), []);
-
   /* 로그아웃 */
   const logoutWrapper = useMemo(() => ({ float: 'right', marginRight: '7vw' }), []);
   const logoutButtonWrapper = useMemo(() => ({ background: '#13c276', marginRight: '10px', borderColor: '#fff', color: 'white' }), []);
@@ -37,14 +29,14 @@ const NavigationBar = ({ me }) => {
   return (
     <Row style={wrapper}>
       <div style={logoWrapper}>
-        <Link href="/">
+        <Link href="/index">
           <a>
             <img style={logoImgWrapper} src="/nutee_circle.png" alt="nutee" />
           </a>
         </Link>
       </div>
       <div style={nuteeWrapper}>
-        <Link href="/">
+        <Link href="/index">
           <a>
             <b style={nuteeAWrapper}>NUTEE</b>
           </a>
@@ -52,26 +44,15 @@ const NavigationBar = ({ me }) => {
       </div>
       {me || me !== null
         ? (
-          <>
-            {showSearch
-              ? (
-                <Search onCloseSearch={onCloseSearch} />
-              )
-              : (
-                <>
-                  <SearchOutlined style={showSearchWrapper} onClick={onOpenSearch} />
-                  <div style={logoutWrapper}>
-                    <Button
-                      style={logoutButtonWrapper}
-                      shape="round"
-                      onClick={onLogOut}
-                    >
-                      <b>로그아웃</b>
-                    </Button>
-                  </div>
-                </>
-              )}
-          </>
+          <div style={logoutWrapper}>
+            <Button
+              style={logoutButtonWrapper}
+              shape="round"
+              onClick={onLogOut}
+            >
+              <b>로그아웃</b>
+            </Button>
+          </div>
         )
         : <></>}
     </Row>

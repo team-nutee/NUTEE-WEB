@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
@@ -19,12 +18,17 @@ const FindId = ({ setIdVisible }) => {
   }, [email]);
 
   const onFindId = () => {
-    dispatch({
-      type: FIND_ID_REQUEST,
-      data: {
-        schoolEmail: email,
-      },
-    });
+    if (!email || email.length === 0) {
+      return alert('이메일을 작성해주세요.');
+    }
+    return (
+      dispatch({
+        type: FIND_ID_REQUEST,
+        data: {
+          schoolEmail: email,
+        },
+      })
+    );
   };
 
   useEffect(() => {

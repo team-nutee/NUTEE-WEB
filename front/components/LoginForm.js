@@ -27,18 +27,24 @@ const LoginForm = () => {
     dispatch(loginRequestAction({ userId, password }));
   }, [userId, password]);
 
-  const idOk = () => {
+  const showIdModal = useCallback(() => {
+    setIdVisible(true);
+  });
+  const idOk = useCallback(() => {
     setIdVisible(false);
-  };
-  const idCancel = () => {
+  });
+  const idCancel = useCallback(() => {
     setIdVisible(false);
-  };
-  const pwOk = () => {
+  });
+  const showPwModal = useCallback(() => {
+    setPwVisible(true);
+  });
+  const pwOk = useCallback(() => {
     setPwVisible(false);
-  };
-  const pwCancel = () => {
+  });
+  const pwCancel = useCallback(() => {
     setPwVisible(false);
-  };
+  });
 
   const paperWrapper = useMemo(() => ({ padding: '30vh 0 20vh 0' }), []);
   const h1Wrapper = useMemo(() => ({ textAlign: 'center', padding: '5vh auto' }), []);
@@ -107,7 +113,7 @@ const LoginForm = () => {
             <br />
             <Row gutter={8} style={idpwWrapper}>
               <div>
-                <a style={leftWrapper} onClick={setIdVisible}>아이디 찾기</a>
+                <a style={leftWrapper} onClick={showIdModal}>아이디 찾기</a>
               </div>
               <div>
                 <Link href="/signup">
@@ -115,7 +121,7 @@ const LoginForm = () => {
                 </Link>
               </div>
               <div>
-                <a style={rightWrapper} onClick={setPwVisible}>
+                <a style={rightWrapper} onClick={showPwModal}>
                   비밀번호 찾기
                 </a>
               </div>
