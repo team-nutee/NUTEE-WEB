@@ -2,37 +2,28 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, Input } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import { EDIT_PASSWORD_REQUEST, EDIT_PWCK_REQUEST } from '../../reducers/user';
+import { EDIT_PASSWORD_REQUEST } from '../../reducers/user';
 import useInput from '../../hooks/useInput';
 
 const PwEditModal = () => {
-  const [existingPassword, onChangeExistingPassword] = useInput('');
-  const [editPassword, onChangeEditPassword] = useInput('');
+  const [nowPassword, onNowPassword] = useInput('');
+  const [changePassword, onchangePassword] = useInput('');
   const dispatch = useDispatch();
-
-  const onExistingPassword = useCallback(
-    async (e) => {
-      e.preventDefault();
-      await dispatch({
-        type: EDIT_PWCK_REQUEST,
-        data: existingPassword,
-      });
-    }, [existingPassword],
-  );
 
   const onEditPassword = useCallback(
     async (e) => {
       e.preventDefault();
       await dispatch({
         type: EDIT_PASSWORD_REQUEST,
-        data: { password: editPassword },
+        data: { nowPassword, changePassword },
       });
-    }, [editPassword],
+    }, [changePassword],
   );
 
-  const pageWrapper = useMemo(() => ({ marginTop: '70px' }), []);
+  const pageWrapper = useMemo(() => ({ marginTop: '70px', padding: '10px'}), []);
   const divWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginBottom: '10px' }), []);
-  const inputWrapper = useMemo(() => ({ width: '300px', marginRight: '8px' }), []);
+  const changeButtonWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '20px' }), []);
+  const inputWrapper = useMemo(() => ({ width: '300px' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
   const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '100px' }), []);
 
@@ -44,14 +35,11 @@ const PwEditModal = () => {
           type="password"
           placeholder="현재 비밀번호"
           name="user-password"
-          value={existingPassword}
+          value={nowPassword}
           style={inputWrapper}
-          onChange={onChangeExistingPassword}
+          onChange={onNowPassword}
           required
         />
-        <Button onClick={onExistingPassword} style={buttonWrapper}>
-          확인
-        </Button>
       </div>
       <div style={divWrapper}>
         <Input
@@ -59,12 +47,14 @@ const PwEditModal = () => {
           type="password"
           placeholder="변경할 비밀번호"
           name="user-password2"
-          value={editPassword}
+          value={changePassword}
           style={inputWrapper}
-          onChange={onChangeEditPassword}
+          onChange={onchangePassword}
           required
         />
-        <Button onClick={onEditPassword} style={buttonWrapper}>
+      </div>
+      <div style={changeButtonWrapper}>
+        <Button type="round" onClick={onEditPassword} style={buttonWrapper}>
           변경
         </Button>
       </div>

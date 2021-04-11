@@ -1,26 +1,24 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { EDIT_CATEGORY_REQUEST } from '../../reducers/user';
-import { LOAD_CATEGORY_DATA_REQUEST } from '../../reducers/post';
 
 const EditCategory = () => {
   const [interests, setInterests] = useState([]);
   const { categoryData } = useSelector((state) => state.post);
+  const { editCategoryDone } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch({
-      type: LOAD_CATEGORY_DATA_REQUEST,
-    });
-  }, []);
+    if (editCategoryDone) alert('카테고리가 변경되었습니다.');
+  }, [editCategoryDone]);
 
   const onEditCategory = useCallback(() => {
     dispatch({
       type: EDIT_CATEGORY_REQUEST,
       data: { interests },
     });
+    setInterests(null);
   }, [interests]);
 
   const selectOptions = (v) => {
@@ -38,19 +36,17 @@ const EditCategory = () => {
   const customStyles = useMemo(() => ({ control: (css) => ({ ...css, width: '300px', border: '3px solid #005000' }) }), []);
 
   return (
-    <>
-      <div style={pageWrapper}>
-        <Select
-          isMulti
-          placeholder="선호하는 카테고리를 선택해주세요."
-          name="user-interests"
-          onChange={onSelectInterests}
-          options={selectOptions(categoryData)}
-          styles={customStyles}
-        />
-        <Button style={buttonWrapper} onClick={onEditCategory}>확인</Button>
-      </div>
-    </>
+    <div style={pageWrapper}>
+      <Select
+        isMulti
+        placeholder="선호하는 카테고리를 선택해주세요."
+        name="user-interests"
+        onChange={onSelectInterests}
+        options={selectOptions(categoryData)}
+        styles={customStyles}
+      />
+      <Button style={buttonWrapper} onClick={onEditCategory}>확인</Button>
+    </div>
   );
 };
 
