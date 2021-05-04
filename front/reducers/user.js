@@ -52,6 +52,9 @@ export const initialState = {
   editMajorLoading: false, // 전공 변경
   editMajorDone: false,
   editMajorError: null,
+  uploadProfileImageLoading: false, // 프로필 이미지 업로드
+  uploadProfileImageDone: false,
+  uploadProfileImageError: null,
   editProfileImageLoading: false, // 프로필 이미지 변경
   editProfileImageDone: false,
   editProfileImageError: null,
@@ -169,6 +172,10 @@ export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 export const EDIT_PASSWORD_REQUEST = 'EDIT_PASSWORD_REQUEST';
 export const EDIT_PASSWORD_SUCCESS = 'EDIT_PASSWORD_SUCCESS';
 export const EDIT_PASSWORD_FAILURE = 'EDIT_PASSWORD_FAILURE';
+
+export const UPLOAD_PROFILE_IMAGE_REQUEST = 'UPLOAD_PROFILE_IMAGE_REQUEST';
+export const UPLOAD_PROFILE_IMAGE_SUCCESS = 'UPLOAD_PROFILE_IMAGE_SUCCESS';
+export const UPLOAD_PROFILE_IMAGE_FAILURE = 'UPLOAD_PROFILE_IMAGE_FAILURE';
 
 export const EDIT_PROFILE_IMAGE_REQUEST = 'EDIT_PROFILE_IMAGE_REQUEST';
 export const EDIT_PROFILE_IMAGE_SUCCESS = 'EDIT_PROFILE_IMAGE_SUCCESS';
@@ -514,13 +521,29 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     }
     case REMOVE_FOLLOWER_FAILURE:
       break;
+    case UPLOAD_PROFILE_IMAGE_REQUEST:
+      draft.uploadProfileImageLoading = true;
+      draft.uploadProfileImageDone = false;
+      draft.uploadProfileImageError = null;
+      break;
+    case UPLOAD_PROFILE_IMAGE_SUCCESS:
+      if (draft.profileImagePath !== '') {
+        draft.profileImagePath = action.data;
+      }
+      draft.profileImagePath = action.data;
+      draft.uploadProfileImageLoading = false;
+      draft.uploadProfileImageDone = true;
+      break;
+    case UPLOAD_PROFILE_IMAGE_FAILURE:
+      draft.uploadProfileImageLoading = false;
+      draft.uploadProfileImageError = action.error;
+      break;
     case EDIT_PROFILE_IMAGE_REQUEST:
       draft.editProfileImageLoading = true;
       draft.editProfileImageDone = false;
       draft.editProfileImageError = null;
       break;
     case EDIT_PROFILE_IMAGE_SUCCESS:
-      draft.profileImagePath = action.data;
       if (draft.me.image) {
         draft.me.image = action.data;
       }

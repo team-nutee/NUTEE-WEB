@@ -65,7 +65,7 @@ const MyProfile = ({ target }) => {
           >
             <Meta
               avatar={
-                target.Image ? <ProfileAvatar imagePath={target.profileUrl} />
+                target.image ? <ProfileAvatar imagePath={target.image} />
                   : <ProfileAvatar nickname={target.nickname} />
               }
               title={target.nickname ? target.nickname : <></>}
