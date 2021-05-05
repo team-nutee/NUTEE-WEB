@@ -71,6 +71,9 @@ import {
   EDIT_PROFILE_IMAGE_REQUEST,
   EDIT_PROFILE_IMAGE_SUCCESS,
   EDIT_PROFILE_IMAGE_FAILURE,
+  UPLOAD_PROFILE_IMAGE_REQUEST,
+  UPLOAD_PROFILE_IMAGE_SUCCESS,
+  UPLOAD_PROFILE_IMAGE_FAILURE,
 } from '../reducers/user';
 
 function loadMyInfoAPI() {
@@ -288,6 +291,26 @@ function* checkNickname(action) {
   } catch (err) {
     yield put({
       type: CHECK_NICKNAME_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function uploadProfileImgAPI(formData) {
+  return axios.post(`${INDEX_URL}/sns/upload`, formData);
+}
+
+function* uploadProfileImg(action) {
+  try {
+    const result = yield call(uploadProfileImgAPI, action.data);
+    yield put({
+      type: UPLOAD_PROFILE_IMAGE_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UPLOAD_PROFILE_IMAGE_FAILURE,
       error: err,
     });
   }
@@ -574,6 +597,10 @@ function* watchEditPassword() {
   yield takeLatest(EDIT_PASSWORD_REQUEST, editPassword);
 }
 
+function* watchUploadProfileImg() {
+  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImg);
+}
+
 function* watchEditProfileImg() {
   yield takeLatest(EDIT_PROFILE_IMAGE_REQUEST, editProfileImg);
 }
@@ -646,6 +673,7 @@ export default function* userSaga() {
     fork(watchFindId),
     fork(watchFindPassword),
     fork(watchEditPassword),
+    fork(watchUploadProfileImg),
     fork(watchEditProfileImg),
   ]);
 }

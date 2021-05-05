@@ -107,7 +107,6 @@ import {
   REPORT_COMMENT_SUCCESS,
   REPORT_COMMENT_FAILURE,
 } from '../reducers/post';
-import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 import { INDEX_URL } from '../static';
 
 function loadMainPostsAPI(lastId) {
@@ -255,10 +254,6 @@ function* addPost(action) {
       data: result.data.body,
       category: result.data.body.category,
     });
-    yield put({ // user reducer
-      type: ADD_POST_TO_ME,
-      data: action.data.id,
-    });
   } catch (err) {
     yield put({
       type: ADD_POST_FAILURE,
@@ -296,10 +291,6 @@ function* removePost(action) {
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: result.data.body.id,
-    });
-    yield put({
-      type: REMOVE_POST_OF_ME,
-      data: result.data,
     });
   } catch (err) {
     console.error(err);
