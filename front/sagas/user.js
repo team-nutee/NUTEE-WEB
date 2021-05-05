@@ -56,9 +56,6 @@ import {
   FIND_PASSWORD_REQUEST,
   FIND_PASSWORD_SUCCESS,
   FIND_PASSWORD_FAILURE,
-  EDIT_PWCK_REQUEST,
-  EDIT_PWCK_FAILURE,
-  EDIT_PWCK_SUCCESS,
   EDIT_NICKNAME_REQUEST,
   EDIT_NICKNAME_SUCCESS,
   EDIT_NICKNAME_FAILURE,
@@ -473,27 +470,8 @@ function* editNickname(action) {
   }
 }
 
-function checkPasswordAPI(password) { // 비밀번호 변경 전 비밀번호 확인 // api X
-  return axios.post('/user/passwordcheck', password);
-}
-
-function* checkPassword(action) {
-  try {
-    const result = yield call(checkPasswordAPI, action.data);
-    yield put({
-      type: EDIT_PWCK_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: EDIT_PWCK_FAILURE,
-      error: err,
-    });
-  }
-}
-
 function editPasswordAPI(newpassword) {
-  return axios.post(`${AUTH_URL}/auth/user/password`, newpassword);
+  return axios.patch(`${AUTH_URL}/auth/user/password`, newpassword);
 }
 
 function* editPassword(action) {
@@ -592,10 +570,6 @@ function* watchCheckNickname() {
   yield takeLatest(CHECK_NICKNAME_REQUEST, checkNickname);
 }
 
-function* watchCheckPassword() {
-  yield takeLatest(EDIT_PWCK_REQUEST, checkPassword);
-}
-
 function* watchEditPassword() {
   yield takeLatest(EDIT_PASSWORD_REQUEST, editPassword);
 }
@@ -672,7 +646,6 @@ export default function* userSaga() {
     fork(watchFindId),
     fork(watchFindPassword),
     fork(watchEditPassword),
-    fork(watchCheckPassword),
     fork(watchEditProfileImg),
   ]);
 }
