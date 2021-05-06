@@ -534,7 +534,7 @@ function* editCategory(action) {
 }
 
 function editMajorAPI(data) {
-  return axios.patch(`${AUTH_URL}/auth/user/majors`, data.majors);
+  return axios.patch(`${AUTH_URL}/auth/user/majors`, data);
 }
 
 function* editMajor(action) {
