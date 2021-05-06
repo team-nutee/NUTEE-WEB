@@ -5,6 +5,7 @@ import { Row, Tabs, Divider } from 'antd';
 import { SmileOutlined, SettingOutlined, BookOutlined, UnlockOutlined, UserOutlined, TagsOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import wrapper from '../store/configureStore';
+import styled from 'styled-components';
 import { LOAD_MAJOR_DATA_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
@@ -13,12 +14,13 @@ import EditProfileImage from '../components/setting/EditProfileImage';
 import EditNickname from '../components/setting/EditNickname';
 import EditMajor from '../components/setting/EditMajor';
 import EditCategory from '../components/setting/EditCategory';
+import SettingTabs from '../components/SettingWrapper';
 
 const { TabPane } = Tabs;
 
 const setting = () => {
   const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
-  const tabsWrapper = useMemo(() => ({ background: '#f0faf5', borderRadius: '5px', border: '5px solid #c8e6d7', height: '100vh', color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '20px' }), []);
+  const tabsWrapper = useMemo(() => ({ background: '#f0faf5', borderRadius: '5px', border: '5px solid #c8e6d7', height: '80vh', color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '20px' }), []);
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
   const setIconWrapper = useMemo(() => ({ marginRight: '5px' }), []);
   const dividerWrapper = useMemo(() => ({ fontSize: '20px' }), []);
@@ -37,7 +39,7 @@ const setting = () => {
           <SettingOutlined style={setIconWrapper} />
           설정
         </Divider>
-        <Tabs tabPosition="left" type="card" style={tabsWrapper}>
+        <SettingTabs tabPosition="left" type="card" style={tabsWrapper}>
           <TabPane
             tab={(
               <span>
@@ -98,7 +100,7 @@ const setting = () => {
           >
             <EditMajor />
           </TabPane>
-        </Tabs>
+        </SettingTabs>
       </Row>
     </AppLayout>
   );

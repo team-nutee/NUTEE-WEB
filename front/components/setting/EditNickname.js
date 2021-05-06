@@ -25,7 +25,7 @@ const EditNickname = () => {
     setEditNickname('');
   }, [editNickname]);
 
-  const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '70px' }), []);
+  const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '140px' }), []);
   const prefixWrapper = useMemo(() => ({ color: 'rgba(0,0,0,.25)' }), []);
   const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '100px' }), []);
   const inputWrapper = useMemo(() => ({ width: '250px', marginRight: '8px' }), []);

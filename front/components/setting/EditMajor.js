@@ -33,7 +33,7 @@ const EditCategory = () => {
     setMajor(select);
   };
 
-  const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '70px', height: 'auto' }), []);
+  const pageWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '140px', height: 'auto' }), []);
   const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '80px', marginLeft: '10px', height: '40px' }), []);
   const customStyles = useMemo(() => ({ control: (css) => ({ ...css, width: '300px', border: '3px solid #005000' }) }), []);
 

@@ -44,9 +44,9 @@ const EditProfileImage = () => {
     alert('프로필이 변경되었습니다.');
   }, [profileImagePath]);
 
-  const pageWrapper = useMemo(() => ({ marginTop: '70px' }), []);
+  const pageWrapper = useMemo(() => ({ marginTop: '120px' }), []);
   const inputWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center' }), []);
-  const imgWrapper = useMemo(() => ({ width: '100px', height: '100px', borderRadius: '50px', border: '1px solid #e6e6e6' }), []);
+  const imgWrapper = useMemo(() => ({ width: '150px', height: '150px', borderRadius: '75px', border: '1px solid #e6e6e6' }), []);
   const buttonWrapper = useMemo(() => ({ background: '#13c276', color: '#fff', width: '70px', marginTop: '10px' }), []);
 
   return (
