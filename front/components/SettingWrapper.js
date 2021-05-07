@@ -6,7 +6,7 @@ const SettingTabs = styled(Tabs)`
   margin-top: 7px;
   width: 64vw;
   min-width: 730px;
-  max-width: 1000px;
+  max-width: 960px;
  .ant-tabs-nav-wrap {
   .ant-tabs-nav-list {
       display: flex;
@@ -15,6 +15,7 @@ const SettingTabs = styled(Tabs)`
       align-items: center;
       
       .ant-tabs-tab {
+        margin-left: 1vw;
         margin-right: 0vw;
         padding: 0px;
         text-align: center;

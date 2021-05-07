@@ -5,7 +5,6 @@ import { Row, Tabs, Divider } from 'antd';
 import { SmileOutlined, SettingOutlined, BookOutlined, UnlockOutlined, UserOutlined, TagsOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import wrapper from '../store/configureStore';
-import styled from 'styled-components';
 import { LOAD_MAJOR_DATA_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
