@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import { Col, Row } from 'antd';
 import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import { LOAD_NOTICE_REQUEST } from '../reducers/notice';
 import LeftContents from '../components/contents/LeftContents';
 import wrapper from '../store/configureStore';
 import MainContents from '../components/contents/MainContents';
@@ -79,10 +79,25 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_MAJOR_POSTS_REQUEST,
   });
   context.store.dispatch({
-    type: LOAD_NOTICE_REQUEST,
+    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch({
-    type: LOAD_CATEGORY_DATA_REQUEST,
+    type: LOAD_HAKSA_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_SOOUP_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKJUM_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_JANGHAK_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_ILBAN_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HANGSA_NOTICE_REQUEST,
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();

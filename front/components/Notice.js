@@ -34,7 +34,7 @@ const list = [
 ];
 
 const Notice = () => {
-  const { noticeContents, noticeHrefs } = useSelector((state) => state.notice);
+  const { noticeTitles, noticeHrefs } = useSelector((state) => state.notice);
 
   const listWrapper = useMemo(() => ({ background: 'white', borderRadius: '3', borderColor: '#e6e6e6' }), []);
   const listItemAWrapper = useMemo(() => ({ textDecoration: 'none', color: 'black', fontWeight: '10', marginLeft: '-40px' }), []);
@@ -52,7 +52,7 @@ const Notice = () => {
             <List
               style={listWrapper}
               bordered
-              dataSource={noticeContents[v.key]}
+              dataSource={noticeTitles[v.key]}
               renderItem={(item, i) => (
                 <List.Item>
                   <a target="_blank" without rel="noreferrer" style={listItemAWrapper} href={noticeHrefs[v.key][i]}>
