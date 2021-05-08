@@ -8,7 +8,7 @@ import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
 
-const UserContents = ({ me, myPosts, hasMorePost }) => {
+const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
   const dispatch = useDispatch();
   console.log(me);
   console.log(myPosts);
@@ -46,7 +46,7 @@ const UserContents = ({ me, myPosts, hasMorePost }) => {
           tab={(
             <span>
               나의 글
-              <Badge count={250} style={badge1Wrapper} />
+              <Badge count={myPosts.length} style={badge1Wrapper} />
             </span>
           )}
           key="1"
@@ -59,7 +59,7 @@ const UserContents = ({ me, myPosts, hasMorePost }) => {
           tab={(
             <span>
               나의 댓글
-              <Badge count={50} style={badge2Wrapper} />
+              <Badge count={myCommentPosts.length} style={badge2Wrapper} />
             </span>
           )}
           key="2"

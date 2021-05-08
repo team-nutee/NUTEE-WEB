@@ -13,7 +13,7 @@ import wrapper from '../store/configureStore';
 /* myCommentPosts, myLikePosts, */
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
-  const { myPosts, hasMorePost } = useSelector((state) => state.post);
+  const { myPosts, myCommentPosts, hasMorePost } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
@@ -47,6 +47,7 @@ const Profile = () => {
               me={me}
               hasMorePost={hasMorePost}
               myPosts={myPosts}
+              myCommentPosts={myCommentPosts}
             />
           </Col>
         </Row>
