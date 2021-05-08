@@ -57,6 +57,7 @@ const Notice = () => {
                 <List.Item>
                   <a target="_blank" without rel="noreferrer" style={listItemAWrapper} href={noticeHrefs[v.key][i]}>
                     {' '}
+                    {item}
                   </a>
                 </List.Item>
               )}
