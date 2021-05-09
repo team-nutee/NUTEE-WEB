@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import { CloseOutlined } from '@ant-design/icons';
 
 const SearchHistory = ({ keywords, onRemoveKeyword, onClearKeywords }) => {
-  console.log('SearchHistory___keywordssss', keywords);
+  console.log('SearchHistory___keywords 검색 기록', keywords);
 
-  const keywordWrapper = useMemo(() => ({ background: 'green', margin: '0', padding: '5px', height: '20px' }), []);
-  const textWrapper = useMemo(() => ({ float: 'left', margin: '0', padding: '0', width: '80%', background: 'pink' }), []);
+  const keywordWrapper = useMemo(() => ({ display: 'inlineBlock', margin: '0', padding: '5px', height: '20px' }), []);
+  const textWrapper = useMemo(() => ({ float: 'left', marginBottom: '5px', padding: '0', width: '100%', background: '#f5f5f5', borderRadius: '5px' }), []);
   const undefinedWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', margin: '50px 0' }), []);
   const rightWrapper = useMemo(() => ({ float: 'right', cursor: 'pointer' }), []);
   const leftWrapper = useMemo(() => ({ float: 'left' }), []);
@@ -24,10 +24,18 @@ const SearchHistory = ({ keywords, onRemoveKeyword, onClearKeywords }) => {
         : (
           <>
             {keywords.map(({ id, text }) => (
-              <p style={keywordWrapper} key={id}>
-                <p style={textWrapper}>{text}</p>
-                <p style={rightWrapper} key={id} onClick={onRemoveKeyword(id)}><CloseOutlined /></p>
-              </p>
+              <div style={keywordWrapper} key={id}>
+                <div style={textWrapper}>
+                  {text}
+                  <p
+                    style={rightWrapper}
+                    key={id}
+                    onClick={() => onRemoveKeyword(id)}
+                  >
+                    <CloseOutlined />
+                  </p>
+                </div>
+              </div>
             ))}
           </>
         )}

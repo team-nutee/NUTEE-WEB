@@ -37,14 +37,14 @@ const NavigationBar = ({ me }) => {
   return (
     <Row style={wrapper}>
       <div style={logoWrapper}>
-        <Link href="/">
+        <Link href={me ? '/index' : '/'}>
           <a>
             <img style={logoImgWrapper} src="/nutee_circle.png" alt="nutee" />
           </a>
         </Link>
       </div>
       <div style={nuteeWrapper}>
-        <Link href="/">
+        <Link href={me ? '/index' : '/'}>
           <a>
             <b style={nuteeAWrapper}>NUTEE</b>
           </a>

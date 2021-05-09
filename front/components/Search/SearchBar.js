@@ -5,7 +5,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import useInput from '../../hooks/useInput';
 
-const SearchBar = ({ onAddKeyword, onClickClose }) => {
+const SearchBar = ({ onAddKeyword }) => {
   const [keyword, onChangeKeyword, setKeyword] = useInput('');
 
   const onSearch = useCallback(() => {
@@ -14,7 +14,6 @@ const SearchBar = ({ onAddKeyword, onClickClose }) => {
       onAddKeyword(keyword);
       Router.push(`/search/${keyword}`);
     }
-    onClickClose();
   }, [keyword]);
 
   const onEnter = useCallback((e) => {

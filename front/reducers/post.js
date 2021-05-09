@@ -553,7 +553,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikeCommentError = null;
       break;
     case UNLIKE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId,);
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.commentId,
       );

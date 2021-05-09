@@ -48,6 +48,11 @@ const DeveloperInfomation = () => {
       color: 'purple',
     },
     {
+      name: '임윤휘',
+      part: 'AOS',
+      color: 'lime',
+    },
+    {
       name: '김희선',
       part: 'AOS',
       color: 'lime',
