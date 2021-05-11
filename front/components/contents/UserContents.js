@@ -8,7 +8,7 @@ import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
 
-const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
+const UserContents = ({ me, myPosts, myCommentPosts, myLikePosts, hasMorePost }) => {
   const { loadMyPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   console.log(me);
@@ -29,6 +29,11 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
           dispatch({
             type: LOAD_MY_COMMENTS_REQUEST,
             lastId: MyCommentslastId,
+          });
+          const MyLikePostslastId = myLikePosts[myLikePosts.length - 1]?.id;
+          dispatch({
+            type: LOAD_MY_COMMENTS_REQUEST,
+            lastId: MyLikePostslastId,
           });
         }
       }
@@ -85,7 +90,7 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
           style={tabPaneWrapper}
         >
           {me && <PostForm me={me} />}
-          {myPosts.map((post) => (<PostCard key={post.id} post={post} />))}
+          {myLikePosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
       </Tabs>
     </>

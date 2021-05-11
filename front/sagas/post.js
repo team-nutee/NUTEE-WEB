@@ -416,12 +416,12 @@ function* loadMyComments(action) {
 }
 
 function loadMyLikeAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId}&limit=10`, { data: {} });
+  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMyLike(action) {
   try {
-    const result = yield call(loadMyLikeAPI, action.data, action.lastId);
+    const result = yield call(loadMyLikeAPI, action.lastId);
     yield put({
       type: LOAD_MY_LIKE_SUCCESS,
       data: result.data.body,
