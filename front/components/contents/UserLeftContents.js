@@ -9,7 +9,7 @@ import LinkContents from '../LinkContents';
 const UserLeftContents = (target) => {
   const { me } = useSelector((state) => state.user);
   const user = target.target;
-  const wrapper = useMemo(() => ({ marginTop: '15px' }), []);
+  const wrapper = useMemo(() => ({ marginTop: '15px', padding: '15px' }), []);
 
   return (
     <Col style={wrapper}>
