@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST, LOAD_MY_LIKE_REQUEST } from '../reducers/post';
+import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import AppLayout from '../components/AppLayout';
 import UserLeftContents from '../components/contents/UserLeftContents';
 import UserContents from '../components/contents/UserContents';
@@ -76,6 +77,24 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch({
     type: LOAD_MY_LIKE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKSA_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_SOOUP_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKJUM_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_JANGHAK_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_ILBAN_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HANGSA_NOTICE_REQUEST,
   });
   context.store.dispatch(END);
   console.log('getServerSideProps end');
