@@ -22,6 +22,9 @@ export const initialState = {
   loadPostsLoading: false, // 모든 포스트 로드
   loadPostsDone: false,
   loadPostsError: null,
+  loadMyPostsLoading: false, // 나의 포스트 로드
+  loadMyPostsDone: false,
+  loadMyPostsError: null,
   loadCategoryPostsLoading: false, // 카테고리 포스트 로드
   loadCategoryPostsDone: false,
   loadCategoryPostsError: null,
@@ -703,6 +706,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       // draft.loadMajorPostsError = action.error;
       break;
     case LOAD_MY_POSTS_REQUEST:
+      draft.loadMyPostsLoading = true;
+      draft.loadMyPostsDone = false;
+      draft.loadMyPostsError = null;
       draft.myPosts = !action.lastId ? [] : draft.myPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       break;
@@ -711,8 +717,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.myPosts.push(data);
       });
       draft.hasMorePost = action.data.length === 10;
+      draft.loadMyPostsLoading = false;
+      draft.loadMyPostsDone = true;
       break;
     case LOAD_MY_POSTS_FAILURE:
+      draft.loadMyPostsLoading = false;
       break;
     case LOAD_MY_COMMENTS_REQUEST:
       draft.myCommentPosts = !action.lastId ? [] : draft.myCommentPosts;

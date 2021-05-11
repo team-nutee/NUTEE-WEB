@@ -1,14 +1,15 @@
 import React, { useMemo, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Tabs, Badge } from 'antd';
 import PropTypes from 'prop-types';
-import { LOAD_POSTS_REQUEST } from '../../reducers/post';
+import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST } from '../../reducers/post';
 import PostForm from '../post/PostForm';
 import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
 
 const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
+  const { loadMyPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   console.log(me);
   console.log(myPosts);
@@ -18,11 +19,16 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
         window.pageYOffset + document.documentElement.clientHeight
         > document.documentElement.scrollHeight - 300
       ) {
-        if (hasMorePost) {
-          const lastId = myPosts[myPosts - 1]?.id;
+        if (hasMorePost && !loadMyPostsLoading) {
+          const MyPostslastId = myPosts[myPosts.length - 1]?.id;
           dispatch({
-            type: LOAD_POSTS_REQUEST,
-            lastId,
+            type: LOAD_MY_POSTS_REQUEST,
+            lastId: MyPostslastId,
+          });
+          const MyCommentslastId = myCommentPosts[myCommentPosts.length - 1]?.id;
+          dispatch({
+            type: LOAD_MY_COMMENTS_REQUEST,
+            lastId: MyCommentslastId,
           });
         }
       }
@@ -31,7 +37,7 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [hasMorePost, myPosts]);
+  }, [hasMorePost, myPosts.length, !loadMyPostsLoading]);
 
   const tabsWrapper = useMemo(() => ({ color: '#005000', marginTop: '10px', fontWeight: 'bold', lineHeight: '15px', paddingBotton: '10px' }), []);
   const tabPaneWrapper = useMemo(() => ({ color: 'black', fontWeight: 'normal' }), []);
@@ -46,7 +52,7 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
           tab={(
             <span>
               나의 글
-              <Badge count={myPosts.length} style={badge1Wrapper} />
+              <Badge count={me.postNum} style={badge1Wrapper} />
             </span>
           )}
           key="1"
@@ -59,20 +65,20 @@ const UserContents = ({ me, myPosts, myCommentPosts, hasMorePost }) => {
           tab={(
             <span>
               나의 댓글
-              <Badge count={myCommentPosts.length} style={badge2Wrapper} />
+              <Badge count={me.commentNum} style={badge2Wrapper} />
             </span>
           )}
           key="2"
           style={tabPaneWrapper}
         >
           {me && <PostForm me={me} />}
-          {myPosts.map((post) => (<PostCard key={post.id} post={post} />))}
+          {myCommentPosts.map((post) => (<PostCard key={post.id} post={post} />))}
         </TabPane>
         <TabPane
           tab={(
             <span>
               내가 추천한 글
-              <Badge count={30} style={badge3Wrapper} />
+              <Badge count={me.likeNum} style={badge3Wrapper} />
             </span>
           )}
           key="3"

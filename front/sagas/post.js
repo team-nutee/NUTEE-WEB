@@ -383,7 +383,7 @@ function loadMyPostsAPI(lastId) {
 
 function* loadMyPosts(action) {
   try {
-    const result = yield call(loadMyPostsAPI, action.data, action.lastId);
+    const result = yield call(loadMyPostsAPI, action.lastId);
     yield put({
       type: LOAD_MY_POSTS_SUCCESS,
       data: result.data.body,
@@ -397,12 +397,12 @@ function* loadMyPosts(action) {
 }
 
 function loadMyCommentsAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId}&limit=10`, { data: {} });
+  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMyComments(action) {
   try {
-    const result = yield call(loadMyCommentsAPI, action.data, action.lastId);
+    const result = yield call(loadMyCommentsAPI, action.lastId);
     yield put({
       type: LOAD_MY_COMMENTS_SUCCESS,
       data: result.data.body,
