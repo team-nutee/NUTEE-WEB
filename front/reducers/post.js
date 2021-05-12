@@ -716,6 +716,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       action.data.forEach((data) => {
         draft.myPosts.push(data);
       });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
+      });
       draft.hasMorePost = action.data.length === 10;
       draft.loadMyPostsLoading = false;
       draft.loadMyPostsDone = true;
@@ -731,6 +736,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       action.data.forEach((data) => {
         draft.myCommentPosts.push(data);
       });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
+      });
       draft.hasMorePost = action.data.length === 10;
       break;
     case LOAD_MY_COMMENTS_FAILURE:
@@ -742,6 +752,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_MY_LIKE_SUCCESS:
       action.data.forEach((data) => {
         draft.myLikePosts.push(data);
+      });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
       });
       draft.hasMorePost = action.data.length === 10;
       break;
