@@ -204,8 +204,8 @@ function* loadHashtagPosts(action) {
   }
 }
 
-function loadSearchPostsAPI(text, lastId) {
-  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`, { data: {} });
+function loadSearchPostsAPI(keyword, lastId) {
+  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(keyword)}?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadSearchPosts(action) {
@@ -249,7 +249,7 @@ function addPostAPI(postData) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data, action.major);
-    yield put({ // post reducer
+    yield put({
       type: ADD_POST_SUCCESS,
       data: result.data.body,
       category: result.data.body.category,

@@ -15,6 +15,7 @@ export const initialState = {
   myPosts: [], // 나의 전체 포스트들
   myCommentPosts: [], // 나의 댓글 포스트들
   myLikePosts: [], // 나의 좋아요 포스트들
+  searchPosts: [], // 검색 포스트들
   imagePaths: [], // 미리보기 이미지 경로
   editImagePaths: [], // 수정 미리보기 이미지 경로
   singlePost: null,
@@ -34,6 +35,9 @@ export const initialState = {
   loadMajorPostsLoading: false, // 전공 포스트 로드
   loadMajorPostsDone: false,
   loadMajorPostsError: null,
+  loadSearchPostsLoading: false, // 전공 포스트 로드
+  loadSearchPostsDone: false,
+  loadSearchPostsError: null,
   addPostLoading: false, // 포스트 업로드
   addPostDone: false,
   addPostError: null,
@@ -860,6 +864,22 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikePostError = action.error;
       break;
     case LOAD_SEARCH_POSTS_REQUEST:
+      draft.searchPosts = !action.lastId ? [] : draft.searchPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadSearchPostsLoading = true;
+      draft.loadSearchPostsDone = false;
+      draft.loadSearchPostsError = null;
+      break;
+    case LOAD_SEARCH_POSTS_SUCCESS:
+      action.data.forEach((data) => { draft.searchPosts.push(data); });
+      draft.hasMorePost = action.data.length === 10;
+      draft.loadsearchPostsLoading = false;
+      draft.loadsearchPostsDone = true;
+      break;
+    case LOAD_SEARCH_POSTS_FAILURE:
+      draft.loadsearchPostsLoading = false;
+      // draft.loadSearchPostsError = action.error;
+      break;
     case LOAD_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST:
@@ -869,7 +889,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsDone = false;
       draft.loadPostsError = null;
       break;
-    case LOAD_SEARCH_POSTS_SUCCESS:
     case LOAD_POSTS_SUCCESS:
     case LOAD_HASHTAG_POSTS_SUCCESS:
     case LOAD_USER_POSTS_SUCCESS:
@@ -878,7 +897,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
       break;
-    case LOAD_SEARCH_POSTS_FAILURE:
     case LOAD_POSTS_FAILURE:
     case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_USER_POSTS_FAILURE:

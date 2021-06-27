@@ -15,8 +15,6 @@ const Search = ({ onCloseSearch }) => {
   const getKetwords = JSON.parse(localStorage.getItem('keywords'));
   const [keywords, setKeywords] = useState(getKetwords || []);
 
-  console.log('keywords 비교keywords VS getKetwords  Search.js  ::: ', keywords, getKetwords);
-
   useEffect(() => {
     localStorage.setItem('keywords', JSON.stringify(keywords));
   }, [keywords]);
@@ -32,20 +30,17 @@ const Search = ({ onCloseSearch }) => {
   }, []);
 
   const onAddKeyword = useCallback((text) => {
-    console.log('onAddKeyword___text  검색한 키워드  Search.js', text);
     const newKeyword = {
       id: Date.now(),
       text,
     };
-    console.log('onAddKeyword___text  새로운 키워드 추가 Search.js', newKeyword);
     setKeywords([newKeyword, ...keywords]);
-    console.log('onAddKeyword___text  새로운 키워드 추가 setKeywords 이후', keywords);
   }, []);
 
   const onRemoveKeyword = useCallback((id) => {
-    console.log('onRemoveKeyword___text 삭제한 키워드   Search.js ::: ', id);
-    const nextKeyword = keywords.filter((thisKeyword) => thisKeyword.id !== id);
-    setKeywords(nextKeyword);
+    const index = keywords.findIndex((thisKeyword) => thisKeyword.id === id);
+    setKeywords(keywords.filter((thisKeyword) => thisKeyword.id !== id));
+    keywords.splice(index, 1);
   }, []);
 
   const onClearKeywords = useCallback(() => {
@@ -61,10 +56,10 @@ const Search = ({ onCloseSearch }) => {
   const searchHistoryWrapper = useMemo(() => ({ marginTop: '20px' }), []);
 
   const Box = styled.div`
-  height: 55vh; 
-  max-height: 500px;
-  width: 100vw;
-  overflow:auto;
+    height: 55vh; 
+    max-height: 500px;
+    width: 100vw;
+    overflow:auto;
     ::-webkit-scrollbar {
        display: none;
     }
@@ -74,6 +69,7 @@ const Search = ({ onCloseSearch }) => {
   /* 검색 아이콘을 눌렀을 때 보이는 페이지 */
     <div style={pageWrapper}>
       <CloseOutlined style={closeWrapper} onClick={onCloseSearch} />
+      {/* 검색바 */}
       <SearchBar
         onAddKeyword={onAddKeyword}
         onCloseSearch={onCloseSearch}

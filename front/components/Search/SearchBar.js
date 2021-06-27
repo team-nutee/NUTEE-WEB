@@ -5,22 +5,28 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import useInput from '../../hooks/useInput';
 
-const SearchBar = ({ onAddKeyword }) => {
-  const [keyword, onChangeKeyword, setKeyword] = useInput('');
+const SearchBar = ({ onAddKeyword, onCloseSearch }) => {
+  const [keyword, onChangeKeyword] = useInput('');
 
   const onSearch = useCallback(() => {
-    if (keyword) {
-      console.log('search', keyword);
-      onAddKeyword(keyword);
-      Router.push(`/search/${keyword}`);
+    if (keyword.length <= 0 || keyword.trim() === '') {
+      return alert('검색어를 입력하십시오.');
     }
+    Router.push(`/search/${keyword}`);
+    onAddKeyword(keyword);
+    return true;
   }, [keyword]);
 
   const onEnter = useCallback((e) => {
-    if (keyword && e.keyCode === 13) {
+    console.log('Enter', e.keyCode);
+    if (e.keyCode === 13) {
+      if (keyword.length <= 0 || keyword.trim() === '') {
+        return alert('검색어를 입력하십시오.');
+      }
+      Router.push(`/search/${keyword}`);
       onAddKeyword(keyword);
-      setKeyword('');
     }
+    return true;
   }, []);
 
   const searchWrapper = useMemo(() => ({ float: 'left', margin: '2px 10px 0 20px', width: '40vw' }), []);
@@ -42,7 +48,7 @@ const SearchBar = ({ onAddKeyword }) => {
 
 SearchBar.propTypes = {
   onAddKeyword: PropTypes.func,
-  onClickClose: PropTypes.func,
+  onCloseSearch: PropTypes.func,
 }.isRequired;
 
 export default SearchBar;
