@@ -11,7 +11,6 @@ import UserContents from '../components/contents/UserContents';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
 
-/* myCommentPosts, myLikePosts, */
 const Profile = () => {
   const { me } = useSelector((state) => state.user);
   const { myPosts, myCommentPosts, myLikePosts, hasMorePost } = useSelector((state) => state.post);
