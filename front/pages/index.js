@@ -44,9 +44,9 @@ const Home = () => {
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   return (
-    <>
-      { me ? (
-        <AppLayout>
+    <AppLayout>
+      {me
+        ? (
           <Row gutter={10} style={pageWrapper}>
             {/* 프로필, 공지, 포스터 */}
             <Col span={7}>
@@ -63,10 +63,9 @@ const Home = () => {
               />
             </Col>
           </Row>
-        </AppLayout>
-      )
+        )
         : <></>}
-    </>
+    </AppLayout>
   );
 };
 
