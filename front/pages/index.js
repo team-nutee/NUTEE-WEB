@@ -44,24 +44,29 @@ const Home = () => {
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
 
   return (
-    <AppLayout>
-      <Row gutter={10} style={pageWrapper}>
-        {/* 프로필, 공지, 포스터 */}
-        <Col span={7}>
-          <LeftContents me={me} />
-        </Col>
-        {/* 게시글 */}
-        <Col span={17}>
-          <MainContents
-            me={me}
-            hasMorePost={hasMorePost}
-            mainPosts={mainPosts}
-            favoritePosts={favoritePosts}
-            majorPosts={majorPosts}
-          />
-        </Col>
-      </Row>
-    </AppLayout>
+    <>
+      { me ? (
+        <AppLayout>
+          <Row gutter={10} style={pageWrapper}>
+            {/* 프로필, 공지, 포스터 */}
+            <Col span={7}>
+              <LeftContents me={me} />
+            </Col>
+            {/* 게시글 */}
+            <Col span={17}>
+              <MainContents
+                me={me}
+                hasMorePost={hasMorePost}
+                mainPosts={mainPosts}
+                favoritePosts={favoritePosts}
+                majorPosts={majorPosts}
+              />
+            </Col>
+          </Row>
+        </AppLayout>
+      )
+        : <></>}
+    </>
   );
 };
 

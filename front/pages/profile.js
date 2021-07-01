@@ -20,6 +20,9 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    dispatch({
       type: LOAD_MY_POSTS_REQUEST,
     });
     dispatch({
@@ -28,31 +31,32 @@ const Profile = () => {
     dispatch({
       type: LOAD_MY_LIKE_REQUEST,
     });
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
   }, []);
 
   return (
     <>
-      <AppLayout>
-        <Row gutter={10} style={pageWrapper}>
-          {/* 프로필, 공지, 포스터 */}
-          <Col span={7}>
-            <UserLeftContents target={me} />
-          </Col>
-          {/* 게시글 */}
-          <Col span={17}>
-            <UserContents
-              me={me}
-              hasMorePost={hasMorePost}
-              myPosts={myPosts}
-              myCommentPosts={myCommentPosts}
-              myLikePosts={myLikePosts}
-            />
-          </Col>
-        </Row>
-      </AppLayout>
+      { me
+        ? (
+          <AppLayout>
+            <Row gutter={10} style={pageWrapper}>
+              {/* 프로필, 공지, 포스터 */}
+              <Col span={7}>
+                <UserLeftContents target={me} />
+              </Col>
+              {/* 게시글 */}
+              <Col span={17}>
+                <UserContents
+                  me={me}
+                  hasMorePost={hasMorePost}
+                  myPosts={myPosts}
+                  myCommentPosts={myCommentPosts}
+                  myLikePosts={myLikePosts}
+                />
+              </Col>
+            </Row>
+          </AppLayout>
+        )
+        : <></> }
     </>
   );
 };

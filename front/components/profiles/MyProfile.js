@@ -17,7 +17,7 @@ const MyProfile = ({ target }) => {
   const setWrapper = useMemo(() => ({ float: 'right', color: 'black', fontSize: '13px', marginLeft: '5px' }), []);
 
   const link = document.location.href;
-  const myPage = link !== ('http://localhost/' || 'http://nutee.kr') ? <></> : (
+  const myPage = link !== ('http://localhost/profile' || 'http://nutee.kr/profile') ? (
     <>
       <Link href="/profile">
         <a style={profileWrapper}>
@@ -26,7 +26,7 @@ const MyProfile = ({ target }) => {
         </a>
       </Link>
     </>
-  );
+  ) : <></>;
 
   return (
     <>
@@ -35,7 +35,7 @@ const MyProfile = ({ target }) => {
           <Card
             style={cardWrapper}
             actions={[
-              <Link href="/profile" key="twit">
+              <Link href="/profile" key="post">
                 <a>
                   <div>
                     <b>게시글</b>
@@ -44,7 +44,7 @@ const MyProfile = ({ target }) => {
                   </div>
                 </a>
               </Link>,
-              <Link href="/profile" key="following">
+              <Link href="/profile" key="comment">
                 <a>
                   <div>
                     <b>댓글</b>
@@ -53,7 +53,7 @@ const MyProfile = ({ target }) => {
                   </div>
                 </a>
               </Link>,
-              <Link href="/profile" key="follower">
+              <Link href="/profile" key="like">
                 <a>
                   <div>
                     <b>좋아요</b>

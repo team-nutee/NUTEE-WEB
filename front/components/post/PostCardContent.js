@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useMemo, useState } from 'react';
 import EditForm from './EditForm';
 
-const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
+const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
   const { title, content, commentNum, likers } = post;
   const [showMore, setShowMore] = useState(false);
   const cssChange = () => { setShowMore(true); };
@@ -43,7 +43,6 @@ const PostCardContent = ({ post, editMode, onCancelEdit, me, retweet }) => {
                   <EditForm
                     postDataTotal={post}
                     onCancelEdit={onCancelEdit}
-                    me={me}
                   />
                 </>
               )
@@ -118,7 +117,6 @@ PostCardContent.propTypes = {
   post: PropTypes.object,
   editMode: PropTypes.bool,
   onCancelEdit: PropTypes.bool,
-  me: PropTypes.array,
   retweet: PropTypes.array,
 }.isRequired;
 
