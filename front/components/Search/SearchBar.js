@@ -5,7 +5,7 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import useInput from '../../hooks/useInput';
 
-const SearchBar = ({ onAddKeyword, onCloseSearch }) => {
+const SearchBar = ({ onAddKeyword }) => {
   const [keyword, onChangeKeyword] = useInput('');
 
   const onSearch = useCallback(() => {
@@ -18,13 +18,13 @@ const SearchBar = ({ onAddKeyword, onCloseSearch }) => {
   }, [keyword]);
 
   const onEnter = useCallback((e) => {
-    console.log('Enter', e.keyCode);
-    if (e.keyCode === 13) {
-      if (keyword.length <= 0 || keyword.trim() === '') {
+    if (e.key === 'Enter') {
+      const key = e.target.value;
+      if (key.length <= 0 || key.trim() === '') {
         return alert('검색어를 입력하십시오.');
       }
-      Router.push(`/search/${keyword}`);
-      onAddKeyword(keyword);
+      Router.push(`/search/${key}`);
+      onAddKeyword(key);
     }
     return true;
   }, []);
@@ -33,22 +33,22 @@ const SearchBar = ({ onAddKeyword, onCloseSearch }) => {
   const SearchIconWrapper = useMemo(() => ({ fontSize: '30px', color: '#13c276', marginTop: '17px' }), []);
 
   return (
-    <>
+    <div>
       <Input
         placeholder="검색어를 입력하세요."
         allowClear
         style={searchWrapper}
         value={keyword}
         onChange={onChangeKeyword}
+        onKeyPress={onEnter}
       />
-      <SearchOutlined style={SearchIconWrapper} onKeyDown={onEnter} onClick={onSearch} />
-    </>
+      <SearchOutlined style={SearchIconWrapper} onClick={onSearch} />
+    </div>
   );
 };
 
 SearchBar.propTypes = {
   onAddKeyword: PropTypes.func,
-  onCloseSearch: PropTypes.func,
 }.isRequired;
 
 export default SearchBar;

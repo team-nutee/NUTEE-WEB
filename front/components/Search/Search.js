@@ -70,10 +70,7 @@ const Search = ({ onCloseSearch }) => {
     <div style={pageWrapper}>
       <CloseOutlined style={closeWrapper} onClick={onCloseSearch} />
       {/* 검색바 */}
-      <SearchBar
-        onAddKeyword={onAddKeyword}
-        onCloseSearch={onCloseSearch}
-      />
+      <SearchBar onAddKeyword={onAddKeyword} />
       <Box>
         <div style={divWrapper}>
           <div style={categoryWrapper}>
