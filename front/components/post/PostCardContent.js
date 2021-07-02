@@ -19,18 +19,6 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
 
   const Like = useCallback((likers ? likers.length : 0), []);
 
-  // url 입력 시 링크로 생성(수정 해야 함)
-  const urlReg = /(?:(http(s)?:\/\/|[\s\t\r\n\[\]\`\<\>\"\'])((?:[\w$\-_\.+!*\'\(\),]|%[0-9a-f][0-9a-f])*\:(?:[\w$\-_\.+!*\'\(\),;\?&=]|%[0-9a-f][0-9a-f])+\@)?(?:((?:(?:[a-z0-9\-가-힣]+\.)+[a-z0-9\-]{2,})|(?:[\d]{1,3}\.){3}[\d]{1,3})|localhost)(?:\:([0-9]+))?((?:\/(?:[\w$\-_\.+!*\'\(\),;:@&=ㄱ-ㅎㅏ-ㅣ가-힣]|%[0-9a-f][0-9a-f])+)*)(?:\/([^\s\/\?\.:<>|#]*(?:\.[^\s\/\?:<>|#]+)*))?(\/?[\?;](?:[a-z0-9\-]+(?:=[^\s:&<>]*)?\&)*[a-z0-9\-]+(?:=[^\s:&<>]*)?)?(#[\w\-]+)?)/;
-  const urlRegExp = useCallback(() => {
-    const url = content.split(`${urlReg}gi`).map((u) => {
-      if (u.match(urlReg)) {
-        return <Link href={u.slice(1)} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
-      }
-      return u;
-    });
-    return url;
-  }, []);
-
   return (
     <div style={pageWrapper}>
       {(content.split('\n').length <= 7)
@@ -50,12 +38,19 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
                 <>
                   <Divider orientation="left">{title}</Divider>
                   {content.split(/(#[^\s]+)/g).map((v) => {
-                    if (v.match(/#[^\s]+/)) {
+                    if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    return v;
+                    else {
+                      return v.split(/(\s)/gi).map((u) => {
+                        console.log(u);
+                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                        }
+                        return u;
+                      })
+                    }
                   })}
-                  {urlRegExp}
                 </>
               )}
 
@@ -79,12 +74,19 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
               ? (
                 <>
                   {content.split(/(#[^\s]+)/g).map((v) => {
-                    if (v.match(/#[^\s]+/)) {
+                    if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    return v;
+                    else {
+                      return v.split(/(\s)/gi).map((u) => {
+                        console.log(u);
+                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                        }
+                        return u;
+                      })
+                    }
                   })}
-                  {urlRegExp}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}
                   </h5>
@@ -93,12 +95,19 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
               : (
                 <pre style={preWrapper}>
                   {content.split(/(#[^\s]+)/g).map((v) => {
-                    if (v.match(/#[^\s]+/)) {
+                    if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    return v;
+                    else {
+                      return v.split(/(\s)/gi).map((u) => {
+                        console.log(u);
+                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                        }
+                        return u;
+                      })
+                    }
                   })}
-                  {urlRegExp}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}
                   </h5>
