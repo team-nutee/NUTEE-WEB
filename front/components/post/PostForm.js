@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
@@ -6,11 +5,10 @@ import { Form, Button, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FileImageOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Select from 'react-select';
-import PropTypes from 'prop-types';
 import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_REQUEST, ADD_POST_SUCCESS } from '../../reducers/post';
 import useInput from '../../hooks/useInput';
 
-const PostForm = ({ me }) => {
+const PostForm = () => {
   const dispatch = useDispatch();
   const [title, onChangeTitle, setTitle] = useInput('');
   const [text, onChangeText, setText] = useInput('');
@@ -77,6 +75,12 @@ const PostForm = ({ me }) => {
     });
   }, []);
 
+  const onEnter = (e) => { // 엔터 사용 불가
+    if (e.keyCode === 13 || e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const formWrapper = useMemo(() => ({ height: 'auto', overflow: 'hidden', background: '#f0faf5', borderRadius: '5px', border: '3px solid #c8e6d7', margin: '7px 0 15px 0', minWidth: '500px', maxWidth: '700px', width: '50wv' }), []);
   const imageAndWriteWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', width: '47vw', minWidth: '500px', maxWidth: '672px', borderColor: '#c8e6d7' }), []);
@@ -113,7 +117,8 @@ const PostForm = ({ me }) => {
         style={inputWrapper}
         value={title}
         onChange={onChangeTitle}
-        autoSize={{ minRows: 1, maxRows: 2 }}
+        autoSize={{ minRows: 1, maxRows: 1 }}
+        onKeyDown={onEnter}
         placeholder="제목"
       />
       <Input.TextArea
@@ -151,12 +156,6 @@ const PostForm = ({ me }) => {
       </div>
     </Form>
   );
-};
-
-PostForm.propTypes = {
-  me: PropTypes.shape({
-    majors: PropTypes.array,
-  }).isRequired,
 };
 
 export default PostForm;

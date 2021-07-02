@@ -2,7 +2,6 @@ import React, { useMemo, useEffect } from 'react';
 import { Col, Row } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
-import axios from 'axios';
 import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST, LOAD_MY_LIKE_REQUEST } from '../reducers/post';
 import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import AppLayout from '../components/AppLayout';
@@ -20,6 +19,9 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    dispatch({
       type: LOAD_MY_POSTS_REQUEST,
     });
     dispatch({
@@ -28,43 +30,35 @@ const Profile = () => {
     dispatch({
       type: LOAD_MY_LIKE_REQUEST,
     });
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
   }, []);
 
   return (
-    <>
-      <AppLayout>
-        <Row gutter={10} style={pageWrapper}>
-          {/* 프로필, 공지, 포스터 */}
-          <Col span={7}>
-            <UserLeftContents target={me} />
-          </Col>
-          {/* 게시글 */}
-          <Col span={17}>
-            <UserContents
-              me={me}
-              hasMorePost={hasMorePost}
-              myPosts={myPosts}
-              myCommentPosts={myCommentPosts}
-              myLikePosts={myLikePosts}
-            />
-          </Col>
-        </Row>
-      </AppLayout>
-    </>
+    <AppLayout>
+      { me
+        ? (
+          <Row gutter={10} style={pageWrapper}>
+            {/* 프로필, 공지, 포스터 */}
+            <Col span={7}>
+              <UserLeftContents target={me} />
+            </Col>
+            {/* 게시글 */}
+            <Col span={17}>
+              <UserContents
+                me={me}
+                hasMorePost={hasMorePost}
+                myPosts={myPosts}
+                myCommentPosts={myCommentPosts}
+                myLikePosts={myLikePosts}
+              />
+            </Col>
+          </Row>
+        )
+        : <></> }
+    </AppLayout>
   );
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log('getServerSideProps start_profile');
-  console.log(context.req.headers);
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
   });
@@ -96,7 +90,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_HANGSA_NOTICE_REQUEST,
   });
   context.store.dispatch(END);
-  console.log('getServerSideProps end');
   await context.store.sagaTask.toPromise();
 });
 

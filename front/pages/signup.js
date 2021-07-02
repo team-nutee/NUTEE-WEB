@@ -213,6 +213,12 @@ const Signup = () => {
     setInterests(select);
   };
 
+  const onSpace = (e) => {
+    if (e.keyCode === 32 || e.key === 'Space') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <>
       <div style={pageWrapper}>
@@ -232,6 +238,7 @@ const Signup = () => {
                   value={id}
                   placeholder="아이디"
                   required
+                  onKeyDown={onSpace}
                   onChange={onChangeId}
                 />
               </Col>
@@ -251,6 +258,7 @@ const Signup = () => {
                   value={nickname}
                   placeholder="닉네임"
                   required
+                  onKeyDown={onSpace}
                   onChange={onChangeNickname}
                 />
                 {checkNicknameError && <div style={failureWrapper}>중복된 닉네임입니다.</div>}
@@ -302,6 +310,7 @@ const Signup = () => {
                   placeholder="이메일(@office.skhu.ac.kr)"
                   value={schoolEmail}
                   required
+                  onKeyDown={onSpace}
                   onChange={onChangeSchoolEmail}
                 />
               </Col>
@@ -321,6 +330,7 @@ const Signup = () => {
                   value={otp}
                   placeholder="otp"
                   required
+                  onKeyDown={onSpace}
                   onChange={onChangeOtp}
                 />
               </Col>

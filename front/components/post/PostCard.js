@@ -217,7 +217,6 @@ const PostCard = ({ post }) => {
                       <>
                         <PostCardContent
                           post={post}
-                          me={me}
                           editMode={editMode}
                           onCancelEdit={onCancelEdit}
                         />

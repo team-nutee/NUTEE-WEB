@@ -56,26 +56,33 @@ const Search = () => {
   const iconWrapper = useMemo(() => ({ margin: '10px 10vh', width: '250px', fontSize: '40px' }), []);
 
   return (
-    <AppLayout>
-      <Row gutter={10} style={pageWrapper}>
-        <Col span={7}>
-          <LeftContents me={me} />
-        </Col>
-        <Col span={17} style={colWrapper}>
-          {searchPosts.length !== 0 ? searchPosts.map((c) => <PostCard key={c.id} post={c} />) : (
-            <div style={divFontWrapper}>
-              <h2>
-                <FileSearchOutlined style={iconWrapper} />
-                <br />
-                &quot;
-                {text}
-                &quot;에 대한 검색 결과가 없습니다.
-              </h2>
-            </div>
-          )}
-        </Col>
-      </Row>
-    </AppLayout>
+    <>
+      {me
+        ? (
+          <AppLayout>
+            <Row gutter={10} style={pageWrapper}>
+              <Col span={7}>
+                <LeftContents me={me} />
+              </Col>
+              <Col span={17} style={colWrapper}>
+                {searchPosts.length !== 0 ? searchPosts.map((c) => <PostCard key={c.id} post={c} />)
+                  : (
+                    <div style={divFontWrapper}>
+                      <h2>
+                        <FileSearchOutlined style={iconWrapper} />
+                        <br />
+                        &quot;
+                        {text}
+                        &quot;에 대한 검색 결과가 없습니다.
+                      </h2>
+                    </div>
+                  )}
+              </Col>
+            </Row>
+          </AppLayout>
+        )
+        : <></> }
+    </>
   );
 };
 
