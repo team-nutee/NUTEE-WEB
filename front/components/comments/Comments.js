@@ -14,6 +14,7 @@ import ProfileAvatar from '../profiles/ProfileAvatar';
 import ReCommentForm from './ReCommentForm';
 import RecommentBox from './RecommentBox';
 import ReportComment from '../ReportComment';
+import CommentsContent from './CommentsContent';
 
 moment.locale('ko');
 
@@ -139,7 +140,11 @@ const Comments = ({ item, post }) => {
                       {moment(item.createdAt).format('YYYY.MM.DDTHH:mm:ss') === moment(item.updatedAt).format('YYYY.MM.DDTHH:mm:ss')
                         ? moment(item.createdAt).format('YYYY.MM.DD') : moment(item.updatedAt).format('YYYY.MM.DD', ' (수정됨)')}
                     </div>
-                    {item.content}
+                    {<>
+                      <CommentsContent 
+                        commentsData = {item.content}
+                      />
+                    </>}
                   </pre>
                 )}
             />
