@@ -6,6 +6,7 @@ import { END } from 'redux-saga';
 import { useRouter } from 'next/router';
 import { LOAD_SEARCH_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import PostCard from '../components/post/PostCard';
 import LeftContents from '../components/contents/LeftContents';
 import AppLayout from '../components/AppLayout';
@@ -97,6 +98,24 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   context.store.dispatch({
     type: LOAD_SEARCH_POSTS_REQUEST,
     data: text,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKSA_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_SOOUP_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKJUM_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_JANGHAK_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_ILBAN_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HANGSA_NOTICE_REQUEST,
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
