@@ -18,11 +18,6 @@ const DeveloperInfomation = () => {
       color: 'magenta',
     },
     {
-      name: '이승헌',
-      part: 'Back-end',
-      color: 'magenta',
-    },
-    {
       name: '오준현',
       part: 'iOS',
       color: 'cyan',
@@ -56,11 +51,6 @@ const DeveloperInfomation = () => {
       name: '김희선',
       part: 'AOS',
       color: 'lime',
-    },
-    {
-      name: '박세연',
-      part: 'QA',
-      color: 'orange',
     },
   ];
 

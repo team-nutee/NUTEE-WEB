@@ -5,7 +5,7 @@ import { Col, Row, Modal, List } from 'antd';
 import PropTypes from 'prop-types';
 import MyProfile from '../profiles/MyProfile';
 import Notice from '../Notice';
-import LinkContents from '../LinkContents';
+import LinkContents from './LinkContents';
 import DevInfo from '../DeveloperInformation';
 
 const LeftContents = ({ me }) => {
