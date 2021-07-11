@@ -10,7 +10,7 @@ import Empty from './Empty';
 const AppLayout = ({ children }) => {
   const { me, isLoadMyInfoError } = useSelector((state) => state.user);
   const wrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', minHeight: '1000px' }), []);
-  const page = isLoadMyInfoError || !me ? (
+  const page = isLoadMyInfoError ? (
     <>
       <NavigationBar me={me} />
       <LoginForm />

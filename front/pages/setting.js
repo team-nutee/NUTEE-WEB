@@ -12,7 +12,7 @@ import EditProfileImage from '../components/setting/EditProfileImage';
 import EditNickname from '../components/setting/EditNickname';
 import EditMajor from '../components/setting/EditMajor';
 import EditCategory from '../components/setting/EditCategory';
-import SettingTabs from '../components/SettingWrapper';
+import SettingTabs from '../components/setting/SettingWrapper';
 
 const { TabPane } = Tabs;
 

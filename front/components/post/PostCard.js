@@ -11,8 +11,8 @@ import PostCardContent from './PostCardContent';
 import Comments from '../comments/Comments';
 import CommentForm from '../comments/CommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
-import Report from '../Report';
-import PostTime from '../PostTime';
+import Report from '../report/Report';
+import PostTime from './PostTime';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();

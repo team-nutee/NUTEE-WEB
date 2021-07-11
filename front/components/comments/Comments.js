@@ -13,7 +13,7 @@ import EditCommentForm from './EditCommentForm';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import ReCommentForm from './ReCommentForm';
 import RecommentBox from './RecommentBox';
-import ReportComment from '../ReportComment';
+import ReportComment from '../report/ReportComment';
 import CommentsContent from './CommentsContent';
 
 moment.locale('ko');
