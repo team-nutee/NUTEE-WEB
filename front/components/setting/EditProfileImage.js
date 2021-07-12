@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -54,39 +55,37 @@ const EditProfileImage = () => {
       <div style={inputWrapper}>
         <Form encType="multipart/form-data" onClick={onClickImageUpload}>
           <input type="file" name="image" hidden ref={imageInput} onChange={uploadProfileImage} />
-          {
-                      me.image
-                        ? isImage
-                            ? (
-                              <img
-                                src={profileImagePath}
-                                style={imgWrapper}
-                                alt={profileImagePath}
-                              />
-                            )
-                            : (
-                              <img
-                                src={me.image.src}
-                                style={imgWrapper}
-                                alt={me.image.src}
-                              />
-                            )
-                        : isImage
-                            ? (
-                              <img
-                                src={profileImagePath}
-                                style={imgWrapper}
-                                alt={profileImagePath}
-                              />
-                            )
-                            : (
-                              <img
-                                src={`${TARGET_URL}/settings/nutee_profile.png`}
-                                style={imgWrapper}
-                                alt="nutee profile"
-                              />
-                            )
-                  }
+          { me.image
+            ? isImage
+              ? (
+                <img
+                  src={profileImagePath}
+                  style={imgWrapper}
+                  alt={profileImagePath}
+                />
+              )
+              : (
+                <img
+                  src={me.image.src}
+                  style={imgWrapper}
+                  alt={me.image.src}
+                />
+              )
+            : isImage
+              ? (
+                <img
+                  src={profileImagePath}
+                  style={imgWrapper}
+                  alt={profileImagePath}
+                />
+              )
+              : (
+                <img
+                  src={`${TARGET_URL}/settings/nutee_profile.png`}
+                  style={imgWrapper}
+                  alt="nutee profile"
+                />
+              )}
         </Form>
       </div>
       <div style={inputWrapper}>

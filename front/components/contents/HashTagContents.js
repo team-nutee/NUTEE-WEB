@@ -2,6 +2,8 @@ import React, { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Col } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
+import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 import { LOAD_HASHTAG_POSTS_REQUEST } from '../../reducers/post';
 import PostCard from '../post/PostCard';
 import wrapper from '../../store/configureStore';
@@ -21,7 +23,7 @@ const HashTagContents = ({ mainPosts, hasMorePost, tag }) => {
     const onScroll = () => {
       if (window.pageYOffset + document.documentElement.clientHeight
         > document.documentElement.scrollHeight - 300) {
-        if (hasMorePost && !loadPostsLoading ) {
+        if (hasMorePost && !loadPostsLoading) {
           dispatch({
             type: LOAD_HASHTAG_POSTS_REQUEST,
             lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
@@ -35,7 +37,7 @@ const HashTagContents = ({ mainPosts, hasMorePost, tag }) => {
       window.removeEventListener('scroll', onScroll);
     };
   }, [mainPosts.length, hasMorePost, tag, loadPostsLoading]);
-  
+
   const pageWrapper = useMemo(() => ({ marginTop: '30px' }), []);
 
   return (

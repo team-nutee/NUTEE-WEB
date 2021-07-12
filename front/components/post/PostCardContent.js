@@ -41,15 +41,12 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
                     if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    else {
-                      return v.split(/(\s)/gi).map((u) => {
-                        console.log(u);
-                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
-                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
-                        }
-                        return u;
-                      })
-                    }
+                    return v.split(/(\s)/gi).map((u) => {
+                      if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                        return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                      }
+                      return u;
+                    });
                   })}
                 </>
               )}
@@ -77,15 +74,13 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
                     if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    else {
-                      return v.split(/(\s)/gi).map((u) => {
-                        console.log(u);
-                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
-                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
-                        }
-                        return u;
-                      })
-                    }
+
+                    return v.split(/(\s)/gi).map((u) => {
+                      if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                        return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                      }
+                      return u;
+                    });
                   })}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}
@@ -98,15 +93,14 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
                     if (v.match(/(#[^\s]+)/)) {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
-                    else {
-                      return v.split(/(\s)/gi).map((u) => {
-                        console.log(u);
-                        if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
-                          return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
-                        }
-                        return u;
-                      })
-                    }
+
+                    return v.split(/(\s)/gi).map((u) => {
+                      console.log(u);
+                      if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                        return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
+                      }
+                      return u;
+                    });
                   })}
                   <h5 style={h5Wrapper}>
                     {`댓글 ${commentNum === undefined ? 0 : commentNum}개 좋아요${Like}개`}

@@ -79,6 +79,7 @@ const Comments = ({ item, post }) => {
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
+  // eslint-disable-next-line react/prop-types
   const liked = item.likers && item.likers.find((v) => v.id === id);
 
   const EllipsisContent = (
@@ -140,11 +141,11 @@ const Comments = ({ item, post }) => {
                       {moment(item.createdAt).format('YYYY.MM.DDTHH:mm:ss') === moment(item.updatedAt).format('YYYY.MM.DDTHH:mm:ss')
                         ? moment(item.createdAt).format('YYYY.MM.DD') : moment(item.updatedAt).format('YYYY.MM.DD', ' (수정됨)')}
                     </div>
-                    {<>
-                      <CommentsContent 
-                        commentsData = {item.content}
+                    <>
+                      <CommentsContent
+                        commentsData={item.content}
                       />
-                    </>}
+                    </>
                   </pre>
                 )}
             />

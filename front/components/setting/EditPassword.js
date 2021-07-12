@@ -20,7 +20,7 @@ const PwEditModal = () => {
     }, [changePassword],
   );
 
-  const pageWrapper = useMemo(() => ({ marginTop: '120px', padding: '10px'}), []);
+  const pageWrapper = useMemo(() => ({ marginTop: '120px', padding: '10px' }), []);
   const divWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginBottom: '10px' }), []);
   const changeButtonWrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', marginTop: '20px' }), []);
   const inputWrapper = useMemo(() => ({ width: '300px' }), []);

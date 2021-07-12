@@ -12,7 +12,7 @@ const AppLayout = ({ children }) => {
   const wrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', minHeight: '1000px' }), []);
   const page = isLoadMyInfoError ? (
     <>
-      <NavigationBar me={me} />
+      <NavigationBar />
       <LoginForm />
     </>
   ) : <Empty />;
