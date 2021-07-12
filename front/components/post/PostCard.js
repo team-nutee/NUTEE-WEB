@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
@@ -24,10 +24,12 @@ const PostCard = ({ post }) => {
   const [lastId, setlastId] = useState(0);
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const [editMode, setEditMode] = useState(false);
+  const [mobileScreen, setMobileScreen] = useState(false);
 
   const postImage = post.images && post.images[0] ? <PostImages images={post.images} /> : <></>;
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
+  const mobilePostCardWrapper = useMemo(() => ({ minWidth: '250px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
   const aWrapper = useMemo(() => ({ margin: '0px 10px' }), []);
   const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
@@ -48,6 +50,20 @@ const PostCard = ({ post }) => {
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
   const onClickEdit = useCallback(() => { setPopoverVisible(false); setEditMode(true); }, []);
   const onCancelEdit = useCallback(() => { setEditMode(false); }, []);
+
+  useEffect(
+    function onMobileWidth() {
+      if ((window.innerWidth || document.body.clientWidth) > 750) {
+        setMobileScreen(false);
+      } else {
+        setMobileScreen(true);
+      }
+      window.addEventListener('resize', onMobileWidth);
+      return () => {
+        window.removeEventListener('resize', onMobileWidth);
+      };
+    },
+  );
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
@@ -124,7 +140,7 @@ const PostCard = ({ post }) => {
   };
 
   return (
-    <div style={postCardWrapper}>
+    <div style={mobileScreen?mobilePostCardWrapper:postCardWrapper}>
       {post.blocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card>
         : (
           <Card
