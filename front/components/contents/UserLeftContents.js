@@ -4,7 +4,7 @@ import { Row, Col } from 'antd';
 import UserProfile from '../profiles/UserProfile';
 import MyProfile from '../profiles/MyProfile';
 import Notice from '../Notice';
-import LinkContents from '../LinkContents';
+import LinkContents from './LinkContents';
 
 const UserLeftContents = (target) => {
   const { me } = useSelector((state) => state.user);

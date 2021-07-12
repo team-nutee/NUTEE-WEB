@@ -2,11 +2,11 @@ import React, { useCallback, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Input, Row } from 'antd';
 import { useDispatch } from 'react-redux';
-import { REPORT_REQUEST } from '../reducers/post';
+import { REPORT_COMMENT_REQUEST } from '../../reducers/post';
 
 const { TextArea } = Input;
 
-const Report = ({ postId, setReportVisible }) => {
+const ReportComment = ({ item, post, setReportVisible }) => {
   const [report, setReport] = useState('');
   const dispatch = useDispatch();
 
@@ -16,9 +16,10 @@ const Report = ({ postId, setReportVisible }) => {
 
   const onSubmitReport = useCallback(() => {
     dispatch({
-      type: REPORT_REQUEST,
+      type: REPORT_COMMENT_REQUEST,
       data: {
-        postId,
+        commentId: item.id,
+        postId: post.id,
         content: report,
       },
     });
@@ -44,9 +45,10 @@ const Report = ({ postId, setReportVisible }) => {
   );
 };
 
-Report.propTypes = {
+ReportComment.propTypes = {
+  commentId: PropTypes.number,
   postId: PropTypes.number,
   setReportVisible: PropTypes.func,
 }.isRequired;
 
-export default Report;
+export default ReportComment;

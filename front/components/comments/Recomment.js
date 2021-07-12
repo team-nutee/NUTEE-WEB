@@ -11,7 +11,7 @@ import { HeartTwoTone, HeartOutlined, EllipsisOutlined, AlertOutlined } from '@a
 import { REMOVE_RECOMMENT_REQUEST, LIKE_RECOMMENT_REQUEST, UNLIKE_RECOMMENT_REQUEST } from '../../reducers/post';
 import ProfileAvatar from '../profiles/ProfileAvatar';
 import EditRecommentForm from './EditRecommentForm';
-import ReportComment from '../ReportComment';
+import ReportComment from '../report/ReportComment';
 
 moment.locale('ko');
 

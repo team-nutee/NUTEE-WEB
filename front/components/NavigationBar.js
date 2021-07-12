@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import { logoutRequestAction } from '../reducers/user';
 import Search from './Search/Search';
 
@@ -16,6 +17,7 @@ const NavigationBar = ({ me }) => {
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
+    Router.push('/index');
   }, []);
 
   const wrapper = useMemo(() => ({ background: '#fff', boxShadow: '0 5px 10px rgba(0,0,0,0.19), 0 1px 3px rgba(0,0,0,0.23)', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1050', width: '100%' }), []);
