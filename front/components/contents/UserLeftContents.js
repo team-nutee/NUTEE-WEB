@@ -8,6 +8,7 @@ import LinkContents from './LinkContents';
 
 const UserLeftContents = (target) => {
   const { me } = useSelector((state) => state.user);
+  // eslint-disable-next-line react/destructuring-assignment
   const user = target.target;
   const wrapper = useMemo(() => ({ marginTop: '15px', padding: '15px' }), []);
 

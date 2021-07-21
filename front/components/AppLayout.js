@@ -37,11 +37,7 @@ const AppLayout = ({ children }) => {
     <div style={wrapper}>
       {me ? (
         <>
-          {
-          mobileScreen
-            ? <MobileNavigationBar me={me} />
-            :<NavigationBar me={me} />
-          } 
+          { mobileScreen ? <MobileNavigationBar me={me} /> : <NavigationBar me={me} /> }
           <Row>
             <Col style={wrapper}>{children}</Col>
             <Footer />

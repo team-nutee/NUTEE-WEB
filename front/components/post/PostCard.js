@@ -140,7 +140,7 @@ const PostCard = ({ post }) => {
   };
 
   return (
-    <div style={mobileScreen?mobilePostCardWrapper:postCardWrapper}>
+    <div style={mobileScreen ? mobilePostCardWrapper : postCardWrapper}>
       {post.blocked ? <Card style={blockCardWrapper}>다수 사용자의 신고로 인해 잠시 가려진 게시물입니다.</Card>
         : (
           <Card

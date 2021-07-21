@@ -80,6 +80,7 @@ const Recomment = ({ item, post, parentId, userId }) => {
   const reportOk = useCallback(() => { setReportVisible(false); }, []);
   const reportCancel = useCallback(() => { setReportVisible(false); }, []);
 
+  // eslint-disable-next-line react/prop-types
   const liked = item.likers.find((v) => v.id === id);
 
   const EllipsisContent = (

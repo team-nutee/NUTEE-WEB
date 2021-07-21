@@ -115,7 +115,7 @@ const PostForm = () => {
 
   return (
     <Form
-      style={mobileScreen?mobileFormWrapper:formWrapper}
+      style={mobileScreen ? mobileFormWrapper : formWrapper}
       onFinish={onSubmitForm}
     >
       <div style={categoryButtonWrapper}>
