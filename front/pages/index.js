@@ -64,34 +64,35 @@ const Home = () => {
       {mobileScreen
         ? (
           <Row style={mobilePageWrapper}>
-          <Col span={24}>
-            <MainContents
-              me={me}
-              hasMorePost={hasMorePost}
-              mainPosts={mainPosts}
-              favoritePosts={favoritePosts}
-              majorPosts={majorPosts}
-            />
-          </Col>
-        </Row>
+            <Col span={24}>
+              <MainContents
+                me={me}
+                hasMorePost={hasMorePost}
+                mainPosts={mainPosts}
+                favoritePosts={favoritePosts}
+                majorPosts={majorPosts}
+              />
+            </Col>
+          </Row>
         )
-        : 
-        <Row gutter={10} style={pageWrapper}>
-        {/* 프로필, 공지, 포스터 */}
-        <Col span={7}>
-          <LeftContents me={me} />
-        </Col>
-        {/* 게시글 */}
-        <Col span={17}>
-          <MainContents
-            me={me}
-            hasMorePost={hasMorePost}
-            mainPosts={mainPosts}
-            favoritePosts={favoritePosts}
-            majorPosts={majorPosts}
-          />
-        </Col>
-      </Row>}
+        : (
+          <Row gutter={10} style={pageWrapper}>
+            {/* 프로필, 공지, 포스터 */}
+            <Col span={7}>
+              <LeftContents me={me} />
+            </Col>
+            {/* 게시글 */}
+            <Col span={17}>
+              <MainContents
+                me={me}
+                hasMorePost={hasMorePost}
+                mainPosts={mainPosts}
+                favoritePosts={favoritePosts}
+                majorPosts={majorPosts}
+              />
+            </Col>
+          </Row>
+        )}
     </AppLayout>
   );
 };
