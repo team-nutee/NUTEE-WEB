@@ -1,8 +1,6 @@
 const express = require('express');
 const next = require('next');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
 const dotenv = require('dotenv');
 const path = require('path');
 
@@ -19,18 +17,7 @@ app.prepare().then(() => {
   server.use('/', express.static(path.join(__dirname, 'images')));
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
-  server.use(cookieParser(process.env.COOKIE_SECRET));
-  server.use(
-    expressSession({
-      resave: false,
-      saveUninitialized: false,
-      secret: process.env.COOKIE_SECRET,
-      cookie: {
-        httpOnly: true,
-        secure: false,
-      },
-    }),
-  );
+
   server.get('/hashtag/:tag', (req, res) => app.render(req, res, '/hashtag', { tag: req.params.tag }));
   server.get('/search/:text', (req, res) => app.render(req, res, '/search', { text: req.params.text }));
   server.get('/user/:id', (req, res) => app.render(req, res, '/user', { id: req.params.id }));

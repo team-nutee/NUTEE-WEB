@@ -107,7 +107,6 @@ import {
   REPORT_COMMENT_SUCCESS,
   REPORT_COMMENT_FAILURE,
 } from '../reducers/post';
-import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 import { INDEX_URL } from '../static';
 
 function loadMainPostsAPI(lastId) {
@@ -205,8 +204,8 @@ function* loadHashtagPosts(action) {
   }
 }
 
-function loadSearchPostsAPI(text, lastId) {
-  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(text)}?lastId=${lastId}&limit=10`, { data: {} });
+function loadSearchPostsAPI(keyword, lastId) {
+  return axios.get(`${INDEX_URL}/sns/search/${encodeURIComponent(keyword)}?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadSearchPosts(action) {
@@ -250,14 +249,10 @@ function addPostAPI(postData) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data, action.major);
-    yield put({ // post reducer
+    yield put({
       type: ADD_POST_SUCCESS,
       data: result.data.body,
       category: result.data.body.category,
-    });
-    yield put({ // user reducer
-      type: ADD_POST_TO_ME,
-      data: action.data.id,
     });
   } catch (err) {
     yield put({
@@ -296,10 +291,6 @@ function* removePost(action) {
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: result.data.body.id,
-    });
-    yield put({
-      type: REMOVE_POST_OF_ME,
-      data: result.data,
     });
   } catch (err) {
     console.error(err);
@@ -392,7 +383,7 @@ function loadMyPostsAPI(lastId) {
 
 function* loadMyPosts(action) {
   try {
-    const result = yield call(loadMyPostsAPI, action.data, action.lastId);
+    const result = yield call(loadMyPostsAPI, action.lastId);
     yield put({
       type: LOAD_MY_POSTS_SUCCESS,
       data: result.data.body,
@@ -406,12 +397,12 @@ function* loadMyPosts(action) {
 }
 
 function loadMyCommentsAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId}&limit=10`, { data: {} });
+  return axios.get(`${INDEX_URL}/sns/user/me/comment/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMyComments(action) {
   try {
-    const result = yield call(loadMyCommentsAPI, action.data, action.lastId);
+    const result = yield call(loadMyCommentsAPI, action.lastId);
     yield put({
       type: LOAD_MY_COMMENTS_SUCCESS,
       data: result.data.body,
@@ -425,12 +416,12 @@ function* loadMyComments(action) {
 }
 
 function loadMyLikeAPI(lastId) {
-  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId}&limit=10`, { data: {} });
+  return axios.get(`${INDEX_URL}/sns/user/me/like/posts?lastId=${lastId || 0}&limit=10`, { data: {} });
 }
 
 function* loadMyLike(action) {
   try {
-    const result = yield call(loadMyLikeAPI, action.data, action.lastId);
+    const result = yield call(loadMyLikeAPI, action.lastId);
     yield put({
       type: LOAD_MY_LIKE_SUCCESS,
       data: result.data.body,

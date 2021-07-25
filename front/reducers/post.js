@@ -15,6 +15,7 @@ export const initialState = {
   myPosts: [], // 나의 전체 포스트들
   myCommentPosts: [], // 나의 댓글 포스트들
   myLikePosts: [], // 나의 좋아요 포스트들
+  searchPosts: [], // 검색 포스트들
   imagePaths: [], // 미리보기 이미지 경로
   editImagePaths: [], // 수정 미리보기 이미지 경로
   singlePost: null,
@@ -22,6 +23,9 @@ export const initialState = {
   loadPostsLoading: false, // 모든 포스트 로드
   loadPostsDone: false,
   loadPostsError: null,
+  loadMyPostsLoading: false, // 나의 포스트 로드
+  loadMyPostsDone: false,
+  loadMyPostsError: null,
   loadCategoryPostsLoading: false, // 카테고리 포스트 로드
   loadCategoryPostsDone: false,
   loadCategoryPostsError: null,
@@ -31,6 +35,9 @@ export const initialState = {
   loadMajorPostsLoading: false, // 전공 포스트 로드
   loadMajorPostsDone: false,
   loadMajorPostsError: null,
+  loadSearchPostsLoading: false, // 전공 포스트 로드
+  loadSearchPostsDone: false,
+  loadSearchPostsError: null,
   addPostLoading: false, // 포스트 업로드
   addPostDone: false,
   addPostError: null,
@@ -399,6 +406,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.parentId,
       );
+      if (draft.commentList[postIndex][commentIndex].reComment === null) {
+        draft.commentList[postIndex][commentIndex].reComment = [];
+      }
       draft.commentList[postIndex][commentIndex].reComment.push(action.data.reComment);
       const reCommentIndex = draft.commentList[postIndex][commentIndex].reComment.findIndex(
         (v) => v.id === action.data.reComment.id,
@@ -553,7 +563,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikeCommentError = null;
       break;
     case UNLIKE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId,);
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.commentId,
       );
@@ -703,6 +713,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       // draft.loadMajorPostsError = action.error;
       break;
     case LOAD_MY_POSTS_REQUEST:
+      draft.loadMyPostsLoading = true;
+      draft.loadMyPostsDone = false;
+      draft.loadMyPostsError = null;
       draft.myPosts = !action.lastId ? [] : draft.myPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       break;
@@ -710,9 +723,17 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       action.data.forEach((data) => {
         draft.myPosts.push(data);
       });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
+      });
       draft.hasMorePost = action.data.length === 10;
+      draft.loadMyPostsLoading = false;
+      draft.loadMyPostsDone = true;
       break;
     case LOAD_MY_POSTS_FAILURE:
+      draft.loadMyPostsLoading = false;
       break;
     case LOAD_MY_COMMENTS_REQUEST:
       draft.myCommentPosts = !action.lastId ? [] : draft.myCommentPosts;
@@ -721,6 +742,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_MY_COMMENTS_SUCCESS:
       action.data.forEach((data) => {
         draft.myCommentPosts.push(data);
+      });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
       });
       draft.hasMorePost = action.data.length === 10;
       break;
@@ -733,6 +759,11 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_MY_LIKE_SUCCESS:
       action.data.forEach((data) => {
         draft.myLikePosts.push(data);
+      });
+      action.data.forEach((data) => {
+        if (!draft.mainPosts.includes(data)) {
+          draft.mainPosts.push(data);
+        }
       });
       draft.hasMorePost = action.data.length === 10;
       break;
@@ -748,6 +779,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const mainPostsIndex = draft.mainPosts.findIndex((v) => v.id === postId);
       const favoritePostsIndex = draft.favoritePosts.findIndex((v) => v.id === postId);
       const majorPostsIndex = draft.majorPosts.findIndex((v) => v.id === postId);
+      const myCommentPostsIndex = draft.myCommentPosts.findIndex((v) => v.id === postId);
+      const myLikePostsIndex = draft.myLikePosts.findIndex((v) => v.id === postId);
       if (mainPostsIndex !== -1) {
         if (draft.mainPosts[mainPostsIndex].likers === null) {
           draft.mainPosts[mainPostsIndex].likers = [];
@@ -766,6 +799,18 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
           draft.majorPosts[majorPostsIndex].likers.push({ id: user.id });
         } else draft.majorPosts[majorPostsIndex].likers.push({ id: user.id });
       }
+      if (myCommentPostsIndex !== -1) {
+        if (draft.myCommentPosts[myCommentPostsIndex].likers === null) {
+          draft.myCommentPosts[myCommentPostsIndex].likers = [];
+          draft.myCommentPosts[myCommentPostsIndex].likers.push({ id: user.id });
+        } else draft.myCommentPosts[myCommentPostsIndex].likers.push({ id: user.id });
+      }
+      if (myLikePostsIndex !== -1) {
+        if (draft.myLikePosts[myLikePostsIndex].likers === null) {
+          draft.myLikePosts[myLikePostsIndex].likers = [];
+          draft.myLikePosts[myLikePostsIndex].likers.push({ id: user.id });
+        } else draft.myLikePosts[myLikePostsIndex].likers.push({ id: user.id });
+      }
       draft.likePostLoading = false;
       draft.likePostDone = true;
       break;
@@ -783,6 +828,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const mainPostsIndex = draft.mainPosts.findIndex((v) => v.id === action.postId);
       const favoritePostsIndex = draft.favoritePosts.findIndex((v) => v.id === action.postId);
       const majorPostsIndex = draft.majorPosts.findIndex((v) => v.id === action.postId);
+      const myCommentPostsIndex = draft.myCommentPosts.findIndex((v) => v.id === action.postId);
+      const myLikePostsIndex = draft.myLikePosts.findIndex((v) => v.id === action.postId);
       if (mainPostsIndex !== -1) {
         const mainPostLikeIndex = draft.mainPosts[mainPostsIndex
         ].likers.findIndex((v) => v.id !== action.userId);
@@ -798,6 +845,16 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         ].likers.findIndex((v) => v.id !== action.userId);
         draft.majorPosts[majorPostsIndex].likers.splice(majorPostLikeIndex, 1);
       }
+      if (myCommentPostsIndex !== -1) {
+        const myCommentPostLikeIndex = draft.myCommentPosts[myCommentPostsIndex
+        ].likers.findIndex((v) => v.id !== action.userId);
+        draft.myCommentPosts[myCommentPostsIndex].likers.splice(myCommentPostLikeIndex, 1);
+      }
+      if (myLikePostsIndex !== -1) {
+        const myLikePostLikeIndex = draft.myLikePosts[myLikePostsIndex
+        ].likers.findIndex((v) => v.id !== action.userId);
+        draft.myLikePosts[myLikePostsIndex].likers.splice(myLikePostLikeIndex, 1);
+      }
       draft.unlikePostLoading = false;
       draft.unlikePostDone = true;
       break;
@@ -807,6 +864,22 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikePostError = action.error;
       break;
     case LOAD_SEARCH_POSTS_REQUEST:
+      draft.searchPosts = !action.lastId ? [] : draft.searchPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.loadSearchPostsLoading = true;
+      draft.loadSearchPostsDone = false;
+      draft.loadSearchPostsError = null;
+      break;
+    case LOAD_SEARCH_POSTS_SUCCESS:
+      action.data.forEach((data) => { draft.searchPosts.push(data); });
+      draft.hasMorePost = action.data.length === 10;
+      draft.loadsearchPostsLoading = false;
+      draft.loadsearchPostsDone = true;
+      break;
+    case LOAD_SEARCH_POSTS_FAILURE:
+      draft.loadsearchPostsLoading = false;
+      // draft.loadSearchPostsError = action.error;
+      break;
     case LOAD_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST:
@@ -816,7 +889,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsDone = false;
       draft.loadPostsError = null;
       break;
-    case LOAD_SEARCH_POSTS_SUCCESS:
     case LOAD_POSTS_SUCCESS:
     case LOAD_HASHTAG_POSTS_SUCCESS:
     case LOAD_USER_POSTS_SUCCESS:
@@ -825,7 +897,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
       break;
-    case LOAD_SEARCH_POSTS_FAILURE:
     case LOAD_POSTS_FAILURE:
     case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_USER_POSTS_FAILURE:

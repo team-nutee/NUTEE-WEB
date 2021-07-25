@@ -4,9 +4,9 @@ import styled from 'styled-components';
 const NoticeTabs = styled(Tabs)`
 .ant-tabs-nav{
     background: white;
-    width: 19.5vw;
-    min-width: 205px;
-    max-width: 280px;
+    width: 18vw;
+    min-width: 187px;
+    max-width: 260px;
    .ant-tabs-nav-wrap {
     .ant-tabs-nav-list {
         display: flex;

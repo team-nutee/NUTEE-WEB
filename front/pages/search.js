@@ -1,20 +1,23 @@
 import React, { useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { FileSearchOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { END } from 'redux-saga';
-import axios from 'axios';
-import { LOAD_SEARCH_POSTS_REQUEST } from '../reducers/post';
+import { useRouter } from 'next/router';
+import { LOAD_SEARCH_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import PostCard from '../components/post/PostCard';
 import LeftContents from '../components/contents/LeftContents';
 import AppLayout from '../components/AppLayout';
 import wrapper from '../store/configureStore';
 
-const Search = ({ text }) => {
+const Search = () => {
   const dispatch = useDispatch();
-  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const { searchPosts, hasMorePost } = useSelector((state) => state.post);
   const { me } = useSelector((state) => state.user);
+  const router = useRouter();
+  const { text } = router.query;
 
   useEffect(() => {
     dispatch({
@@ -23,6 +26,9 @@ const Search = ({ text }) => {
     });
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
+    });
+    dispatch({
+      type: LOAD_CATEGORY_DATA_REQUEST,
     });
   }, []);
 
@@ -33,7 +39,7 @@ const Search = ({ text }) => {
         if (hasMorePost) {
           dispatch({
             type: LOAD_SEARCH_POSTS_REQUEST,
-            lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
+            lastId: searchPosts[searchPosts.length - 1] && searchPosts[searchPosts.length - 1].id,
             data: text,
           });
         }
@@ -43,48 +49,75 @@ const Search = ({ text }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts.length, hasMorePost]);
+  }, [searchPosts.length, hasMorePost]);
 
-  const colWrapper = useMemo(() => ({ marginTop: '10px' }), []);
   const pageWrapper = useMemo(() => ({ outline: 'none', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
+  const colWrapper = useMemo(() => ({ marginTop: '30px' }), []);
+  const divFontWrapper = useMemo(() => ({ margin: '30vh 10vh' }), []);
+  const iconWrapper = useMemo(() => ({ margin: '10px 10vh', width: '250px', fontSize: '40px' }), []);
 
   return (
-    <AppLayout>
-      <Row gutter={10} style={pageWrapper}>
-        <Col span={7}>
-          <LeftContents me={me} />
-        </Col>
-        <Col span={17} style={colWrapper}>
-          {mainPosts.map((c) => <PostCard key={c.id} post={c} />)}
-        </Col>
-      </Row>
-    </AppLayout>
+    <>
+      {me
+        ? (
+          <AppLayout>
+            <Row gutter={10} style={pageWrapper}>
+              <Col span={7}>
+                <LeftContents me={me} />
+              </Col>
+              <Col span={17} style={colWrapper}>
+                {searchPosts.length !== 0 ? searchPosts.map((c) => <PostCard key={c.id} post={c} />)
+                  : (
+                    <div style={divFontWrapper}>
+                      <h2>
+                        <FileSearchOutlined style={iconWrapper} />
+                        <br />
+                        &quot;
+                        {text}
+                        &quot;에 대한 검색 결과가 없습니다.
+                      </h2>
+                    </div>
+                  )}
+              </Col>
+            </Row>
+          </AppLayout>
+        )
+        : <></> }
+    </>
   );
 };
 
-Search.propTypes = {
-  text: PropTypes.string.isRequired,
-};
-
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log('getServerSideProps start_search_search');
-  console.log(context.req.headers);
   const { text } = context.query;
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
   });
-  console.log('search getInitialProps', text);
+  context.store.dispatch({
+    type: LOAD_CATEGORY_DATA_REQUEST,
+  });
   context.store.dispatch({
     type: LOAD_SEARCH_POSTS_REQUEST,
     data: text,
   });
+  context.store.dispatch({
+    type: LOAD_HAKSA_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_SOOUP_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HAKJUM_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_JANGHAK_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_ILBAN_NOTICE_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_HANGSA_NOTICE_REQUEST,
+  });
   context.store.dispatch(END);
-  console.log('getServerSideProps end');
   await context.store.sagaTask.toPromise();
 });
 

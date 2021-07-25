@@ -52,15 +52,15 @@ export const initialState = {
   editMajorLoading: false, // 전공 변경
   editMajorDone: false,
   editMajorError: null,
+  uploadProfileImageLoading: false, // 프로필 이미지 업로드
+  uploadProfileImageDone: false,
+  uploadProfileImageError: null,
   editProfileImageLoading: false, // 프로필 이미지 변경
   editProfileImageDone: false,
   editProfileImageError: null,
   editPasswordLoading: false, // 비밀번호 변경
   editPasswordDone: false,
   editPasswordError: null,
-  checkedPasswordLoading: false, // 비밀번호 확인 여부 (비번 변경 시)
-  checkedPasswordDone: false,
-  checkedPasswordError: null,
 
   /* follow */
   followingList: [], // 팔로잉 리스트
@@ -150,10 +150,6 @@ export const FIND_PASSWORD_REQUEST = 'FIND_PASSWORD_REQUEST';
 export const FIND_PASSWORD_SUCCESS = 'FIND_PASSWORD_SUCCESS';
 export const FIND_PASSWORD_FAILURE = 'FIND_PASSWORD_FAILURE';
 
-export const EDIT_PWCK_REQUEST = 'EDIT_PWCK_REQUEST';
-export const EDIT_PWCK_SUCCESS = 'EDIT_PWCK_SUCCESS';
-export const EDIT_PWCK_FAILURE = 'EDIT_PWCK_FAILURE';
-
 export const EDIT_MAJOR_REQUEST = 'EDIT_MAJOR_REQUEST';
 export const EDIT_MAJOR_SUCCESS = 'EDIT_MAJOR_SUCCESS';
 export const EDIT_MAJOR_FAILURE = 'EDIT_MAJOR_FAILURE';
@@ -169,6 +165,10 @@ export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 export const EDIT_PASSWORD_REQUEST = 'EDIT_PASSWORD_REQUEST';
 export const EDIT_PASSWORD_SUCCESS = 'EDIT_PASSWORD_SUCCESS';
 export const EDIT_PASSWORD_FAILURE = 'EDIT_PASSWORD_FAILURE';
+
+export const UPLOAD_PROFILE_IMAGE_REQUEST = 'UPLOAD_PROFILE_IMAGE_REQUEST';
+export const UPLOAD_PROFILE_IMAGE_SUCCESS = 'UPLOAD_PROFILE_IMAGE_SUCCESS';
+export const UPLOAD_PROFILE_IMAGE_FAILURE = 'UPLOAD_PROFILE_IMAGE_FAILURE';
 
 export const EDIT_PROFILE_IMAGE_REQUEST = 'EDIT_PROFILE_IMAGE_REQUEST';
 export const EDIT_PROFILE_IMAGE_SUCCESS = 'EDIT_PROFILE_IMAGE_SUCCESS';
@@ -352,12 +352,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.isLoadMyInfoLoading = false;
       draft.isLoadMyInfoError = action.error;
       break;
-    case ADD_POST_TO_ME:
-      // draft.me.posts.unshift({ userId: action.data });
-      break;
-    case REMOVE_POST_OF_ME:
-      // draft.me.posts = draft.me.posts.filter((v) => v.id !== action.data);
-      break;
     case EDIT_NICKNAME_REQUEST:
       draft.editNicknameLoading = true;
       draft.editNicknameError = null;
@@ -399,19 +393,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case EDIT_MAJOR_FAILURE:
       draft.editMajorLoading = false;
       draft.editMajorError = action.error;
-      break;
-    case EDIT_PWCK_REQUEST:
-      draft.checkedPasswordLoading = true;
-      draft.checkedPasswordDone = false;
-      draft.checkedPasswordError = null;
-      break;
-    case EDIT_PWCK_SUCCESS:
-      draft.checkedPasswordLoading = false;
-      draft.checkedPasswordDone = true;
-      break;
-    case EDIT_PWCK_FAILURE:
-      draft.checkedPasswordLoading = false;
-      draft.checkedPasswordError = action.error;
       break;
     case FIND_ID_REQUEST:
       draft.findIdLoading = true;
@@ -514,13 +495,29 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     }
     case REMOVE_FOLLOWER_FAILURE:
       break;
+    case UPLOAD_PROFILE_IMAGE_REQUEST:
+      draft.uploadProfileImageLoading = true;
+      draft.uploadProfileImageDone = false;
+      draft.uploadProfileImageError = null;
+      break;
+    case UPLOAD_PROFILE_IMAGE_SUCCESS:
+      if (draft.profileImagePath !== '') {
+        draft.profileImagePath = action.data;
+      }
+      draft.profileImagePath = action.data;
+      draft.uploadProfileImageLoading = false;
+      draft.uploadProfileImageDone = true;
+      break;
+    case UPLOAD_PROFILE_IMAGE_FAILURE:
+      draft.uploadProfileImageLoading = false;
+      draft.uploadProfileImageError = action.error;
+      break;
     case EDIT_PROFILE_IMAGE_REQUEST:
       draft.editProfileImageLoading = true;
       draft.editProfileImageDone = false;
       draft.editProfileImageError = null;
       break;
     case EDIT_PROFILE_IMAGE_SUCCESS:
-      draft.profileImagePath = action.data;
       if (draft.me.image) {
         draft.me.image = action.data;
       }

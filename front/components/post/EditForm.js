@@ -9,11 +9,12 @@ import Select from 'react-select';
 import { EDIT_POST_REQUEST, REMOVE_EDIT_IMAGE, UPLOAD_EDIT_REQUEST, LOAD_EDIT_IMAGE } from '../../reducers/post';
 import useInput from '../../hooks/useInput';
 
-const EditForm = ({ me, onCancelEdit, postDataTotal }) => {
+const EditForm = ({ onCancelEdit, postDataTotal }) => {
   const dispatch = useDispatch();
   const { id, category, content, images, title } = postDataTotal;
   const { categoryData, editImagePaths, editPostLoading, editPostDone,
   } = useSelector((state) => state.post);
+  const { myMajorInfo } = useSelector((state) => state.user);
   const [editTitle, onChangeTitle] = useInput(title);
   const [editText, onChangeText] = useInput(content);
   const [editCategory, setEditCategory] = useState(category);
@@ -38,8 +39,8 @@ const EditForm = ({ me, onCancelEdit, postDataTotal }) => {
 
   const postCategoryList = useCallback((m, i) => {
     const categoryList = [];
-    m.map((data) => (categoryList.push({ value: data, label: data })));
-    i.map((data) => (categoryList.push({ value: data, label: data })));
+    if (myMajorInfo) m.map((data) => (categoryList.push({ value: data, label: data })));
+    if (categoryData) i.map((data) => (categoryList.push({ value: data, label: data })));
     return categoryList;
   }, []);
 
@@ -84,6 +85,12 @@ const EditForm = ({ me, onCancelEdit, postDataTotal }) => {
     });
   }, []);
 
+  const onEnter = (e) => { // 엔터 사용 불가
+    if (e.keyCode === 13 || e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const imageAndWriteWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
   const inputWrapper = useMemo(() => ({ background: 'white', margin: '0px 10px 10px 10px', borderColor: '#c8e6d7' }), []);
   /* 작성, 이미지 업로드 버튼 */
@@ -107,7 +114,7 @@ const EditForm = ({ me, onCancelEdit, postDataTotal }) => {
           name="categoty"
           defaultValue={{ label: category }}
           onChange={onSelectCategory}
-          options={postCategoryList(me.majors, categoryData)}
+          options={postCategoryList(myMajorInfo, categoryData)}
           styles={customStyles}
           menuPlacement="auto"
           maxMenuHeight={150}
@@ -117,7 +124,8 @@ const EditForm = ({ me, onCancelEdit, postDataTotal }) => {
         style={inputWrapper}
         value={editTitle}
         onChange={onChangeTitle}
-        autoSize={{ minRows: 1, maxRows: 2 }}
+        autoSize={{ minRows: 1, maxRows: 1 }}
+        onKeyDown={onEnter}
         placeholder="제목"
       />
       <Input.TextArea

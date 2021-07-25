@@ -56,9 +56,6 @@ import {
   FIND_PASSWORD_REQUEST,
   FIND_PASSWORD_SUCCESS,
   FIND_PASSWORD_FAILURE,
-  EDIT_PWCK_REQUEST,
-  EDIT_PWCK_FAILURE,
-  EDIT_PWCK_SUCCESS,
   EDIT_NICKNAME_REQUEST,
   EDIT_NICKNAME_SUCCESS,
   EDIT_NICKNAME_FAILURE,
@@ -74,6 +71,9 @@ import {
   EDIT_PROFILE_IMAGE_REQUEST,
   EDIT_PROFILE_IMAGE_SUCCESS,
   EDIT_PROFILE_IMAGE_FAILURE,
+  UPLOAD_PROFILE_IMAGE_REQUEST,
+  UPLOAD_PROFILE_IMAGE_SUCCESS,
+  UPLOAD_PROFILE_IMAGE_FAILURE,
 } from '../reducers/user';
 
 function loadMyInfoAPI() {
@@ -83,7 +83,6 @@ function loadMyInfoAPI() {
 function* loadMyInfo() {
   try {
     const result = yield call(loadMyInfoAPI);
-    console.log(result.data.body);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data.body,
@@ -104,7 +103,6 @@ function loadUserAPI(userId) {
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
-    console.log('loadUserData', result.data.body);
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data.body,
@@ -296,6 +294,26 @@ function* checkNickname(action) {
   }
 }
 
+function uploadProfileImgAPI(formData) {
+  return axios.post(`${INDEX_URL}/sns/upload`, formData);
+}
+
+function* uploadProfileImg(action) {
+  try {
+    const result = yield call(uploadProfileImgAPI, action.data);
+    yield put({
+      type: UPLOAD_PROFILE_IMAGE_SUCCESS,
+      data: result.data.body,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UPLOAD_PROFILE_IMAGE_FAILURE,
+      error: err,
+    });
+  }
+}
+
 function editProfileImgAPI(formData) {
   return axios.patch(`${AUTH_URL}/auth/user/profile`, formData);
 }
@@ -473,27 +491,8 @@ function* editNickname(action) {
   }
 }
 
-function checkPasswordAPI(password) { // 비밀번호 변경 전 비밀번호 확인 // api X
-  return axios.post('/user/passwordcheck', password);
-}
-
-function* checkPassword(action) {
-  try {
-    const result = yield call(checkPasswordAPI, action.data);
-    yield put({
-      type: EDIT_PWCK_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: EDIT_PWCK_FAILURE,
-      error: err,
-    });
-  }
-}
-
 function editPasswordAPI(newpassword) {
-  return axios.post(`${AUTH_URL}/auth/user/password`, newpassword);
+  return axios.patch(`${AUTH_URL}/auth/user/password`, newpassword);
 }
 
 function* editPassword(action) {
@@ -533,7 +532,7 @@ function* editCategory(action) {
 }
 
 function editMajorAPI(data) {
-  return axios.patch(`${AUTH_URL}/auth/user/majors`, data.majors);
+  return axios.patch(`${AUTH_URL}/auth/user/majors`, data);
 }
 
 function* editMajor(action) {
@@ -592,12 +591,12 @@ function* watchCheckNickname() {
   yield takeLatest(CHECK_NICKNAME_REQUEST, checkNickname);
 }
 
-function* watchCheckPassword() {
-  yield takeLatest(EDIT_PWCK_REQUEST, checkPassword);
-}
-
 function* watchEditPassword() {
   yield takeLatest(EDIT_PASSWORD_REQUEST, editPassword);
+}
+
+function* watchUploadProfileImg() {
+  yield takeLatest(UPLOAD_PROFILE_IMAGE_REQUEST, uploadProfileImg);
 }
 
 function* watchEditProfileImg() {
@@ -672,7 +671,7 @@ export default function* userSaga() {
     fork(watchFindId),
     fork(watchFindPassword),
     fork(watchEditPassword),
-    fork(watchCheckPassword),
+    fork(watchUploadProfileImg),
     fork(watchEditProfileImg),
   ]);
 }

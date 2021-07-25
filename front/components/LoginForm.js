@@ -19,11 +19,10 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLogInError) alert(isLogInError);
+    if (isLogInError) alert('아이디 또는 비밀번호가 잘못된 정보입니다.');
   }, [isLogInError]);
 
   const onSubmitForm = useCallback(() => {
-    console.log(userId, password);
     dispatch(loginRequestAction({ userId, password }));
   }, [userId, password]);
 
