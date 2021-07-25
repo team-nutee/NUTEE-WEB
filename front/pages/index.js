@@ -5,10 +5,6 @@ import { Col, Row } from 'antd';
 import { LOAD_POSTS_REQUEST, LOAD_FAVORITE_POSTS_REQUEST, LOAD_CATEGORY_DATA_REQUEST, LOAD_MAJOR_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-<<<<<<< HEAD
-=======
-import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
->>>>>>> develop
 import LeftContents from '../components/contents/LeftContents';
 import wrapper from '../store/configureStore';
 import MainContents from '../components/contents/MainContents';
