@@ -95,7 +95,6 @@ const PostCardContent = ({ post, editMode, onCancelEdit, retweet }) => {
                     }
 
                     return v.split(/(\s)/gi).map((u) => {
-                      console.log(u);
                       if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
                         return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
                       }

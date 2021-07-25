@@ -293,7 +293,6 @@ function* removePost(action) {
       data: result.data.body.id,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: REMOVE_POST_FAILURE,
       error: err,
@@ -450,7 +449,6 @@ function* loadComments(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_COMMENTS_FAILURE,
       error: err.response.data,
@@ -473,7 +471,6 @@ function* addComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: ADD_COMMENT_FAILURE,
       error: err,
@@ -496,7 +493,6 @@ function* editComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_COMMENT_FAILURE,
       error: err,
@@ -520,7 +516,6 @@ function* editReComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_RECOMMENT_FAILURE,
       error: err,
@@ -544,7 +539,6 @@ function* removeComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: REMOVE_COMMENT_FAILURE,
       error: e,
@@ -569,7 +563,6 @@ function* removeReComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: REMOVE_RECOMMENT_FAILURE,
       error: e,
@@ -593,7 +586,6 @@ function* addReComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: ADD_RECOMMENT_FAILURE,
       error: err,
@@ -618,7 +610,6 @@ function* likeComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LIKE_COMMENT_FAILURE,
       error: err,
@@ -643,7 +634,6 @@ function* unlikeComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: UNLIKE_COMMENT_FAILURE,
       error: e,
@@ -669,7 +659,6 @@ function* likeReComment(action) {
       },
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LIKE_RECOMMENT_FAILURE,
       error: err,
@@ -695,7 +684,6 @@ function* unlikeReComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: UNLIKE_RECOMMENT_FAILURE,
       error: e,
@@ -715,7 +703,6 @@ function* upload(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: UPLOAD_FAILURE,
       error: err,
@@ -735,7 +722,6 @@ function* uploadEdit(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: UPLOAD_EDIT_FAILURE,
       error: err,
@@ -757,7 +743,6 @@ function* likePost(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LIKE_POST_FAILURE,
       error: err,
@@ -779,7 +764,6 @@ function* unlikePost(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: UNLIKE_POST_FAILURE,
       error: err,
@@ -799,7 +783,6 @@ function* retweet(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: RETWEET_FAILURE,
       error: err,
@@ -819,7 +802,6 @@ function* majorsData(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_MAJOR_DATA_FAILURE,
       error: err,
@@ -839,7 +821,6 @@ function* categoryData(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_CATEGORY_DATA_FAILURE,
       error: err,

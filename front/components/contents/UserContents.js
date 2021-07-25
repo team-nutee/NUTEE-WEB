@@ -11,8 +11,6 @@ const { TabPane } = Tabs;
 const UserContents = ({ me, myPosts, myCommentPosts, myLikePosts, hasMorePost }) => {
   const { loadMyPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
-  console.log(me);
-  console.log(myPosts);
   useEffect(() => {
     function onScroll() {
       if (

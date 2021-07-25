@@ -109,7 +109,6 @@ function* loadUser(action) {
       me: !action.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
       error: err,
@@ -129,7 +128,6 @@ function* refresh(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: REFRESH_FAILURE,
       error: err,
@@ -155,7 +153,6 @@ function* logIn(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
       error: err,
@@ -176,7 +173,6 @@ function* logOut(action) {
       type: LOG_OUT_SUCCESS,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOG_OUT_FAILURE,
       error: err,
@@ -195,7 +191,6 @@ function* signUp(action) {
       type: SIGN_UP_SUCCESS,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
       error: err,
@@ -268,7 +263,6 @@ function* checkId(action) {
       type: CHECK_ID_SUCCESS,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: CHECK_ID_FAILURE,
       error: err,
@@ -306,7 +300,6 @@ function* uploadProfileImg(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: UPLOAD_PROFILE_IMAGE_FAILURE,
       error: err,
@@ -326,7 +319,6 @@ function* editProfileImg(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_PROFILE_IMAGE_FAILURE,
       error: err,
@@ -383,7 +375,6 @@ function* follow(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: FOLLOW_USER_FAILURE,
       error: err,
@@ -403,7 +394,6 @@ function* unfollow(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: UNFOLLOW_USER_FAILURE,
       error: err,
@@ -423,7 +413,6 @@ function* loadFollowers(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_FOLLOWERS_FAILURE,
       error: err,
@@ -443,7 +432,6 @@ function* loadFollowings(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_FOLLOWINGS_FAILURE,
       error: err,
@@ -463,7 +451,6 @@ function* removeFollower(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: REMOVE_FOLLOWER_FAILURE,
       error: err,
@@ -483,7 +470,6 @@ function* editNickname(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_NICKNAME_FAILURE,
       error: err,
@@ -503,7 +489,6 @@ function* editPassword(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_PASSWORD_FAILURE,
       error: err,
@@ -523,7 +508,6 @@ function* editCategory(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_CATEGORY_FAILURE,
       error: err,
@@ -543,7 +527,6 @@ function* editMajor(action) {
       data: result.data.body,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: EDIT_MAJOR_FAILURE,
       error: err.response.data,

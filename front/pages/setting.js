@@ -121,7 +121,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch(END);
-  console.log('getServerSideProps start_setting');
   await context.store.sagaTask.toPromise();
 });
 

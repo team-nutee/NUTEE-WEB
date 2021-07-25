@@ -20,7 +20,6 @@ const Search = ({ onCloseSearch }) => {
   }, [keywords]);
 
   const onTag = useCallback((tag) => {
-    console.log(tag);
     dispatch({
       type: LOAD_CATEGORY_POSTS_REQUEST,
       data: {
