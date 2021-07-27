@@ -81,7 +81,7 @@ const NavigationBar = ({ me }) => {
 };
 
 NavigationBar.defaultProps = {
-  me: {},
+  me: null,
 };
 
 NavigationBar.propTypes = {
