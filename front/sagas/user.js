@@ -91,7 +91,7 @@ function* loadUser(action) {
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data.body,
-      me: !action.data.body,
+      /*  me: !action.data.body, */
     });
   } catch (err) {
     yield put({

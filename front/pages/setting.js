@@ -48,7 +48,7 @@ const setting = () => {
                       <SmileOutlined />
                       프로필 사진 변경
                     </span>
-            )}
+                  )}
                   key="1"
                   style={tabPaneWrapper}
                 >
@@ -60,7 +60,7 @@ const setting = () => {
                       <UserOutlined />
                       닉네임 변경
                     </span>
-            )}
+                  )}
                   key="2"
                   style={tabPaneWrapper}
                 >
@@ -72,7 +72,7 @@ const setting = () => {
                       <UnlockOutlined />
                       비밀번호 변경
                     </span>
-            )}
+                  )}
                   key="3"
                   style={tabPaneWrapper}
                 >
@@ -84,7 +84,7 @@ const setting = () => {
                       <TagsOutlined />
                       카테고리 변경
                     </span>
-            )}
+                  )}
                   key="4"
                   style={tabPaneWrapper}
                 >
@@ -96,7 +96,7 @@ const setting = () => {
                       <BookOutlined />
                       전공 변경
                     </span>
-            )}
+                  )}
                   key="5"
                   style={tabPaneWrapper}
                 >
@@ -121,7 +121,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch(END);
-  console.log('getServerSideProps start_setting');
   await context.store.sagaTask.toPromise();
 });
 

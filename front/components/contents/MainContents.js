@@ -8,7 +8,7 @@ import PostCard from '../post/PostCard';
 
 const { TabPane } = Tabs;
 
-const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPosts }) => {
+const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPosts, userPosts }) => {
   const { me } = useSelector((state) => state.user);
   const { loadPostsLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
@@ -45,26 +45,38 @@ const MainContents = ({ target, mainPosts, hasMorePost, favoritePosts, majorPost
 
   return (
     <>
-      <Tabs defaultActiveKey="2" style={tabsWrapper}>
-        <TabPane tab="즐겨찾기" key="1" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {favoritePosts.map((f) => (
-            <PostCard key={f.id} post={f} />
-          ))}
-        </TabPane>
-        <TabPane tab="전체 게시글" key="2" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {mainPosts.map((p) => (
-            <PostCard key={p.id} post={p} />
-          ))}
-        </TabPane>
-        <TabPane tab="전공" key="3" style={tabPaneWrapper}>
-          {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
-          {majorPosts.map((c) => (
-            <PostCard key={c.id} post={c} />
-          ))}
-        </TabPane>
-      </Tabs>
+      { !target || me.id === target.id
+        ? (
+          <Tabs defaultActiveKey="2" style={tabsWrapper}>
+            <TabPane tab="즐겨찾기" key="1" style={tabPaneWrapper}>
+              {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+              {favoritePosts.map((f) => (
+                <PostCard key={f.id} post={f} />
+              ))}
+            </TabPane>
+            <TabPane tab="전체 게시글" key="2" style={tabPaneWrapper}>
+              {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+              {mainPosts.map((p) => (
+                <PostCard key={p.id} post={p} />
+              ))}
+            </TabPane>
+            <TabPane tab="전공" key="3" style={tabPaneWrapper}>
+              {!target || me.id === target.id ? <PostForm me={me} /> : <></>}
+              {majorPosts.map((c) => (
+                <PostCard key={c.id} post={c} />
+              ))}
+            </TabPane>
+          </Tabs>
+        )
+        : (
+          <Tabs defaultActiveKey="1" style={tabsWrapper}>
+            <TabPane tab={`${target.nickname}의 게시물`} key="1" style={tabPaneWrapper}>
+              {userPosts.map((p) => (
+                <PostCard key={p.id} post={p} />
+              ))}
+            </TabPane>
+          </Tabs>
+        )}
     </>
   );
 };

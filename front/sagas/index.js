@@ -7,7 +7,7 @@ import notice from './notice';
 axios.defaults.withCredentials = true;
 const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
-if (accessToken !== null) {
+if (accessToken) {
   axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 }
 

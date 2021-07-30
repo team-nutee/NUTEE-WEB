@@ -32,7 +32,6 @@ function* getHaksaNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_HAKSA_NOTICE_FAILURE,
       error: e.name,
@@ -52,7 +51,6 @@ function* getSooupNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_SOOUP_NOTICE_FAILURE,
       error: e,
@@ -72,7 +70,6 @@ function* getHakjumNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_HAKJUM_NOTICE_FAILURE,
       error: e,
@@ -92,7 +89,6 @@ function* getJanghakNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_JANGHAK_NOTICE_FAILURE,
       error: e,
@@ -112,7 +108,6 @@ function* getIlbanNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_ILBAN_NOTICE_FAILURE,
       error: e,
@@ -132,7 +127,6 @@ function* getHangsaNotice(action) {
       data: result.data.body,
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: LOAD_HANGSA_NOTICE_FAILURE,
       error: e,

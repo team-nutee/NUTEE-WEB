@@ -40,12 +40,18 @@ const Home = () => {
     dispatch({
       type: LOAD_MAJOR_POSTS_REQUEST,
     });
+    dispatch({
+      type: LOAD_POSTS_REQUEST,
+    });
   }, []);
 
   useEffect(() => {
     if (isLogInDone) {
       dispatch({
         type: LOAD_MY_INFO_REQUEST,
+      });
+      dispatch({
+        type: LOAD_POSTS_REQUEST,
       });
       dispatch({
         type: LOAD_FAVORITE_POSTS_REQUEST,
@@ -66,7 +72,7 @@ const Home = () => {
           <Row style={mobilePageWrapper}>
             <Col span={24}>
               <MainContents
-                me={me}
+                target={me}
                 hasMorePost={hasMorePost}
                 mainPosts={mainPosts}
                 favoritePosts={favoritePosts}
@@ -84,7 +90,7 @@ const Home = () => {
             {/* 게시글 */}
             <Col span={17}>
               <MainContents
-                me={me}
+                target={me}
                 hasMorePost={hasMorePost}
                 mainPosts={mainPosts}
                 favoritePosts={favoritePosts}
@@ -98,18 +104,6 @@ const Home = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_POSTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_FAVORITE_POSTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_MAJOR_POSTS_REQUEST,
-  });
   context.store.dispatch({
     type: LOAD_CATEGORY_DATA_REQUEST,
   });

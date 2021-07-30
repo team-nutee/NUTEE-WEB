@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
 import { AlertOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
+import { LOAD_USER_REQUEST } from '../../reducers/user';
+import { LOAD_USER_INFO_SUCCESS, LOAD_USER_POSTS_REQUEST, LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import Comments from '../comments/Comments';
@@ -24,6 +25,7 @@ const PostCard = ({ post }) => {
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const [editMode, setEditMode] = useState(false);
   const [mobileScreen, setMobileScreen] = useState(false);
+  const user = post.user.id;
 
   const postImage = post.images && post.images[0] ? <PostImages images={post.images} /> : <></>;
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
@@ -77,7 +79,7 @@ const PostCard = ({ post }) => {
 
   const onLike = useCallback(() => {
     if (!me.id) return alert('로그인이 필요합니다.');
-    if (me.id === post.user.id) return alert('자신의 글은 좋아요를 누를 수 없습니다.');
+    if (me.id === user) return alert('자신의 글은 좋아요를 누를 수 없습니다.');
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
@@ -118,7 +120,7 @@ const PostCard = ({ post }) => {
 
   const EllipsisContent = (
     <>
-      {me && post.user.id === me.id ? (
+      {me && user === me.id ? (
         <>
           <Button onClick={onClickEdit}>수정</Button>
           <Button type="danger" onClick={onRemovePost}>삭제</Button>
@@ -135,6 +137,20 @@ const PostCard = ({ post }) => {
       </div>
     ),
   };
+
+  const userpages = () => {
+    dispatch({
+      type: LOAD_USER_POSTS_REQUEST,
+      data: user,
+    });
+    dispatch({
+      type: LOAD_USER_INFO_SUCCESS,
+      data: user,
+    });
+  };
+
+  const postProfile = (post.user.image
+    ? <ProfileAvatar imagePath={post.user.image} /> : <ProfileAvatar />);
 
   return (
     <div style={mobileScreen ? mobilePostCardWrapper : postCardWrapper}>
@@ -163,21 +179,11 @@ const PostCard = ({ post }) => {
             <div style={postWrapperTest}>
               {editMode ? <></> : <div style={tagWrapper}><Tag color="purple">{post.category}</Tag></div>}
               <Card.Meta
-                avatar={
-                      post.user.id
-                        ? (
-                          <Link href={`/user/${post.user.id}`} prefetch={false}>
-                            <a>
-                              {post.user.image ? <ProfileAvatar imagePath={post.user.image} />
-                                : <ProfileAvatar />}
-                            </a>
-                          </Link>
-                        ) : <></>
-                    }
+                avatar={user ? postProfile : <></>}
                 title={(
                   <>
                     <p style={nicknameWrapper}>{post.user.nickname}</p>
-                    {editMode ? <></> : (<><PostTime post={post} /></>)}
+                    {editMode ? <></> : <><PostTime post={post} /></>}
                   </>
                     )}
                 description={(
