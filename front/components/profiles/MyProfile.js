@@ -5,6 +5,8 @@ import { Card } from 'antd';
 import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ProfileAvatar from './ProfileAvatar';
+import Router from 'next/router';
+
 
 const { Meta } = Card;
 
@@ -35,7 +37,7 @@ const MyProfile = ({ target }) => {
           <Card
             style={cardWrapper}
             actions={[
-              <Link href="/profile" key="post">
+              <Link href="/profile">
                 <a>
                   <div>
                     <b>게시글</b>
@@ -44,7 +46,7 @@ const MyProfile = ({ target }) => {
                   </div>
                 </a>
               </Link>,
-              <Link href="/profile" key="comment">
+              <Link href="/profile">
                 <a>
                   <div>
                     <b>댓글</b>
@@ -53,7 +55,7 @@ const MyProfile = ({ target }) => {
                   </div>
                 </a>
               </Link>,
-              <Link href="/profile" key="like">
+              <Link href="/profile">
                 <a>
                   <div>
                     <b>좋아요</b>

@@ -17,7 +17,6 @@ const SearchHistory = ({ keywords, onRemoveKeyword, onClearKeywords }) => {
   const leftWrapper = useMemo(() => ({ float: 'left' }), []);
 
   const onTag = useCallback((tag) => {
-    console.log(tag);
     dispatch({
       type: LOAD_CATEGORY_POSTS_REQUEST,
       data: {
