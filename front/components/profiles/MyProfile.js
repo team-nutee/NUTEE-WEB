@@ -5,8 +5,6 @@ import { Card } from 'antd';
 import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ProfileAvatar from './ProfileAvatar';
-import Router from 'next/router';
-
 
 const { Meta } = Card;
 
