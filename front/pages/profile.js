@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { Col, Row } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
-import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST, LOAD_MY_LIKE_REQUEST } from '../reducers/post';
+import { LOAD_MY_POSTS_REQUEST, LOAD_MY_COMMENTS_REQUEST, LOAD_MY_LIKE_REQUEST, LOAD_CATEGORY_DATA_REQUEST } from '../reducers/post';
 import { LOAD_HAKSA_NOTICE_REQUEST, LOAD_SOOUP_NOTICE_REQUEST, LOAD_HAKJUM_NOTICE_REQUEST, LOAD_JANGHAK_NOTICE_REQUEST, LOAD_ILBAN_NOTICE_REQUEST, LOAD_HANGSA_NOTICE_REQUEST } from '../reducers/notice';
 import AppLayout from '../components/AppLayout';
 import UserLeftContents from '../components/contents/UserLeftContents';
@@ -60,16 +60,7 @@ const Profile = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_MY_POSTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_MY_COMMENTS_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_MY_LIKE_REQUEST,
+    type: LOAD_CATEGORY_DATA_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_HAKSA_NOTICE_REQUEST,

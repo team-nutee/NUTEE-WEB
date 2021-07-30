@@ -1,21 +1,33 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import React, { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import { Col, Row } from 'antd';
 import { END } from 'redux-saga';
+import router from 'next/router';
 import { LOAD_USER_REQUEST } from '../reducers/user';
-import { LOAD_USER_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_USER_POSTS_REQUEST, LOAD_USER_INFO_SUCCESS } from '../reducers/post';
 import AppLayout from '../components/AppLayout';
 import MainContents from '../components/contents/MainContents';
 import UserLeftContents from '../components/contents/UserLeftContents';
 import wrapper from '../store/configureStore';
 
 const User = () => {
-  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+  const { userPosts, hasMorePost } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
-
+  const { user } = router.query;
   const pageWrapper = useMemo(() => ({ outline: 'none', height: '100vh', width: '70vw', minWidth: '750px', maxWidth: '1000px', paddingTop: '65px' }), []);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_USER_POSTS_REQUEST,
+      data: user,
+    });
+    dispatch({
+      type: LOAD_USER_INFO_SUCCESS,
+      data: user,
+    });
+  }, []);
 
   return (
     <AppLayout>
@@ -25,8 +37,8 @@ const User = () => {
           <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
           <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
           <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:image" content="localhost:80/favicon.ico" />
-          <meta property="og:url" content={`https://localhost:80/user/${userInfo.id}`} />
+          <meta property="og:image" content="../public/favicon.ico" />
+          <meta property="og:url" content={`https://nutee.kr/user/${userInfo.id}`} />
         </Head>
       )}
       <Row gutter={10} style={pageWrapper}>
@@ -36,7 +48,7 @@ const User = () => {
         </Col>
         {/* 게시글 */}
         <Col span={17}>
-          <MainContents target={userInfo} hasMorePost={hasMorePost} mainPosts={mainPosts} />
+          <MainContents target={userInfo} hasMorePost={hasMorePost} userPosts={userPosts} />
         </Col>
       </Row>
     </AppLayout>
@@ -44,19 +56,15 @@ const User = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
-  context.store.dispatch({
+  // const { user } = context.query;
+/*   context.store.dispatch({
     type: LOAD_USER_POSTS_REQUEST,
-    data: context.params.id,
+    data: user,
   });
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
-    data: context.params.id,
-  });
+    data: user,
+  }); */
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
 });

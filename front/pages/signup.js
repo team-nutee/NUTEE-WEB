@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */ /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Select from 'react-select';
@@ -412,11 +411,6 @@ const Signup = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
   context.store.dispatch({
     type: LOAD_CATEGORY_DATA_REQUEST,
   });

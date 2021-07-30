@@ -90,14 +90,11 @@ const Search = () => {
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   const { text } = context.query;
   context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
+    type: LOAD_SEARCH_POSTS_REQUEST,
+    data: text,
   });
   context.store.dispatch({
     type: LOAD_CATEGORY_DATA_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_SEARCH_POSTS_REQUEST,
-    data: text,
   });
   context.store.dispatch({
     type: LOAD_HAKSA_NOTICE_REQUEST,

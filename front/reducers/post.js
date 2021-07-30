@@ -1,12 +1,6 @@
 import produce from '../util/produce';
 
 export const initialState = {
-  /* user */
-  loadUserInfo: null, // 사용자의 정보 조회
-  isLoadUserInfoLoading: false, // 사용자의 정보 로드
-  isLoadUserInfoDone: false,
-  isLoadUserInfoError: null,
-
   /* post */
   mainPosts: [], // 전체 포스트들
   categoryPosts: [], // 카테고리 포스트들
@@ -53,6 +47,15 @@ export const initialState = {
   unlikePostLoading: false, // 포스트 좋아요 취소
   unlikePostDone: false,
   unlikePostError: null,
+
+  /* user posts */
+  userPosts: [], // 사용자의 포스트들
+  isLoadUserPostsLoading: false, // 조회한 사용자의 포스트 로드
+  isLoadUserPostsDone: false,
+  isLoadUserPostsError: null,
+  isLoadUserInfoLoading: false, // 사용자의 정보 조회 로드
+  isLoadUserInfoError: false,
+  isLoadUserInfoDone: null,
 
   /* comment */
   commentList: [], // 댓글들
@@ -863,6 +866,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unlikePostLoading = false;
       draft.unlikePostError = action.error;
       break;
+    case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_SEARCH_POSTS_REQUEST:
       draft.searchPosts = !action.lastId ? [] : draft.searchPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
@@ -870,19 +874,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadSearchPostsDone = false;
       draft.loadSearchPostsError = null;
       break;
+    case LOAD_HASHTAG_POSTS_SUCCESS:
     case LOAD_SEARCH_POSTS_SUCCESS:
       action.data.forEach((data) => { draft.searchPosts.push(data); });
       draft.hasMorePost = action.data.length === 10;
       draft.loadsearchPostsLoading = false;
       draft.loadsearchPostsDone = true;
       break;
+    case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_SEARCH_POSTS_FAILURE:
       draft.loadsearchPostsLoading = false;
       // draft.loadSearchPostsError = action.error;
       break;
     case LOAD_POSTS_REQUEST:
-    case LOAD_HASHTAG_POSTS_REQUEST:
-    case LOAD_USER_POSTS_REQUEST:
       draft.mainPosts = !action.lastId ? [] : draft.mainPosts;
       draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
       draft.loadPostsLoading = true;
@@ -890,18 +894,31 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsError = null;
       break;
     case LOAD_POSTS_SUCCESS:
-    case LOAD_HASHTAG_POSTS_SUCCESS:
-    case LOAD_USER_POSTS_SUCCESS:
       action.data.forEach((data) => { draft.mainPosts.push(data); });
       draft.hasMorePost = action.data.length === 10;
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
       break;
     case LOAD_POSTS_FAILURE:
-    case LOAD_HASHTAG_POSTS_FAILURE:
-    case LOAD_USER_POSTS_FAILURE:
       draft.loadPostsLoading = false;
       // draft.loadPostError = action.error;
+      break;
+    case LOAD_USER_POSTS_REQUEST:
+      draft.userPosts = !action.lastId ? [] : draft.userPosts;
+      draft.hasMorePost = action.lastId ? draft.hasMorePost : true;
+      draft.isLoadUserPostsLoading = true;
+      draft.isLoadUserPostsDone = false;
+      draft.isLoadUserPostsError = null;
+      break;
+    case LOAD_USER_POSTS_SUCCESS:
+      action.data.forEach((data) => { draft.userPosts.push(data); });
+      draft.hasMorePost = action.data.length === 10;
+      draft.isLoadUserPostsLoading = false;
+      draft.isLoadUserPostsDone = true;
+      break;
+    case LOAD_USER_POSTS_FAILURE:
+      draft.isLoadUserPostsLoading = false;
+      // draft.isLoadUserPostsError = action.error;
       break;
     case LOAD_MAJOR_DATA_REQUEST:
       draft.loadMajorDataLoading = true;

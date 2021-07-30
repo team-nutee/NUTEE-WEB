@@ -2,15 +2,6 @@ import { all, call, put, takeLatest, fork } from 'redux-saga/effects';
 import axios from 'axios';
 import { AUTH_URL, INDEX_URL } from '../static';
 import {
-  FOLLOW_USER_REQUEST,
-  FOLLOW_USER_SUCCESS,
-  FOLLOW_USER_FAILURE,
-  LOAD_FOLLOWERS_REQUEST,
-  LOAD_FOLLOWERS_SUCCESS,
-  LOAD_FOLLOWERS_FAILURE,
-  LOAD_FOLLOWINGS_REQUEST,
-  LOAD_FOLLOWINGS_SUCCESS,
-  LOAD_FOLLOWINGS_FAILURE,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAILURE,
@@ -26,15 +17,9 @@ import {
   REFRESH_REQUEST,
   REFRESH_SUCCESS,
   REFRESH_FAILURE,
-  REMOVE_FOLLOWER_REQUEST,
-  REMOVE_FOLLOWER_SUCCESS,
-  REMOVE_FOLLOWER_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
-  UNFOLLOW_USER_REQUEST,
-  UNFOLLOW_USER_SUCCESS,
-  UNFOLLOW_USER_FAILURE,
   CHECK_OTP_REQUEST,
   CHECK_OTP_SUCCESS,
   CHECK_OTP_FAILURE,
@@ -106,7 +91,7 @@ function* loadUser(action) {
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data.body,
-      me: !action.data.body,
+      /*  me: !action.data.body, */
     });
   } catch (err) {
     yield put({
@@ -363,101 +348,6 @@ function* findPassword(action) {
   }
 }
 
-function followAPI(userId) { // api X
-  return axios.post(`/user/${userId}/follow`);
-}
-
-function* follow(action) {
-  try {
-    const result = yield call(followAPI, action.data);
-    yield put({
-      type: FOLLOW_USER_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: FOLLOW_USER_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function unfollowAPI(userId) { // api X
-  return axios.delete(`/user/${userId}/follow`);
-}
-
-function* unfollow(action) {
-  try {
-    const result = yield call(unfollowAPI, action.data);
-    yield put({
-      type: UNFOLLOW_USER_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: UNFOLLOW_USER_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function loadFollowersAPI(userId, offset = 0, limit = 3) { // api X
-  return axios.get(`/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`, { data: {} });
-}
-
-function* loadFollowers(action) {
-  try {
-    const result = yield call(loadFollowersAPI, action.data, action.offset);
-    yield put({
-      type: LOAD_FOLLOWERS_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: LOAD_FOLLOWERS_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function loadFollowingsAPI(userId, offset = 0, limit = 3) { // api X
-  return axios.get(`/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`, { data: {} });
-}
-
-function* loadFollowings(action) {
-  try {
-    const result = yield call(loadFollowingsAPI, action.data, action.offset);
-    yield put({
-      type: LOAD_FOLLOWINGS_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: LOAD_FOLLOWINGS_FAILURE,
-      error: err,
-    });
-  }
-}
-
-function removeFollowerAPI(userId) { // api X
-  return axios.delete(`/user/${userId}/follower`);
-}
-
-function* removeFollower(action) {
-  try {
-    const result = yield call(removeFollowerAPI, action.data);
-    yield put({
-      type: REMOVE_FOLLOWER_SUCCESS,
-      data: result.data.body,
-    });
-  } catch (err) {
-    yield put({
-      type: REMOVE_FOLLOWER_FAILURE,
-      error: err,
-    });
-  }
-}
-
 function editNicknameAPI(nickname) {
   return axios.patch(`${AUTH_URL}/auth/user/nickname`, nickname);
 }
@@ -598,26 +488,6 @@ function* watchLogOut() {
   yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
-function* watchFollow() {
-  yield takeLatest(FOLLOW_USER_REQUEST, follow);
-}
-
-function* watchUnfollow() {
-  yield takeLatest(UNFOLLOW_USER_REQUEST, unfollow);
-}
-
-function* watchLoadFollowers() {
-  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
-}
-
-function* watchLoadFollowings() {
-  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
-}
-
-function* watchRemoveFollower() {
-  yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
-}
-
 function* watchEditNickname() {
   yield takeLatest(EDIT_NICKNAME_REQUEST, editNickname);
 }
@@ -638,11 +508,6 @@ export default function* userSaga() {
     fork(watchLoadUser),
     fork(watchLoadMyInfo),
     fork(watchSignUp),
-    fork(watchFollow),
-    fork(watchUnfollow),
-    fork(watchLoadFollowers),
-    fork(watchLoadFollowings),
-    fork(watchRemoveFollower),
     fork(watchEditNickname),
     fork(watchEditCategory),
     fork(watchEditMajor),

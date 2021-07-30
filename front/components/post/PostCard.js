@@ -1,11 +1,11 @@
-/* eslint-disable no-restricted-globals */
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, List, Badge, Modal, Tag, Button, Popover } from 'antd';
 import { AlertOutlined, MessageOutlined, HeartTwoTone, HeartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
+import { LOAD_USER_REQUEST } from '../../reducers/user';
+import { LOAD_USER_INFO_SUCCESS, LOAD_USER_POSTS_REQUEST, LIKE_POST_REQUEST, LOAD_COMMENTS_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import Comments from '../comments/Comments';
@@ -25,15 +25,13 @@ const PostCard = ({ post }) => {
   const { mainPosts, loadPostDone } = useSelector((state) => state.post);
   const [editMode, setEditMode] = useState(false);
   const [mobileScreen, setMobileScreen] = useState(false);
+  const user = post.user.id;
 
   const postImage = post.images && post.images[0] ? <PostImages images={post.images} /> : <></>;
   const liked = me && post.likers && post.likers.find((v) => v.id === me.id);
   const postCardWrapper = useMemo(() => ({ minWidth: '500px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const mobilePostCardWrapper = useMemo(() => ({ minWidth: '250px', width: '50wv', borderRadius: '2px', border: '2px solid #c8e6d7', maxWidth: '700px', marginBottom: '15px' }), []);
   const blockCardWrapper = useMemo(() => ({ background: '#F6CED8', textAlign: 'center' }), []);
-  const aWrapper = useMemo(() => ({ margin: '0px 10px' }), []);
-  const retweetCardWrapper = useMemo(() => ({ marginBottom: '10px' }), []);
-  const retweetCardMetaWrapper = useMemo(() => ({ position: 'absolute', right: '15px', bottom: '15px', fontSize: '12px' }), []);
   const heartWrapper = useMemo(() => ({ color: '#eb2f96', fontSize: '20px' }), []);
   const badge2Wrapper = useMemo(() => ({ background: '#87d068', size: 'small', zIndex: '0' }), []);
   const badge3Wrapper = useMemo(() => ({ background: '#005000', size: 'small', zIndex: '0' }), []);
@@ -81,7 +79,7 @@ const PostCard = ({ post }) => {
 
   const onLike = useCallback(() => {
     if (!me.id) return alert('로그인이 필요합니다.');
-    if (me.id === post.user.id) return alert('자신의 글은 좋아요를 누를 수 없습니다.');
+    if (me.id === user) return alert('자신의 글은 좋아요를 누를 수 없습니다.');
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
@@ -104,6 +102,7 @@ const PostCard = ({ post }) => {
 
   const onRemovePost = useCallback(() => {
     setPopoverVisible(false);
+    // eslint-disable-next-line no-restricted-globals
     const result = confirm('정말로 삭제하시겠습니까?');
     if (!result) {
       return;
@@ -121,9 +120,9 @@ const PostCard = ({ post }) => {
 
   const EllipsisContent = (
     <>
-      {me && post.user.id === me.id ? (
+      {me && user === me.id ? (
         <>
-          {(post.retweet === null || !post.retweet.id) && <Button onClick={onClickEdit}>수정</Button>}
+          <Button onClick={onClickEdit}>수정</Button>
           <Button type="danger" onClick={onRemovePost}>삭제</Button>
         </>
       )
@@ -138,6 +137,20 @@ const PostCard = ({ post }) => {
       </div>
     ),
   };
+
+  const userpages = () => {
+    dispatch({
+      type: LOAD_USER_POSTS_REQUEST,
+      data: user,
+    });
+    dispatch({
+      type: LOAD_USER_INFO_SUCCESS,
+      data: user,
+    });
+  };
+
+  const postProfile = (post.user.image
+    ? <ProfileAvatar imagePath={post.user.image} /> : <ProfileAvatar />);
 
   return (
     <div style={mobileScreen ? mobilePostCardWrapper : postCardWrapper}>
@@ -162,85 +175,28 @@ const PostCard = ({ post }) => {
                 <EllipsisOutlined />
               </Popover>,
             ]}
-            title={post.retweet
-              ? (
-                <>
-                  {post.user.image
-                    ? <ProfileAvatar imagePath={post.user.image} /> : <ProfileAvatar />}
-                  <a style={aWrapper}>{post.user.nickname}</a>
-                  님이 글을 공유하였습니다.
-                </>
-              ) : <></>}
           >
-            {post.retweet
-              ? (
-                <Card
-                  style={retweetCardWrapper}
-                  cover={post.retweet.images[0] && <PostImages images={post.retweet.images} />}
-                >
-                  <Card.Meta
-                    avatar={(
-                      <Link href={`/user/${post.retweet.user.id}`} prefetch={false}>
-                        <a>
-                          {post.retweet.user.image
-                            ? <ProfileAvatar imagePath={post.retweet.user.image} />
-                            : <ProfileAvatar />}
-                        </a>
-                      </Link>
+            <div style={postWrapperTest}>
+              {editMode ? <></> : <div style={tagWrapper}><Tag color="purple">{post.category}</Tag></div>}
+              <Card.Meta
+                avatar={user ? postProfile : <></>}
+                title={(
+                  <>
+                    <p style={nicknameWrapper}>{post.user.nickname}</p>
+                    {editMode ? <></> : <><PostTime post={post} /></>}
+                  </>
                     )}
-                    title={(
-                      <>
-                        <p style={nicknameWrapper}>{post.retweet.user.nickname}</p>
-                        <PostTime post={post} />
-                      </>
+                description={(
+                  <>
+                    <PostCardContent
+                      post={post}
+                      editMode={editMode}
+                      onCancelEdit={onCancelEdit}
+                    />
+                  </>
                     )}
-                    description={(
-                      <>
-                        <PostCardContent
-                          post={post.retweet}
-                          retweet={1}
-                        />
-                        <h5 style={retweetCardMetaWrapper}>
-                          {`댓글 ${post.retweet.commentNum}개 좋아요 ${post.retweet.likers ? post.retweet.likers.length : 0}개`}
-                        </h5>
-                      </>
-                    )}
-                  />
-                </Card>
-              )
-              : (
-                <div style={postWrapperTest}>
-                  {editMode ? <></> : <div style={tagWrapper}><Tag color="purple">{post.category}</Tag></div>}
-                  <Card.Meta
-                    avatar={
-                      post.user.id
-                        ? (
-                          <Link href={`/user/${post.user.id}`} prefetch={false}>
-                            <a>
-                              {post.user.image ? <ProfileAvatar imagePath={post.user.image} />
-                                : <ProfileAvatar />}
-                            </a>
-                          </Link>
-                        ) : <></>
-                    }
-                    title={(
-                      <>
-                        <p style={nicknameWrapper}>{post.user.nickname}</p>
-                        {editMode ? <></> : (<><PostTime post={post} /></>)}
-                      </>
-                    )}
-                    description={(
-                      <>
-                        <PostCardContent
-                          post={post}
-                          editMode={editMode}
-                          onCancelEdit={onCancelEdit}
-                        />
-                      </>
-                    )}
-                  />
-                </div>
-              )}
+              />
+            </div>
           </Card>
         )}
       {commentFormOpened && (
@@ -300,21 +256,6 @@ PostCard.propTypes = {
     blocked: PropTypes.bool,
     createdAt: PropTypes.string,
     updatedAt: PropTypes.string,
-    retweet: PropTypes.shape({
-      id: PropTypes.number,
-      title: PropTypes.string,
-      content: PropTypes.string,
-      commentNum: PropTypes.number,
-      user: PropTypes.shape({
-        id: PropTypes.number,
-        nickname: PropTypes.string,
-        image: PropTypes.string,
-      }),
-      likers: PropTypes.string,
-      images: PropTypes.shape({
-        src: PropTypes.string,
-      }),
-    }),
   }).isRequired,
 };
 

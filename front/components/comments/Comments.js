@@ -90,9 +90,7 @@ const Comments = ({ item, post }) => {
             <Button onClick={onEdit}>수정</Button>
             <Button type="danger" onClick={onRemove}>삭제</Button>
           </>
-        )
-        : <Button onClick={onReport}>신고</Button>}
-
+        ) : <Button onClick={onReport}>신고</Button>}
     </>
   );
 
