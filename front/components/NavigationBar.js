@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Row } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
@@ -17,8 +16,15 @@ const NavigationBar = ({ me }) => {
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
-    Router.push('/index');
+    Router.push('/');
   }, []);
+
+  const onHome = () => {
+    if (document.location.href !== 'http://nutee.kr/') {
+      return Router.push('/');
+    }
+    return document.location.reload();
+  };
 
   const wrapper = useMemo(() => ({ background: '#fff', boxShadow: '0 5px 10px rgba(0,0,0,0.19), 0 1px 3px rgba(0,0,0,0.23)', height: '65px', paddingTop: '15px', position: 'fixed', top: '0', zIndex: '1050', width: '100%' }), []);
   /* 로고 */
@@ -39,18 +45,12 @@ const NavigationBar = ({ me }) => {
   return (
     <Row style={wrapper}>
       <div style={logoWrapper}>
-        <Link href="/">
-          <a>
-            <img style={logoImgWrapper} src="/nutee_circle.png" alt="nutee" />
-          </a>
-        </Link>
+        <div onClick={onHome} role="presentation">
+          <img style={logoImgWrapper} src="/nutee_circle.png" alt="nutee" />
+        </div>
       </div>
-      <div style={nuteeWrapper}>
-        <Link href="/">
-          <a>
-            <b style={nuteeAWrapper}>NUTEE</b>
-          </a>
-        </Link>
+      <div style={nuteeWrapper} onClick={onHome} role="presentation">
+        <b style={nuteeAWrapper}>NUTEE</b>
       </div>
       {me || me !== null
         ? (
