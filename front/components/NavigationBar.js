@@ -16,7 +16,6 @@ const NavigationBar = ({ me }) => {
   const onLogOut = useCallback(() => {
     const accessToken = localStorage.getItem('accessToken');
     dispatch(logoutRequestAction({ accessToken }));
-    Router.push('/');
   }, []);
 
   const onHome = () => {
