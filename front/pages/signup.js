@@ -224,7 +224,7 @@ const Signup = () => {
         <div style={paperWrapper}>
           <p style={textWrapper}>회원가입</p>
           <h3 style={h1Wrapper}>
-            <Link href="/index"><a style={nuteeWrapper}>NUTEE</a></Link>
+            <Link href="/"><a style={nuteeWrapper}>NUTEE</a></Link>
             에 오신것을 환영합니다!
           </h3>
           <Form onFinish={onSubmit}>
