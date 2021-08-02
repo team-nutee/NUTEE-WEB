@@ -539,7 +539,6 @@ function* removeComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: REMOVE_COMMENT_FAILURE,
       error: e,
@@ -564,7 +563,6 @@ function* removeReComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: REMOVE_RECOMMENT_FAILURE,
       error: e,
@@ -636,7 +634,6 @@ function* unlikeComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: UNLIKE_COMMENT_FAILURE,
       error: e,
@@ -687,7 +684,6 @@ function* unlikeReComment(action) {
       },
     });
   } catch (e) {
-    console.error(e);
     yield put({
       type: UNLIKE_RECOMMENT_FAILURE,
       error: e,
