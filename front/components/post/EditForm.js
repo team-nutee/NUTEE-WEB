@@ -39,8 +39,8 @@ const EditForm = ({ onCancelEdit, postDataTotal }) => {
 
   const postCategoryList = useCallback((m, i) => {
     const categoryList = [];
-    if (myMajorInfo) m.map((data) => (categoryList.push({ value: data, label: data })));
-    if (categoryData) i.map((data) => (categoryList.push({ value: data, label: data })));
+    if (m) m.map((data) => (categoryList.push({ value: data, label: data })));
+    if (i) i.map((data) => (categoryList.push({ value: data, label: data })));
     return categoryList;
   }, []);
 

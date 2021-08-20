@@ -10,7 +10,6 @@ import Search from './Search/Search';
 const NavigationBar = ({ me }) => {
   const [showSearch, setShowSearch] = useState(false);
   const dispatch = useDispatch();
-
   const onOpenSearch = useCallback(() => { setShowSearch(true); }, []);
   const onCloseSearch = useCallback(() => { setShowSearch(false); }, []);
   const onLogOut = useCallback(() => {

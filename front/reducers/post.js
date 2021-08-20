@@ -835,27 +835,27 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       const myLikePostsIndex = draft.myLikePosts.findIndex((v) => v.id === action.postId);
       if (mainPostsIndex !== -1) {
         const mainPostLikeIndex = draft.mainPosts[mainPostsIndex
-        ].likers.findIndex((v) => v.id !== action.userId);
+        ].likers.findIndex((v) => v.id === action.userId);
         draft.mainPosts[mainPostsIndex].likers.splice(mainPostLikeIndex, 1);
       }
       if (favoritePostsIndex !== -1) {
         const favoritePostLikeIndex = draft.mainPosts[favoritePostsIndex
-        ].likers.findIndex((v) => v.id !== action.userId);
+        ].likers.findIndex((v) => v.id === action.userId);
         draft.favoritePosts[favoritePostsIndex].likers.splice(favoritePostLikeIndex, 1);
       }
       if (majorPostsIndex !== -1) {
         const majorPostLikeIndex = draft.mainPosts[majorPostsIndex
-        ].likers.findIndex((v) => v.id !== action.userId);
+        ].likers.findIndex((v) => v.id === action.userId);
         draft.majorPosts[majorPostsIndex].likers.splice(majorPostLikeIndex, 1);
       }
       if (myCommentPostsIndex !== -1) {
         const myCommentPostLikeIndex = draft.myCommentPosts[myCommentPostsIndex
-        ].likers.findIndex((v) => v.id !== action.userId);
+        ].likers.findIndex((v) => v.id === action.userId);
         draft.myCommentPosts[myCommentPostsIndex].likers.splice(myCommentPostLikeIndex, 1);
       }
       if (myLikePostsIndex !== -1) {
         const myLikePostLikeIndex = draft.myLikePosts[myLikePostsIndex
-        ].likers.findIndex((v) => v.id !== action.userId);
+        ].likers.findIndex((v) => v.id === action.userId);
         draft.myLikePosts[myLikePostsIndex].likers.splice(myLikePostLikeIndex, 1);
       }
       draft.unlikePostLoading = false;
