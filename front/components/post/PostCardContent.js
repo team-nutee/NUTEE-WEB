@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { Divider } from 'antd';
 import Link from 'next/link';
@@ -9,7 +8,7 @@ import EditForm from './EditForm';
 const PostCardContent = ({ post, editMode, onCancelEdit }) => {
   const { title, content, commentNum, likers } = post;
   const [showMore, setShowMore] = useState(false);
-  const cssChange = () => { setShowMore(true); };
+  const onShow = () => { setShowMore(true); };
   const pageWrapper = useMemo(() => ({ margin: '0 30px 15px 0' }), []);
   const postDataPreWrapper = useMemo(() => ({ wordWrap: 'break-word', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'NanumBarunGothic', fontSize: '15px' }), []);
   const h5Wrapper = useMemo(() => ({ position: 'absolute', right: '25px', bottom: '60px', fontSize: '12px' }), []);
@@ -65,7 +64,7 @@ const PostCardContent = ({ post, editMode, onCancelEdit }) => {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
                     return v.split(/(\s)/gi).map((u) => {
-                      if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                      if (u.match(/http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/)) {
                         return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
                       }
                       return u;
@@ -83,8 +82,8 @@ const PostCardContent = ({ post, editMode, onCancelEdit }) => {
                       return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={v}><a>{v}</a></Link>;
                     }
 
-                    return v.split(/(\s)/gi).map((u) => {
-                      if (u.match(/(http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4})/)) {
+                    return v.split(/\s/gi).map((u) => {
+                      if (u.match(/http(s)?:\/\/([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/)) {
                         return <Link href={u} prefetch={false} key={u}><a target="_blank" rel="noreferrer">{u}</a></Link>;
                       }
                       return u;
@@ -96,7 +95,7 @@ const PostCardContent = ({ post, editMode, onCancelEdit }) => {
                 </pre>
               )}
             {!showMore
-              ? <a onClick={cssChange}>더보기</a>
+              ? <a onClick={onShow}>더보기</a>
               : <></>}
           </div>
         )}
