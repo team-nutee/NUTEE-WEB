@@ -1,8 +1,7 @@
 # NUTEE
-=========
 ## 성공회대학교 통합 커뮤니티 서비스
----------
-> 성공회대학교 교내 통항 커뮤니티 서비스의 웹 파트에 대한 설명입니다. 
+> 성공회대학교 교내 통항 커뮤니티 서비스의 웹 파트에 대한 설명입니다.   
+    
     
     
 ## 사용 기술
@@ -16,6 +15,7 @@
 Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.notion.site/Web-ee029b9489a04061b55d50434a205fbb, "Nutee-web")
    
    
+    
 ## 실행방법
 ------------
 <pre>
@@ -45,11 +45,15 @@ develop : 개발용
 </pre>
    
    
+   
+   
 ## 브랜치가 master만 보인다면?
 <pre>   
 터미널 or cmd에 git checkout -t origin/develop 
 develop branch 체크아웃
 </pre>
+   
+   
    
    
 ## 실행 이미지
