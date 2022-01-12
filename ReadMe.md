@@ -6,24 +6,14 @@ NUTEE
     
     
 # 사용 기술
-<img src="https://img.shields.io/badge/#F7DF1E?style=flat-square&logo=JavaScript&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#1572B6?style=flat-square&logo=CSS3&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#E34F26?style=flat-square&logo=HTML5&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#61DAFB?style=flat-square&logo=React&logoColor=white"/></a>&nbsp
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=CSS3&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=HTML5&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" />
+   
+<img src="https://img.shields.io/badge/Redux-Saga-999999?style=flat-square&logo=Redux-Saga&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=Next.js&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/ESlint-4B32C3?style=flat-square&logo=ESlint&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Webpack-8DD6F9?style=flat-square&logo=Webpack&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/AntDesign-0170FE?style=flat-square&logo=AntDesign&logoColor=white" />
     
-<img src="https://img.shields.io/badge/#999999?style=flat-square&logo=Redux-Saga&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#764ABC?style=flat-square&logo=Redux&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#000000?style=flat-square&logo=Next.js&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#4B32C3?style=flat-square&logo=ESlint&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#8DD6F9?style=flat-square&logo=Webpack&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#0170FE?style=flat-square&logo=AntDesign&logoColor=white"/></a>&nbsp
-    
-<img src="https://img.shields.io/badge/#232F3E?style=flat-square&logo=AmazonAWS&logoColor=white"/></a>&nbsp
-    
-<img src="https://img.shields.io/badge/#181717?style=flat-square&logo=GitHub&logoColor=white"/></a>&nbsp
-<img src="https://img.shields.io/badge/#000000?style=flat-square&logo=Notion&logoColor=white"/></a>&nbsp
-Notion 회의록 : [NUTEE-WEB 회의록][notionlink]
-[notionlink]: https://turquoise-countess-97d.notion.site/Web-ee029b9489a04061b55d50434a205fbb
+<img src="https://img.shields.io/badge/AmazonAWS-232F3E?style=flat-square&logo=AmazonAWS&logoColor=white" />&nbsp;
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white" />
+   
+Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.notion.site/Web-ee029b9489a04061b55d50434a205fbb, "Nutee-web")
    
    
 # 실행방법
@@ -55,7 +45,7 @@ develop : 개발용
 </pre>
    
    
-## 브랜치가 master만 보인다면?
+# 브랜치가 master만 보인다면?
 <pre>   
 터미널 or cmd에 git checkout -t origin/develop 
 develop branch 체크아웃
