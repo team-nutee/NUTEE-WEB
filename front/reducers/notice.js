@@ -1,8 +1,8 @@
 import produce from '../util/produce';
 
 export const initialState = {
-  noticeTitles: [], // 크롤링 데이터
-  noticeHrefs: [], // 크롤링 데이터 링크
+  noticeTitles: [], // 공지사항 타이틀
+  noticeHrefs: [], // 공지사항 링크
 };
 
 export const LOAD_HAKSA_NOTICE_REQUEST = 'LOAD_HAKSA_NOTICE_REQUEST';
@@ -37,11 +37,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_HAKSA_NOTICE_SUCCESS: {
       draft.noticeTitles[0] = [];
       draft.noticeHrefs[0] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[0].push(action.data[i].title);
-        draft.noticeHrefs[0].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[0].push(e.title);
+        draft.noticeHrefs[0].push(e.href);
+      });
       break;
     }
     case LOAD_HAKSA_NOTICE_FAILURE: {
@@ -53,11 +52,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_SOOUP_NOTICE_SUCCESS: {
       draft.noticeTitles[1] = [];
       draft.noticeHrefs[1] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[1].push(action.data[i].title);
-        draft.noticeHrefs[1].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[1].push(e.title);
+        draft.noticeHrefs[1].push(e.href);
+      });
       break;
     }
     case LOAD_SOOUP_NOTICE_FAILURE: {
@@ -69,11 +67,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_HAKJUM_NOTICE_SUCCESS: {
       draft.noticeTitles[2] = [];
       draft.noticeHrefs[2] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[2].push(action.data[i].title);
-        draft.noticeHrefs[2].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[2].push(e.title);
+        draft.noticeHrefs[2].push(e.href);
+      });
       break;
     }
     case LOAD_HAKJUM_NOTICE_FAILURE: {
@@ -85,11 +82,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_JANGHAK_NOTICE_SUCCESS: {
       draft.noticeTitles[3] = [];
       draft.noticeHrefs[3] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[3].push(action.data[i].title);
-        draft.noticeHrefs[3].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[3].push(e.title);
+        draft.noticeHrefs[3].push(e.href);
+      });
       break;
     }
     case LOAD_JANGHAK_NOTICE_FAILURE: {
@@ -101,11 +97,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_ILBAN_NOTICE_SUCCESS: {
       draft.noticeTitles[4] = [];
       draft.noticeHrefs[4] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[4].push(action.data[i].title);
-        draft.noticeHrefs[4].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[4].push(e.title);
+        draft.noticeHrefs[4].push(e.href);
+      });
       break;
     }
     case LOAD_ILBAN_NOTICE_FAILURE: {
@@ -117,11 +112,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_HANGSA_NOTICE_SUCCESS: {
       draft.noticeTitles[5] = [];
       draft.noticeHrefs[5] = [];
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 6; i++) {
-        draft.noticeTitles[5].push(action.data[i].title);
-        draft.noticeHrefs[5].push(action.data[i].href);
-      }
+      action.data.splice(5).forEach((e) => {
+        draft.noticeTitles[5].push(e.title);
+        draft.noticeHrefs[5].push(e.href);
+      });
       break;
     }
     case LOAD_HANGSA_NOTICE_FAILURE: {

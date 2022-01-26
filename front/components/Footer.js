@@ -31,7 +31,7 @@ const Footer = () => {
         <img style={logoImgWrapper} src="/nutee_circle.png" alt="nutee" />
         <p>
           <p style={boldWrapper}>NUTEE : 성공회대학교 통합 커뮤니티 서비스</p>
-          COPYRIGHT 2021 S.OWL ALL RIGHTS RESERVED.
+          COPYRIGHT 2012 S.OWL ALL RIGHTS RESERVED.
           <Link href="https://github.com/team-nutee/NUTEE-WEB">
             <a style={gitWrapper} target="_blank" rel="noreferrer">
               <GithubOutlined style={IconWrapper} />

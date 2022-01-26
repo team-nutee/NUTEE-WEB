@@ -403,9 +403,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addReCommentError = null;
       break;
     case ADD_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.parentId,
       );
@@ -456,9 +454,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.editCommentError = null;
       break;
     case EDIT_RECOMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       const commentIndex = draft.commentList[postIndex
       ].findIndex((v) => v.id === action.data.parentId);
       const reCommentIndex = draft.commentList[postIndex][commentIndex
@@ -521,13 +517,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case ADD_COMMENT_SUCCESS: {
       const commentId = action.data.comment.id;
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
-      draft.commentList[postIndex].push(action.data.comment);
-      const commentIndex = draft.commentList[postIndex].findIndex(
-        (v) => v.id === commentId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
+      draft.commentList[postIndex].unshift(action.data.comment);
+      const commentIndex = draft.commentList[postIndex].findIndex((v) => v.id === commentId);
       if (draft.commentList[postIndex][commentIndex].likers === null) {
         draft.commentList[postIndex][commentIndex].likers = [];
       }
@@ -545,9 +537,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.likeCommentError = null;
       break;
     case LIKE_COMMENT_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       const commentIndex = draft.commentList[postIndex].findIndex(
         (v) => v.id === action.data.commentId,
       );
@@ -641,9 +631,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadCommentsError = null;
       break;
     case LOAD_COMMENTS_SUCCESS: {
-      const postIndex = draft.mainPosts.findIndex(
-        (v) => v.id === action.data.postId,
-      );
+      const postIndex = draft.mainPosts.findIndex((v) => v.id === action.data.postId);
       if (action.data.comments !== null) {
         draft.commentList[postIndex] = action.data.comments;
         if (action.data.offset === 0) {
