@@ -5,11 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import NavigationBar from './NavigationBar';
 import LoginForm from './LoginForm';
 import Footer from './Footer';
-import Empty from './Empty';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const AppLayout = ({ children }) => {
-  const { me, isLoadMyInfoError } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const wrapper = useMemo(() => ({ display: 'flex', justifyContent: 'center', minHeight: '1000px' }), []);
   const dispatch = useDispatch();
 
@@ -18,13 +17,6 @@ const AppLayout = ({ children }) => {
       type: LOAD_MY_INFO_REQUEST,
     });
   }, []);
-
-  const page = isLoadMyInfoError ? (
-    <>
-      <NavigationBar />
-      <LoginForm />
-    </>
-  ) : <Empty />;
 
   return (
     <div style={wrapper}>
@@ -37,7 +29,12 @@ const AppLayout = ({ children }) => {
           </Row>
         </>
       )
-        : page}
+        : (
+          <>
+            <NavigationBar />
+            <LoginForm />
+          </>
+        )}
     </div>
   );
 };
