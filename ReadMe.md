@@ -27,10 +27,10 @@ Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.n
 3. cmd or terminal로 npm 실행하여 의존성 설치
   - 설치 전 브랜치가 develop인지 확인(master만 보인다면 아래의 설명 참고)
   - (package.json 참고 - dependencies와 devDependencies에 적혀있는 것들 설치)
-  - dependencies -> npm i oooo (ex. npm i react)
-  - devDependencies -> npm i -D oooo (ex. npm i -D eslint)
+  - dependencies -> $ npm i oooo (ex. npm i react)
+  - devDependencies -> $ npm i -D oooo (ex. npm i -D eslint)
    
-4. cmd or terminal에서 npm run dev 실행
+4. cmd or terminal에서 $ npm run dev 실행
   - (NUTEE-WEB폴더에서 실행X, front폴더에서 실행!)
    
 5. 웹브라우저를 실행하고 localhost:80 으로 접속
@@ -39,7 +39,6 @@ Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.n
 ## 주요 브랜치 설명
 <pre>
 ### branch
-
 master : 배포용
 develop : 개발용
 </pre>
@@ -48,14 +47,66 @@ develop : 개발용
    
    
 ## 브랜치가 master만 보인다면?
-<pre>   
+<pre>
 터미널 or cmd에 git checkout -t origin/develop 
 develop branch 체크아웃
 </pre>
    
    
-   
-   
+## 구현된 기능
++ 로그인 페이지(/)
+    + 비밀번호 찾기
+    + 아이디 찾기
+    
++ 메인 페이지(/, 홈, 로그인 후)
+    + 왼쪽 콘텐츠(Box)
+        + 사용자 프로필
+        + 내페이지 및 설정 페이지 링크
+        + 공지사항 콘텐츠(공통)
+        + 링크 콘텐츠(공통, 학교 사이트 링크들)
+    + 오른쪽 콘텐츠(Tab)
+        + 게시글 작성 폼
+        + 즐겨찾기 게시글 보기
+        + 전공 게시글 보기
+        + 전체 게시글 보기
+    
++ 회원가입 페이지(/signup)
+    + 아이디 입력 및 중복 검사
+    + 닉네임 입력 및 중복 검사
+    + 카테고리 설정
+    + 전공 설정
+    + 비밀번호 입력
+    + 비밀번호 확인 입력
+    + 이용약관 및 동의
+    
++ 내 페이지(/profile)
+    + 왼쪽 콘텐츠(Box)
+        + 사용자 프로필
+        + 설정 페이지 링크
+        + 공지사항(공통)
+        + 링크 콘텐츠(공통, 학교 사이트 링크들) 
+    + 오른쪽 콘텐츠(Tab) 
+        + 게시글 작성 폼
+        + 내 게시글 
+        + 댓글 쓴 게시글
+        + 전체 게시글
+    
++ 설정 페이지(/setting, Tab)
+    + 프로필 이미지 설정
+    + 전공 변경
+    + 닉네임 변경
+    + 비밀번호 변경
+    + 카테고리 변경
+    
++ 사용자 페이지(/user, Tab, 다른 사용자의 페이지)
+    + 왼쪽 콘텐츠(Box)
+        + 사용자 프로필
+        + 공지사항(공통)
+        + 링크 콘텐츠(공통, 학교 사이트 링크들) 
+    + 오른쪽 콘텐츠 
+        + 사용자 게시물
+    
+     
 ## 실행 이미지
 ------------
    
