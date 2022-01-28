@@ -4,7 +4,7 @@
     
     
     
-## 사용 기술
+## 사용 기술 및 도구
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=CSS3&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=HTML5&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" />
    
 <img src="https://img.shields.io/badge/Redux-Saga-999999?style=flat-square&logo=Redux-Saga&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=Next.js&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/ESlint-4B32C3?style=flat-square&logo=ESlint&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Webpack-8DD6F9?style=flat-square&logo=Webpack&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/AntDesign-0170FE?style=flat-square&logo=AntDesign&logoColor=white" />
@@ -16,8 +16,7 @@ Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.n
    
    
     
-## 실행방법
-------------
+## 실행방법   
 <pre>
 1. NodeJS 설치
    
@@ -54,6 +53,8 @@ develop branch 체크아웃
    
    
 ## 구현된 기능(페이지 별)
+*모든 게시글이는 댓글과 대댓글 기능 그리고 해시태그와 URL 인식 기능이 포함되어 있습니다. 
+    
 + 로그인 페이지(/)
     + 비밀번호 찾기
     + 아이디 찾기
@@ -117,11 +118,13 @@ develop branch 체크아웃
     + 기타(상단바)
         + 검색
         + 로그아웃  
+
     
      
+     
+     
 ## 실행 이미지
-------------
-   
+      
 ### 로그인
 ![로그인](https://user-images.githubusercontent.com/62700252/149049550-5b494504-ebdb-48ef-bc3c-c93dd9925440.PNG)
    
