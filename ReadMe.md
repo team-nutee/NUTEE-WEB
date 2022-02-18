@@ -2,7 +2,9 @@
 ## 성공회대학교 통합 커뮤니티 서비스
 > 성공회대학교 교내 통항 커뮤니티 서비스의 웹 파트에 대한 설명입니다.   
     
-    
+       
+작성자 : [김지원(gwonkim)](https://github.com/gwonkim, "jiwon kim")
+   
     
 ## 사용 기술 및 도구
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=CSS3&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=HTML5&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" />
@@ -11,8 +13,6 @@
     
 <img src="https://img.shields.io/badge/AmazonAWS-232F3E?style=flat-square&logo=AmazonAWS&logoColor=white" />&nbsp;
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white" />&nbsp;<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white" />
-   
-Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.notion.site/Web-ee029b9489a04061b55d50434a205fbb, "Nutee-web")
    
    
     
@@ -40,6 +40,7 @@ Notion 회의록 : [NUTEE-WEB 회의록 링크](https://turquoise-countess-97d.n
 ### branch
 master : 배포용
 develop : 개발용
+etc... 
 </pre>
    
    
@@ -52,7 +53,7 @@ develop branch 체크아웃
 </pre>
    
    
-## 구현된 기능(페이지 별)
+## 구현된 기능(페이지 별 기능)
 *모든 게시글에는 댓글과 대댓글 기능 그리고 해시태그와 URL 인식 기능이 포함되어 있습니다. 
     
 + 로그인 페이지(/)
