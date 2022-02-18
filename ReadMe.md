@@ -3,7 +3,7 @@
 > 성공회대학교 교내 통항 커뮤니티 서비스의 웹 파트에 대한 설명입니다.   
     
        
-작성자 : [김지원(gwonkim)](https://github.com/gwonkim, "jiwon kim")
+작성자 : [김지원(gwonkim)](https://github.com/gwonkim)
    
     
 ## 사용 기술 및 도구
